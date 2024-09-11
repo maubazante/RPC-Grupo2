@@ -74,10 +74,13 @@ Antes de comenzar, asegurate de tener instalado lo siguiente en **Windows 11 x64
 ### Configuración de gRPC en Windows 11
 Para poder hacer lo más mínimo, necesitas el compilador de **protobuf**, para instalarlo hay que hacer lo siguiente:
 1. **Descarga el compilador Protobuf:** [Protobuf Compiler (Win x64)](https://github.com/protocolbuffers/protobuf/releases/download/v28.0/protoc-28.0-win64.zip)
-2. **Agregar protobuf al ``PATH``**:
-   
-   - DescomprimÍ el archivo descargado y copia la ruta donde se encuentra el archivo ``protoc.exe``.
-   - Agrega esta ruta a las **Variables de entorno** del sistema (en la variable ``PATH``).
+2. **Configura la variable de entorno `PROTOC_HOME` y actualiza el `PATH`:**
+   - Descomprimí el archivo descargado.
+   - Copia la ruta donde se encuentra `protoc.exe` (por ejemplo, `C:\Program Files\Common Files\protoc-28.0-win64\bin`).
+   - **Configura `PROTOC_HOME`:**
+     1. Crea una variable de entorno `PROTOC_HOME` con esa ruta.
+   - **Actualiza el `PATH`:**
+     1. Añade `%PROTOC_HOME%` al `PATH`.
      
 3. **Verificar la instalación en CMD** usando el comando ```protoc --version```
 

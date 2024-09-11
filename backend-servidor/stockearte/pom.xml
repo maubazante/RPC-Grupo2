@@ -91,7 +91,7 @@
 				<artifactId>protobuf-maven-plugin</artifactId>
 				<version>0.6.1</version>
 				<configuration>
-					<protocExecutable>"C:/Program Files/Common Files/protoc-28.0-win64/bin/protoc.exe"</protocExecutable> <!--
+					<protocExecutable>${env.PROTOC_HOME}/protoc.exe</protocExecutable> <!--
 					Ruta corregida -->
 					<pluginId>grpc-java</pluginId>
 					<pluginArtifact>
