@@ -80,7 +80,7 @@ Para poder hacer lo más mínimo, necesitas el compilador de **protobuf**, para 
    - **Configura `PROTOC_HOME`:**
      1. Crea una variable de entorno `PROTOC_HOME` con esa ruta.
    - **Actualiza el `PATH`:**
-     1. Añade `%PROTOC_HOME%` al `PATH`.
+     1. Agrega `%PROTOC_HOME%` al `PATH`.
      
 3. **Verificar la instalación en CMD** usando el comando ```protoc --version```
 
