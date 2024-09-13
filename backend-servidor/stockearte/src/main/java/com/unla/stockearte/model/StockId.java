@@ -9,7 +9,12 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class StockId implements Serializable {
 
-    @Column(name = "tienda_id")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "tienda_id")
     private Long tiendaId;
 
     @Column(name = "producto_id")
@@ -28,4 +33,20 @@ public class StockId implements Serializable {
     public int hashCode() {
         return Objects.hash(tiendaId, productoId);
     }
+
+	public Long getTiendaId() {
+		return tiendaId;
+	}
+
+	public void setTiendaId(Long tiendaId) {
+		this.tiendaId = tiendaId;
+	}
+
+	public Long getProductoId() {
+		return productoId;
+	}
+
+	public void setProductoId(Long productoId) {
+		this.productoId = productoId;
+	}
 }
