@@ -16,15 +16,15 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 // Crear el paquete gRPC a partir del archivo .proto cargado
 const helloProto = grpc.loadPackageDefinition(packageDefinition).helloworld;
 
-// Crear un cliente gRPC que se conectará al servidor en localhost:9090
+// Crear un cliente gRPC que se conecta al servidor en localhost:9090
 const client = new helloProto.Greeter('localhost:9090', grpc.credentials.createInsecure());
 
 // Definir el mensaje a enviar
 const request = {
-  name: 'Node.js Client',
+  name: 'Grupo II - Cupo Robles Olivero Bazante',
 };
 
-// Hacer la llamada gRPC al método SayHello
+// Hacer la llamada gRPC al metodo SayHello
 client.SayHello(request, (error, response) => {
   if (error) {
     console.error('Error:', error);

@@ -1,1 +1,23 @@
-// Generar archivo proto
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.stockearte.service";
+option java_outer_classname = "HelloWorldProto";
+
+package helloworld;
+
+// Definir el servicio gRPC
+service Greeter {
+  // Definir el método "SayHello"
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// Definir el mensaje de solicitud
+message HelloRequest {
+  string name = 1;
+}
+
+// Definir el mensaje de respuesta
+message HelloReply {
+  string message = 1;
+}
