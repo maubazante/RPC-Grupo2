@@ -1,34 +1,50 @@
-const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
-const path = require('path');
+const express = require('express');
+const clienteTienda = require('./tienda'); // Importar el cliente gRPC
 
-const PROTO_PATH = path.join(__dirname, 'helloworld.proto');
+const app = express();
+app.use(express.json()); // Middleware para parsear JSON
 
-// Cargar el archivo .proto
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
+// Endpoint para crear una tienda
+app.post('/createTienda', (req, res) => {
+    const tiendaData = req.body;
+
+    const request = {
+        tienda: {
+            codigo: tiendaData.codigo,
+            direccion: tiendaData.direccion,
+            ciudad: tiendaData.ciudad,
+            provincia: tiendaData.provincia,
+            habilitada: tiendaData.habilitada,
+            usuarioId: tiendaData.usuarioId
+        }
+    };
+
+    clienteTienda.createTienda(request, (error, response) => {
+        if (error) {
+            res.status(500).send(error);
+        } else {
+            res.json(response);
+        }
+    });
 });
 
-// Crear el paquete gRPC a partir del archivo .proto cargado
-const helloProto = grpc.loadPackageDefinition(packageDefinition).helloworld;
+// Endpoint para eliminar una tienda 
+app.delete('/deleteTienda', (req, res) => {
+  const { codigo } = req.body;
 
-// Crear un cliente gRPC que se conecta al servidor en localhost:9090
-const client = new helloProto.Greeter('localhost:9090', grpc.credentials.createInsecure());
+  const request = { codigo };
 
-// Definir el mensaje a enviar
-const request = {
-  name: 'Grupo II - Cupo Robles Olivero Bazante',
-};
+  clienteTienda.DeleteTienda(request, (error, response) => {
+    if (error){
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
 
-// Hacer la llamada gRPC al metodo SayHello
-client.SayHello(request, (error, response) => {
-  if (error) {
-    console.error('Error:', error);
-  } else {
-    console.log('Greeting:', response.message);
-  }
+// Iniciar el servidor en el puerto 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
 });

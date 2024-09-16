@@ -60,12 +60,28 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Override
 	public void deleteTienda(DeleteTiendaRequest request, StreamObserver<DeleteTiendaResponse> responseObserver) {
-		// TODO Auto-generated method stub
-		super.deleteTienda(request, responseObserver);
+		Tienda tienda = getTiendaRepository().findByCodigo(request.getCodigo());
+		DeleteTiendaResponse response = null;
+		
+		if(tienda != null) {
+			tienda.setHabilitado(false);
+			getTiendaRepository().save(tienda);
+			
+			response = DeleteTiendaResponse.newBuilder()
+					.setMessage("Tienda con codigo " + request.getCodigo() + " eliminado exitosamente").build();
+		}
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
 	}
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
 	}
+
+	public UsuarioRepository getUsuarioRepository() {
+		return usuarioRepository;
+	}
+	
+	
 
 }

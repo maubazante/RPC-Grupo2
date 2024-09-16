@@ -25,7 +25,7 @@ message CreateTiendaResponse {
 }
 
 message DeleteTiendaRequest {
-  int64 tiendaId = 1;
+  string codigo = 1;
 }
 
 message DeleteTiendaResponse {

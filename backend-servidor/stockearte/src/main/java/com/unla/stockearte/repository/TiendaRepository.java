@@ -8,4 +8,5 @@ import com.unla.stockearte.model.Tienda;
 @Repository
 public interface TiendaRepository extends JpaRepository<Tienda, Long> {
 
+	public Tienda findByCodigo(String codigo);
 }
