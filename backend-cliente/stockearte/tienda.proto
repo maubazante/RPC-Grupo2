@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package tienda;
+
+service TiendaService {
+  rpc CreateTienda (CreateTiendaRequest) returns (CreateTiendaResponse);
+  rpc DeleteTienda (DeleteTiendaRequest) returns (DeleteTiendaResponse);
+}
+
+message Tienda {
+  string codigo = 1;
+  string direccion = 2;
+  string ciudad = 3;
+  string provincia = 4;
+  bool habilitada = 5;
+  int64 usuarioId = 6;
+}
+
+message CreateTiendaRequest {
+  Tienda tienda = 1;
+}
+
+message CreateTiendaResponse {
+  string message = 1;
+}
+
+message DeleteTiendaRequest {
+  int64 tiendaId = 1;
+}
+
+message DeleteTiendaResponse {
+  string message = 1;
+}

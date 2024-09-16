@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.grpc";
+option java_outer_classname = "TiendaProto";
+
+package tienda;
+
+// Definición del mensaje Tienda
+message Tienda {
+    string codigo = 1;         // Código alfanumérico
+    string direccion = 2;      // Dirección de la tienda
+    string ciudad = 3;         // Ciudad donde se encuentra la tienda
+    string provincia = 4;      // Provincia donde se encuentra la tienda
+    bool habilitada = 5;       // Indica si la tienda está habilitada o deshabilitada
+	int64 usuarioId = 6;	   // Indica el id del usuario al cual queremos asociar la nueva tienda	 
+}
+
+// Request para crear una tienda
+message CreateTiendaRequest {
+    Tienda tienda = 1;
+}
+
+// Response para confirmación de creación de tienda
+message CreateTiendaResponse {
+    string message = 1;
+}
+
+// Request para eliminar una tienda
+message DeleteTiendaRequest {
+    string codigo = 1;
+}
+
+// Response para confirmación de eliminación de tienda
+message DeleteTiendaResponse {
+    string message = 1;
+}
+
+// Servicio para manejar las tiendas
+service TiendaService {
+    rpc CreateTienda(CreateTiendaRequest) returns (CreateTiendaResponse);
+    rpc DeleteTienda(DeleteTiendaRequest) returns (DeleteTiendaResponse);
+}
