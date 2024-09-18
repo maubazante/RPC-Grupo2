@@ -5,6 +5,7 @@ package tienda;
 service TiendaService {
   rpc CreateTienda (CreateTiendaRequest) returns (CreateTiendaResponse);
   rpc DeleteTienda (DeleteTiendaRequest) returns (DeleteTiendaResponse);
+  rpc ModifyTienda (ModifyTiendaRequest) returns (ModifyTiendaResponse);
 }
 
 message Tienda {
@@ -29,5 +30,13 @@ message DeleteTiendaRequest {
 }
 
 message DeleteTiendaResponse {
+  string message = 1;
+}
+
+message ModifyTiendaRequest{
+  Tienda tienda = 1;
+}
+
+message ModifyTiendaResponse {
   string message = 1;
 }

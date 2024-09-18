@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.unla.stockearte.service.GreeterImpl;
+import com.unla.stockearte.service.ProductoService;
 import com.unla.stockearte.service.TiendaService;
+import com.unla.stockearte.service.UsuarioService;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -21,6 +23,12 @@ public class GrpcServer {
     @Autowired()
     private TiendaService tiendaService;
     
+    @Autowired()
+    private UsuarioService usuarioService;
+    
+    @Autowired()
+    private ProductoService productoService;
+    
     private static final Logger logger = LoggerFactory.getLogger(GrpcServer.class);
 
     public void start() throws IOException {
@@ -28,6 +36,8 @@ public class GrpcServer {
         server = ServerBuilder.forPort(9090)
                 .addService(new GreeterImpl()) // Registrar el servicio Greeter
                 .addService(tiendaService)
+                .addService(usuarioService)
+                .addService(productoService)
                 .build()
                 .start();
         logger.info("Servidor gRPC iniciado en el puerto 9090...");

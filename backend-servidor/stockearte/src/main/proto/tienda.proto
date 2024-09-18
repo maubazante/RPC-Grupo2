@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.example.grpc";
+option java_package = "com.tienda.grpc";
 option java_outer_classname = "TiendaProto";
 
 package tienda;
@@ -36,8 +36,19 @@ message DeleteTiendaResponse {
     string message = 1;
 }
 
+// Request para modificar una tienda 
+message ModifyTiendaRequest{
+	Tienda tienda = 1;
+}
+
+// Response para confirmar la modificacion de una tienda 
+message ModifyTiendaResponse{
+	string message = 1;
+}
+
 // Servicio para manejar las tiendas
 service TiendaService {
     rpc CreateTienda(CreateTiendaRequest) returns (CreateTiendaResponse);
     rpc DeleteTienda(DeleteTiendaRequest) returns (DeleteTiendaResponse);
+	rpc ModifyTienda(ModifyTiendaRequest) returns (ModifyTiendaResponse);
 }

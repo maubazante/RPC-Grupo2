@@ -39,7 +39,7 @@ public class Producto {
 	private List<Stock> tiendas;
 
 	@Column(name = "habilitado", nullable = false)
-	private boolean habilitado;
+	private boolean habilitado = true;
 
 	public Producto(Long id, String nombre, String codigo, byte[] foto, String color, String talle, List<Stock> tiendas,
 			boolean habilitado) {
