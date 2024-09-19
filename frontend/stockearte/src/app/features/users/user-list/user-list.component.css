@@ -1,0 +1,30 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    background-color: transparent;  /* Fondo transparente */
+  }
+  
+  mat-card {
+    background-color: rgba(0, 0, 0, 0.1);  /* Fondo oscuro semitransparente */
+    padding: 2px;
+    border-radius: 8px;
+    width: 80%;  /* Ancho más grande */
+    max-width: 1200px;  /* Ancho máximo para pantallas grandes */
+  }
+  
+  table {
+    width: 100%;  /* Ancho completo dentro del contenedor */
+    color: #fff;  /* Texto en blanco */
+    padding: 20px;
+  }
+  
+  .mat-header-cell, .mat-cell {
+    border-bottom: 1px solid #4CAF50;  /* Cambia el color de las líneas de la tabla */
+  }
+  
+  /* Opcional: Ajusta el tamaño del texto si es necesario */
+  .mat-cell {
+    font-size: 16px;  /* Aumenta el tamaño del texto */
+  }
