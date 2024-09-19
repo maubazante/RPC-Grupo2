@@ -9,43 +9,119 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tiendas")
+@Table(name = "tienda")
 public class Tienda {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String codigo;
+	@Column(name = "codigo", nullable = false, unique = true, length = 20)
+	private String codigo;
 
-    @Column(nullable = false, length = 255)
-    private String direccion;
+	@Column(name = "direccion", nullable = false, length = 255)
+	private String direccion;
 
-    @Column(nullable = false, length = 100)
-    private String ciudad;
+	@Column(name = "ciudad", nullable = false, length = 100)
+	private String ciudad;
 
-    @Column(nullable = false, length = 100)
-    private String provincia;
+	@Column(name = "provincia", nullable = false, length = 100)
+	private String provincia;
 
-    @Column(nullable = false)
-    private Boolean habilitada = true;
+	@Column(name = "habilitado", nullable = false)
+	private Boolean habilitado = true;
 
-    @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Usuario> usuarios;
+	@OneToOne
+	@JoinColumn(name = "fk_usuario_id", referencedColumnName = "id")
+	private Usuario usuario;
 
-    @ManyToMany
-    @JoinTable(
-        name = "tienda_producto",
-        joinColumns = @JoinColumn(name = "tienda_id"),
-        inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private List<Producto> productos;
+	@OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL)
+	private List<Stock> productos;
+
+	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitado,
+			Usuario usuario, List<Stock> productos) {
+		super();
+		this.id = id;
+		this.codigo = codigo;
+		this.direccion = direccion;
+		this.ciudad = ciudad;
+		this.provincia = provincia;
+		this.habilitado = habilitado;
+		this.usuario = usuario;
+		this.productos = productos;
+	}
+
+	public Tienda() {
+		super();
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getCiudad() {
+		return ciudad;
+	}
+
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public Boolean getHabilitado() {
+		return habilitado;
+	}
+
+	public void setHabilitado(Boolean habilitado) {
+		this.habilitado = habilitado;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public List<Stock> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(List<Stock> productos) {
+		this.productos = productos;
+	}
 
 }

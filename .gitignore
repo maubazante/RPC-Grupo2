@@ -1,0 +1,8 @@
+# Ignorar todos los directorios .metadata
+**/.metadata/
+
+# Ignorar todos los archivos package-lock.json
+**/package-lock.json
+
+# Ignorar un archivo específico
+backend-servidor/stockearte/src/main/resources/application.properties

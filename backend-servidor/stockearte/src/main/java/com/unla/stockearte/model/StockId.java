@@ -9,15 +9,10 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class StockId implements Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "tienda_id")
     private Long tiendaId;
 
-    @Column(name = "producto_id")
     private Long productoId;
 
     @Override

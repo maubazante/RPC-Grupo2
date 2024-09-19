@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package usuario;
+
+service UsuarioService {
+  rpc CreateUsuario (CreateUsuarioRequest) returns (CreateUsuarioResponse);
+  rpc DeleteUsuario (DeleteUsuarioRequest) returns (DeleteUsuarioResponse);
+  rpc ModifyUsuario (ModifyUsuarioRequest) returns (ModifyUsuarioResponse);
+}
+
+message Usuario {
+    string nombre = 1;         // nombre del usuario
+    string apellido = 2;       // apellido del usuario
+    string username = 3;       // nombre de cuenta de usuario
+    string password = 4;       // password de la cuenta del usuario
+    string rol = 5;            // Tipo de cuenta que tiene el usuario
+	int64 tiendaId = 6;	       // Indica el id de la tienda que tiene asociado el usuario
+	bool habilitado = 7;       // Indica si esta habilitado el usuario o no
+	int64 id = 8;              // id del usuario
+}
+
+message CreateUsuarioRequest {
+  Usuario usuario = 1;
+}
+
+message CreateUsuarioResponse {
+  string message = 1;
+}
+
+message DeleteUsuarioRequest {
+  int64 usuarioId = 1;
+}
+
+message DeleteUsuarioResponse {
+  string message = 1;
+}
+
+message ModifyUsuarioRequest{
+  Usuario usuario = 1;
+}
+
+message ModifyUsuarioResponse {
+  string message = 1;
+}
