@@ -4,17 +4,27 @@ import { SharedModule } from './shared/shared.module';
 import { StoresModule } from './features/stores/stores.module';
 import { ProductsModule } from './features/products/products.module';
 import { UsersModule } from './features/users/users.module';
-
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { LayoutComponent } from './layout/layout.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [],
+  declarations: [LayoutComponent],
   imports: [
     CommonModule,
     SharedModule,
     StoresModule,
     ProductsModule,
-    UsersModule
-  ]
+    UsersModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    RouterModule
+  ],
+  exports: [LayoutComponent]
 })
 export class AppModule { }

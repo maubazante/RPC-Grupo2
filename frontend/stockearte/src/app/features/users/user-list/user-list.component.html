@@ -1,7 +1,6 @@
 <div class="table-container">
-<mat-card class="mat-elevation-z8">
+<div class="content-container">
 <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
-
     <!-- ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -51,5 +50,5 @@
     <!-- Data Rows -->
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-</mat-card>
+</div>
 </div>

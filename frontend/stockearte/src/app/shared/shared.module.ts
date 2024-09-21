@@ -5,6 +5,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     declarations: [NavbarComponent],
@@ -12,7 +13,9 @@ import { MatToolbarModule } from "@angular/material/toolbar";
         MatSidenavModule, 
         MatButtonModule,
         MatToolbarModule,
-        MatIconModule,],
+        MatIconModule,
+        RouterModule
+    ],
     exports: [NavbarComponent]
 })
 export class SharedModule { }

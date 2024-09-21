@@ -1,13 +1,11 @@
-<mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side">
-      <p>Si ya sé que no funciona bien.</p>
-    </mat-drawer>
+<mat-toolbar color="primary" class="navbar">
+    <div class="container">
+        <button mat-button (click)="logout()">Logout</button>
+    <span class="spacer"></span>
   
-    <div class="example-sidenav-content">
-        <button mat-fab aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
-            <mat-icon>menu</mat-icon>
-        </button>
+    <button mat-button routerLink="/users">Usuarios</button>
+    <button mat-button routerLink="/products">Productos</button>
+    <button mat-button routerLink="/stores">Tiendas</button>
     </div>
-  
- </mat-drawer-container>
+  </mat-toolbar>
   

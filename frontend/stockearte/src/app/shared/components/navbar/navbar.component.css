@@ -1,0 +1,19 @@
+.navbar {
+    position: absolute;
+    top: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 10px;
+  }
+  
