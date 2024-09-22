@@ -1,0 +1,15 @@
+<mat-toolbar class="mat-elevation-z3">
+    <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" [style.width]="'250px'">
+    <app-navbar></app-navbar>
+  </mat-drawer>
+
+  <div mat-drawer-content class="content">
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

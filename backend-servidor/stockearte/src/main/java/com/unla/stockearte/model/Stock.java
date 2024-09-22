@@ -12,20 +12,64 @@ import jakarta.persistence.Table;
 @Table(name = "stock")
 public class Stock {
 
-    @EmbeddedId
-    private StockId id;
+	@EmbeddedId
+	private StockId id;
 
-    @ManyToOne
-    @MapsId("tiendaId")
-    @JoinColumn(name = "tienda_id")
-    private Tienda tienda;
+	@ManyToOne
+	@MapsId("productoId")
+	@JoinColumn(name = "fk_producto_id", nullable = false)
+	private Producto producto;
 
-    @ManyToOne
-    @MapsId("productoId")
-    @JoinColumn(name = "producto_id")
-    private Producto producto;
+	@ManyToOne
+	@MapsId("tiendaId")
+	@JoinColumn(name = "fk_tienda_id", nullable = false)
+	private Tienda tienda;
 
-    @Column(nullable = false)
-    private Integer stock = 0;
+	@Column(nullable = false)
+	private Integer stock = 0;
+
+	public Stock(StockId id, Tienda tienda, Producto producto, Integer stock) {
+		super();
+		this.id = id;
+		this.tienda = tienda;
+		this.producto = producto;
+		this.stock = stock;
+	}
+
+	public Stock() {
+		super();
+	}
+
+	public StockId getId() {
+		return id;
+	}
+
+	public void setId(StockId id) {
+		this.id = id;
+	}
+
+	public Tienda getTienda() {
+		return tienda;
+	}
+
+	public void setTienda(Tienda tienda) {
+		this.tienda = tienda;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
 
 }

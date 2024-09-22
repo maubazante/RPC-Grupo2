@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.usuario.grpc";
+option java_outer_classname = "UsuarioProto";
+
+package usuario;
+
+// Definición del mensaje Usuario
+message Usuario {
+    string nombre = 1;         // nombre del usuario
+    string apellido = 2;       // apellido del usuario
+    string username = 3;       // nombre de cuenta de usuario
+    string password = 4;       // password de la cuenta del usuario
+    string rol = 5;            // Tipo de cuenta que tiene el usuario
+	int64 tiendaId = 6;	       // Indica el id de la tienda que tiene asociado el usuario
+	bool habilitado = 7;       // Indica si esta habilitado el usuario o no
+	int64 id = 8;              // is del usuario
+}
+
+// Request para crear un usuario
+message CreateUsuarioRequest {
+    Usuario usuario = 1;
+}
+
+// Response para confirmación de creación del usuario
+message CreateUsuarioResponse {
+    string message = 1;
+}
+
+// Request para eliminar un usuario
+message DeleteUsuarioRequest {
+    int64 usuarioId = 1;
+}
+
+// Response para confirmación de eliminación de un usuario
+message DeleteUsuarioResponse {
+    string message = 1;
+}
+
+// Request para modificar un usuario 
+message ModifyUsuarioRequest{
+	Usuario usuario = 1;
+}
+
+// Response para confirmar la modificacion de una usuario 
+message ModifyUsuarioResponse{
+	string message = 1;
+}
+
+// Request para buscar usuarios
+message FindUsuariosRequest {
+    string username = 1;   // nombre de usuario para buscar
+    int64 tiendaId = 2;    // ID de la tienda para filtrar usuarios
+}
+
+// Response para la búsqueda de usuarios
+message FindUsuariosResponse {
+    repeated Usuario usuarios = 1; // Lista de usuarios encontrados
+}
+
+// Request para obtener todos los usuarios
+message GetUsuariosRequest {}
+
+// Response para obtener todos los usuarios
+message GetUsuariosResponse {
+    repeated Usuario usuarios = 1; // Lista de usuarios
+}
+
+// Servicios para manejar usuarios
+service UsuarioService {
+    rpc CreateUsuario(CreateUsuarioRequest) returns (CreateUsuarioResponse);
+    rpc DeleteUsuario(DeleteUsuarioRequest) returns (DeleteUsuarioResponse);
+	rpc ModifyUsuario(ModifyUsuarioRequest) returns (ModifyUsuarioResponse);
+
+    rpc FindUsuarios(FindUsuariosRequest) returns (FindUsuariosResponse);
+    rpc GetUsuarios(GetUsuariosRequest) returns (GetUsuariosResponse);
+}

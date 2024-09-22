@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.tienda.grpc";
+option java_outer_classname = "TiendaProto";
+
+package tienda;
+
+// Definición del mensaje Tienda
+message Tienda {
+    int64 id = 1;              // ID único de la tienda
+    string codigo = 2;         // Código alfanumérico
+    string direccion = 3;      // Dirección de la tienda
+    string ciudad = 4;         // Ciudad donde se encuentra la tienda
+    string provincia = 5;      // Provincia donde se encuentra la tienda
+    bool habilitada = 6;       // Indica si la tienda está habilitada o deshabilitada
+    int64 usuarioId = 7;       // Indica el id del usuario al cual queremos asociar la nueva tienda
+    bool es_casa_central = 8;   // Indica si es es Casa Central
+}
+
+// Request para crear una tienda
+message CreateTiendaRequest {
+    Tienda tienda = 1;
+}
+
+// Response para confirmación de creación de tienda
+message CreateTiendaResponse {
+    string message = 1;
+}
+
+// Request para eliminar una tienda
+message DeleteTiendaRequest {
+    string codigo = 1;
+}
+
+// Response para confirmación de eliminación de tienda
+message DeleteTiendaResponse {
+    string message = 1;
+}
+
+// Request para modificar una tienda 
+message ModifyTiendaRequest{
+	Tienda tienda = 1;
+}
+
+// Response para confirmar la modificacion de una tienda 
+message ModifyTiendaResponse{
+	string message = 1;
+}
+
+// Request para buscar tiendas
+message FindTiendasRequest {
+    string codigo = 1;       // Código de la tienda a buscar (opcional)
+    bool habilitada = 2;     // Si la tienda está habilitada o no (opcional)
+    string username = 3;     // Nombre de usuario para validación de permisos
+}
+
+// Response para la búsqueda de tiendas
+message FindTiendasResponse {
+    repeated Tienda tiendas = 1; // Lista de tiendas encontradas
+}
+
+// Request para obtener todas las tiendas
+message GetTiendasRequest {}
+
+// Response para obtener todas las tiendas
+message GetTiendasResponse {
+    repeated Tienda tiendas = 1; // Lista de todas las tiendas
+}
+
+// Servicio para manejar las tiendas
+service TiendaService {
+    rpc CreateTienda(CreateTiendaRequest) returns (CreateTiendaResponse);
+    rpc DeleteTienda(DeleteTiendaRequest) returns (DeleteTiendaResponse);
+	rpc ModifyTienda(ModifyTiendaRequest) returns (ModifyTiendaResponse);
+
+    rpc FindTiendas(FindTiendasRequest) returns (FindTiendasResponse);
+    rpc GetTiendas(GetTiendasRequest) returns (GetTiendasResponse);
+}

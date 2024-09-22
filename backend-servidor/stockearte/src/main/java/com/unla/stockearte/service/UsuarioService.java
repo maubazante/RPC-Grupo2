@@ -1,0 +1,235 @@
+package com.unla.stockearte.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.unla.stockearte.model.Rol;
+import com.unla.stockearte.model.Tienda;
+import com.unla.stockearte.model.Usuario;
+import com.unla.stockearte.repository.TiendaRepository;
+import com.unla.stockearte.repository.UsuarioRepository;
+import com.usuario.grpc.FindUsuariosRequest;
+import com.usuario.grpc.FindUsuariosResponse;
+import com.usuario.grpc.CreateUsuarioRequest;
+import com.usuario.grpc.CreateUsuarioResponse;
+import com.usuario.grpc.DeleteUsuarioRequest;
+import com.usuario.grpc.DeleteUsuarioResponse;
+import com.usuario.grpc.ModifyUsuarioRequest;
+import com.usuario.grpc.ModifyUsuarioResponse;
+import com.usuario.grpc.GetUsuariosRequest;
+import com.usuario.grpc.GetUsuariosResponse;
+import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
+
+import io.grpc.stub.StreamObserver;
+
+@Service(UsuarioService.BEAN_NAME)
+public class UsuarioService extends UsuarioServiceImplBase {
+
+	public static final String BEAN_NAME = "UsuarioService";
+
+	@Autowired()
+	private UsuarioRepository usuarioRepository;
+
+	@Autowired()
+	private TiendaRepository tiendaRepository;
+
+	// ==========================
+	// CONVERSION
+	// ==========================
+
+	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
+		return com.usuario.grpc.Usuario.newBuilder()
+				.setId(usuario.getId())
+				.setNombre(usuario.getNombre())
+				.setApellido(usuario.getApellido())
+				.setUsername(usuario.getUsername())
+				.setPassword(usuario.getPassword())
+				.setRol(usuario.getRol().toString())
+				.setTiendaId(usuario.getTienda().getId())
+				.setHabilitado(usuario.isHabilitado())
+				.build();
+	}
+
+	// ==========================
+	// CRUD
+	// ==========================
+
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	@Override
+	public void createUsuario(CreateUsuarioRequest request, StreamObserver<CreateUsuarioResponse> responseObserver) {
+		Usuario usuario = new Usuario();
+		usuario.setApellido(request.getUsuario().getApellido());
+		usuario.setNombre(request.getUsuario().getNombre());
+		usuario.setPassword(request.getUsuario().getPassword());
+		usuario.setUsername(request.getUsuario().getUsername());
+		usuario.setRol(Rol.fromValue(request.getUsuario().getRol()));
+
+		Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
+
+		if (tienda.isPresent())
+			usuario.setTienda(tienda.get());
+
+		getUsuarioRepository().save(usuario);
+
+		CreateUsuarioResponse response = CreateUsuarioResponse.newBuilder().setMessage("Cuenta creada con exito")
+				.build();
+
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
+
+	}
+
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	@Override
+	public void deleteUsuario(DeleteUsuarioRequest request, StreamObserver<DeleteUsuarioResponse> responseObserver) {
+		Optional<Usuario> usuario = getUsuarioRepository().findById(request.getUsuarioId());
+		DeleteUsuarioResponse response = null;
+
+		if (usuario.isPresent()) {
+			usuario.get().setHabilitado(false);
+			getUsuarioRepository().save(usuario.get());
+
+			response = DeleteUsuarioResponse.newBuilder()
+					.setMessage("Usuario con id " + usuario.get().getId() + " eliminado exitosamente").build();
+		}
+
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
+	}
+
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	@Override
+	public void modifyUsuario(ModifyUsuarioRequest request, StreamObserver<ModifyUsuarioResponse> responseObserver) {
+		Optional<Usuario> usuario = getUsuarioRepository().findById(request.getUsuario().getId());
+		ModifyUsuarioResponse response = null;
+
+		if (usuario.isPresent()) {
+			usuario.get().setApellido(request.getUsuario().getApellido());
+			usuario.get().setHabilitado(request.getUsuario().getHabilitado());
+			usuario.get().setNombre(request.getUsuario().getNombre());
+			usuario.get().setPassword(request.getUsuario().getPassword());
+			usuario.get().setUsername(request.getUsuario().getUsername());
+			usuario.get().setRol(Rol.fromValue(request.getUsuario().getRol()));
+
+			Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
+			if (tienda.isPresent())
+				usuario.get().setTienda(tienda.get());
+
+			getUsuarioRepository().save(usuario.get());
+
+			response = ModifyUsuarioResponse.newBuilder()
+					.setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito")
+					.build();
+
+		}
+
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
+	}
+
+	// ==========================
+	// BUSQUEDA
+	// ==========================
+
+	@Transactional(readOnly = true)
+	public Optional<Set<Usuario>> findUsuarios(String username, Long tiendaId) {
+		// Solo disponible para usuarios de casa central
+		Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
+		if (optionalUsuario.isPresent() && !optionalUsuario.get().esDeCasaCentral())
+			throw new RuntimeException("Acceso no permitido: el usuario no pertenece a casa central.");
+
+		Set<Usuario> usuarios;
+
+		if (username != null && tiendaId != null) {
+			usuarios = usuarioRepository.findByUsernameContainingAndTiendaId(username, tiendaId);
+		} else if (username != null) {
+			usuarios = usuarioRepository.findByUsernameContaining(username);
+		} else if (tiendaId != null) {
+			usuarios = usuarioRepository.findByTiendaId(tiendaId);
+		} else {
+			usuarios = new HashSet<>(usuarioRepository.findAll());
+		}
+
+		return usuarios.isEmpty() ? Optional.empty() : Optional.of(usuarios);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void findUsuarios(FindUsuariosRequest request, StreamObserver<FindUsuariosResponse> responseObserver) {
+		String username = request.getUsername();
+		Long tiendaId = request.getTiendaId();
+
+		Optional<Set<Usuario>> usuariosOpt = findUsuarios(username, tiendaId);
+
+		FindUsuariosResponse.Builder responseBuilder = FindUsuariosResponse.newBuilder();
+		usuariosOpt.ifPresent(usuarios -> {
+			for (Usuario usuario : usuarios) {
+				responseBuilder.addUsuarios(convertToProtoUsuario(usuario)); // Aquí usas el convert
+			}
+		});
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
+
+	// ==========================
+	// GETTERS
+	// ==========================
+
+	@Transactional(readOnly = true)
+	public Optional<List<Usuario>> getUsuarios() {
+		List<Usuario> usuarios = usuarioRepository.findAll();
+		List<Usuario> usuariosModificados = new ArrayList<>();
+
+		for (Usuario u : usuarios) {
+			Usuario usuarioNuevo = new Usuario(
+					u.getId(),
+					u.getNombre(),
+					u.getApellido(),
+					u.getUsername(),
+					u.getPassword(),
+					u.isHabilitado(),
+					u.getRol(),
+					u.getTienda());
+			usuariosModificados.add(usuarioNuevo);
+		}
+
+		return usuariosModificados.isEmpty() ? Optional.empty() : Optional.of(usuariosModificados);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
+		Optional<List<Usuario>> usuarios = getUsuarios();
+		GetUsuariosResponse.Builder responseBuilder = GetUsuariosResponse.newBuilder();
+
+		if (usuarios.isPresent()) {
+			for (Usuario usuario : usuarios.get()) {
+				responseBuilder.addUsuarios(convertToProtoUsuario(usuario));
+			}
+		}
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
+
+	public UsuarioRepository getUsuarioRepository() {
+		return usuarioRepository;
+	}
+
+	public TiendaRepository getTiendaRepository() {
+		return tiendaRepository;
+	}
+
+}

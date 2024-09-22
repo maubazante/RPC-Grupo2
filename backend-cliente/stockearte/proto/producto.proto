@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package producto;
+
+service ProductoService {
+  rpc CreateProducto (CreateProductoRequest) returns (CreateProductoResponse);
+  rpc DeleteProducto (DeleteProductoRequest) returns (DeleteProductoResponse);
+  rpc ModifyProducto (ModifyProductoRequest) returns (ModifyProductoResponse);
+
+  rpc FindProductos(FindProductosRequest) returns (FindProductosResponse);
+  rpc GetProductos(GetProductosRequest) returns (GetProductosResponse);
+}
+
+// Definición del mensaje Producto
+message Producto {
+    string nombre = 1;            // nombre del producto
+    string codigo = 2;            // codigo del producto
+    string color = 3;             // color del producto
+    string talle = 4;             // talle del producto
+	bool habilitado = 5;          // indica si esta habilitado el producto
+	repeated int64 tiendaIds = 6; // indica a las tiendas a la cual quiero vincular el producto
+	int64 stock = 7;	          // Indica el id de la tienda que tiene asociado el usuario
+	int64 id = 8;                 // id del producto
+	bytes foto = 9;               // foto del producto
+}
+
+message CreateProductoRequest {
+  Producto producto = 1;
+}
+
+message CreateProductoResponse {
+  string message = 1;
+}
+
+message DeleteProductoRequest {
+  int64 productoId = 1;
+}
+
+message DeleteProductoResponse {
+  string message = 1;
+}
+
+message ModifyProductoRequest{
+  Producto producto = 1;
+}
+
+message ModifyProductoResponse {
+  string message = 1;
+}
+
+// Request para buscar productos
+message FindProductosRequest {
+  string nombre = 1;
+  string codigo = 2;
+  string talle = 3;
+  string color = 4;
+}
+
+// Response para la búsqueda de productos
+message FindProductosResponse {
+  repeated Producto productos = 1;
+}
+
+// Request para traer productos por usuario
+message GetProductosRequest {
+  string username = 1;
+}
+
+// Response para la búsqueda de productos
+message GetProductosResponse {
+  repeated Producto productos = 1;
+}

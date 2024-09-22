@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Ignorar todos los directorios .metadata
+.metadata/
+
+# Ignorar todos los archivos package-lock.json
+package-lock.json
+
+# Ignorar un archivo específico
+application.properties
+
+# vscode
+.vscode/settings.json

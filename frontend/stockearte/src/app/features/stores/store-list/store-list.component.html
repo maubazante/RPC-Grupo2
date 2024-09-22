@@ -1,0 +1,55 @@
+<div class="table-container">
+<div class="content-container">
+<table mat-table [dataSource]="tiendas" class="mat-elevation-z8">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.id}} </td>
+    </ng-container>
+  
+    <!-- Código Column -->
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef> Código </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.codigo}} </td>
+    </ng-container>
+  
+    <!-- Dirección Column -->
+    <ng-container matColumnDef="direccion">
+      <th mat-header-cell *matHeaderCellDef> Dirección </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.direccion}} </td>
+    </ng-container>
+  
+    <!-- Ciudad Column -->
+    <ng-container matColumnDef="ciudad">
+      <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.ciudad}} </td>
+    </ng-container>
+  
+    <!-- Provincia Column -->
+    <ng-container matColumnDef="provincia">
+      <th mat-header-cell *matHeaderCellDef> Provincia </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.provincia}} </td>
+    </ng-container>
+  
+    <!-- Usuario Column -->
+    <ng-container matColumnDef="usuario">
+      <th mat-header-cell *matHeaderCellDef> Usuario </th>
+      <td mat-cell *matCellDef="let tienda">
+        {{tienda.usuario ? tienda.usuario.nombre : 'Sin usuario'}}
+      </td>
+    </ng-container>
+  
+    <!-- Habilitado Column -->
+    <ng-container matColumnDef="habilitado">
+      <th mat-header-cell *matHeaderCellDef> Habilitado </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.habilitado ? 'Sí' : 'No'}} </td>
+    </ng-container>
+  
+    <!-- Header Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Data Rows -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+</div>
+</div>
