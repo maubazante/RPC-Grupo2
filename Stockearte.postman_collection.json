@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4c1347b4-e66f-4814-b6d1-a5eaf7fd3896",
+		"_postman_id": "febb4d3a-ba58-4b33-b17a-0b78b1045c46",
 		"name": "Stockearte",
 		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -130,13 +130,46 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/BuscarTiendas",
+							"raw": "{{baseUrl}}:{{port}}/findTiendas",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
-								"BuscarTiendas"
+								"findTiendas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Tiendas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/getTiendas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"getTiendas"
 							]
 						}
 					},
@@ -255,13 +288,46 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/BuscarUsuarios",
+							"raw": "{{baseUrl}}:{{port}}/findUsuarios",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
-								"BuscarUsuarios"
+								"findUsuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Usuarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/getUsuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"getUsuarios"
 							]
 						}
 					},
@@ -314,13 +380,40 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/buscarProductos",
+							"raw": "{{baseUrl}}:{{port}}/findProductos",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
-								"buscarProductos"
+								"findProductos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Productos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"andresUsername\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/getProductos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"getProductos"
 							]
 						}
 					},

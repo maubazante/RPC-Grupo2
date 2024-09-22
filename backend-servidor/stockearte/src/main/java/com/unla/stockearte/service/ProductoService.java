@@ -2,7 +2,6 @@ package com.unla.stockearte.service;
 
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.protobuf.ByteString;
-import com.producto.grpc.BuscarProductosRequest;
-import com.producto.grpc.BuscarProductosResponse;
+import com.producto.grpc.FindProductosRequest;
+import com.producto.grpc.FindProductosResponse;
 import com.producto.grpc.CreateProductoRequest;
 import com.producto.grpc.CreateProductoResponse;
 import com.producto.grpc.DeleteProductoRequest;
@@ -21,15 +20,18 @@ import com.producto.grpc.DeleteProductoResponse;
 import com.producto.grpc.ModifyProductoRequest;
 import com.producto.grpc.ModifyProductoResponse;
 import com.producto.grpc.ProductoServiceGrpc.ProductoServiceImplBase;
-
+import com.producto.grpc.GetProductosRequest;
+import com.producto.grpc.GetProductosResponse;
 import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Stock;
 import com.unla.stockearte.model.StockId;
 import com.unla.stockearte.model.Tienda;
+import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.ProductoRepository;
 import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
+import com.unla.stockearte.repository.UsuarioRepository;
 
 import io.grpc.stub.StreamObserver;
 
@@ -47,11 +49,14 @@ public class ProductoService extends ProductoServiceImplBase {
 	@Autowired()
 	StockRepository stockRepository;
 
+	@Autowired()
+	UsuarioRepository usuarioRepository;
+
 	// ==========================
 	// CONVERSION
 	// ==========================
 
-	public com.producto.grpc.Producto convertToProto(Producto producto) {
+	public com.producto.grpc.Producto convertToProtoProducto(Producto producto) {
 		return com.producto.grpc.Producto.newBuilder()
 				.setId(producto.getId())
 				.setNombre(producto.getNombre())
@@ -155,7 +160,7 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<Set<Producto>> buscarProductos(String nombre, String codigo, String talle, String color) {
+	public Optional<Set<Producto>> findProductos(String nombre, String codigo, String talle, String color) {
 		Set<Producto> productos = productoRepository
 				.findByNombreContainingOrCodigoContainingOrTalleContainingOrColorContaining(
 						nombre, codigo, talle, color);
@@ -165,15 +170,15 @@ public class ProductoService extends ProductoServiceImplBase {
 
 	@Transactional(readOnly = true)
 	@Override
-	public void buscarProductos(BuscarProductosRequest request,
-			StreamObserver<BuscarProductosResponse> responseObserver) {
-		Optional<Set<Producto>> productos = buscarProductos(request.getNombre(), request.getCodigo(),
+	public void findProductos(FindProductosRequest request,
+			StreamObserver<FindProductosResponse> responseObserver) {
+		Optional<Set<Producto>> productos = findProductos(request.getNombre(), request.getCodigo(),
 				request.getTalle(), request.getColor());
-		BuscarProductosResponse.Builder responseBuilder = BuscarProductosResponse.newBuilder();
+		FindProductosResponse.Builder responseBuilder = FindProductosResponse.newBuilder();
 
 		if (productos.isPresent()) {
 			for (Producto producto : productos.get()) {
-				responseBuilder.addProductos(convertToProto(producto));
+				responseBuilder.addProductos(convertToProtoProducto(producto));
 			}
 		}
 
@@ -184,6 +189,46 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 	// GETTERS
 	// ==========================
+
+	@Transactional(readOnly = true)
+	public Optional<List<Producto>> getProductos(String username) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByUsername(username);
+		List<Producto> productos = new ArrayList<>();
+
+		if (usuarioOptional.isPresent()) {
+			Usuario usuario = usuarioOptional.get();
+
+			if (usuario.esDeCasaCentral()) {
+				productos = productoRepository.findAll();
+			} else {
+				Tienda tienda = usuario.getTienda();
+				if (tienda != null) {
+					productos = productoRepository.findByTiendaId(tienda.getId());
+				} else {
+					return Optional.empty();
+				}
+			}
+		}
+
+		return productos.isEmpty() ? Optional.empty() : Optional.of(productos);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void getProductos(GetProductosRequest request,
+			StreamObserver<GetProductosResponse> responseObserver) {
+		Optional<List<Producto>> productos = getProductos(request.getUsername());
+		GetProductosResponse.Builder responseBuilder = GetProductosResponse.newBuilder();
+
+		if (productos.isPresent()) {
+			for (Producto producto : productos.get()) {
+				responseBuilder.addProductos(convertToProtoProducto(producto));
+			}
+		}
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
 
 	public ProductoRepository getProductoRepository() {
 		return productoRepository;

@@ -50,7 +50,7 @@ message ModifyProductoResponse{
 }
 
 // Request para buscar productos
-message BuscarProductosRequest {
+message FindProductosRequest {
     string nombre = 1;
     string codigo = 2;
     string talle = 3;
@@ -58,7 +58,17 @@ message BuscarProductosRequest {
 }
 
 // Response para la búsqueda de productos
-message BuscarProductosResponse {
+message FindProductosResponse {
+    repeated Producto productos = 1;
+}
+
+// Request para traer productos por usuario
+message GetProductosRequest {
+    string username = 1;
+}
+
+// Response para la búsqueda de productos
+message GetProductosResponse {
     repeated Producto productos = 1;
 }
 
@@ -69,5 +79,6 @@ service ProductoService {
     rpc DeleteProducto(DeleteProductoRequest) returns (DeleteProductoResponse);
 	rpc ModifyProducto(ModifyProductoRequest) returns (ModifyProductoResponse);
 
-    rpc BuscarProductos(BuscarProductosRequest) returns (BuscarProductosResponse);
+    rpc FindProductos(FindProductosRequest) returns (FindProductosResponse);
+    rpc GetProductos(GetProductosRequest) returns (GetProductosResponse);
 }

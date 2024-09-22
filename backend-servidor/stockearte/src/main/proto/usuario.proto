@@ -49,14 +49,22 @@ message ModifyUsuarioResponse{
 }
 
 // Request para buscar usuarios
-message BuscarUsuariosRequest {
+message FindUsuariosRequest {
     string username = 1;   // nombre de usuario para buscar
     int64 tiendaId = 2;    // ID de la tienda para filtrar usuarios
 }
 
 // Response para la búsqueda de usuarios
-message BuscarUsuariosResponse {
+message FindUsuariosResponse {
     repeated Usuario usuarios = 1; // Lista de usuarios encontrados
+}
+
+// Request para obtener todos los usuarios
+message GetUsuariosRequest {}
+
+// Response para obtener todos los usuarios
+message GetUsuariosResponse {
+    repeated Usuario usuarios = 1; // Lista de usuarios
 }
 
 // Servicios para manejar usuarios
@@ -65,5 +73,6 @@ service UsuarioService {
     rpc DeleteUsuario(DeleteUsuarioRequest) returns (DeleteUsuarioResponse);
 	rpc ModifyUsuario(ModifyUsuarioRequest) returns (ModifyUsuarioResponse);
 
-    rpc BuscarUsuarios(BuscarUsuariosRequest) returns (BuscarUsuariosResponse);
+    rpc FindUsuarios(FindUsuariosRequest) returns (FindUsuariosResponse);
+    rpc GetUsuarios(GetUsuariosRequest) returns (GetUsuariosResponse);
 }

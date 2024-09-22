@@ -12,7 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuarios")
 public class Usuario {
 
 	@Id
@@ -51,6 +51,20 @@ public class Usuario {
 		this.username = username;
 		this.password = password;
 		this.habilitado = habilitado;
+		this.habilitado = true;
+		this.rol = rol;
+		this.tienda = tienda;
+	}
+
+	public Usuario(Long id, String nombre, String apellido, String username, String password,
+			Rol rol, Tienda tienda) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.username = username;
+		this.password = password;
+		this.habilitado = true;
 		this.rol = rol;
 		this.tienda = tienda;
 	}
@@ -104,6 +118,8 @@ public class Usuario {
 	}
 
 	public void setHabilitado(Boolean habilitado) {
+		if (habilitado == null)
+			throw new IllegalArgumentException("El estado de habilitación no puede ser null.");
 		this.habilitado = habilitado;
 	}
 

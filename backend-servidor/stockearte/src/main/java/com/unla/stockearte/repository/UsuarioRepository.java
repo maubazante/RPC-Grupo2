@@ -1,5 +1,6 @@
 package com.unla.stockearte.repository;
 
+import java.util.List;
 import java.util.Set;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ import com.unla.stockearte.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+    List<Usuario> findAll();
 
     Set<Usuario> findByUsernameContaining(String username);
 

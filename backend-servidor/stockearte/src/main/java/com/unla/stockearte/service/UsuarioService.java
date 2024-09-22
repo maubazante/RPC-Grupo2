@@ -1,5 +1,7 @@
 package com.unla.stockearte.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Optional;
@@ -14,14 +16,16 @@ import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.TiendaRepository;
 import com.unla.stockearte.repository.UsuarioRepository;
-import com.usuario.grpc.BuscarUsuariosRequest;
-import com.usuario.grpc.BuscarUsuariosResponse;
+import com.usuario.grpc.FindUsuariosRequest;
+import com.usuario.grpc.FindUsuariosResponse;
 import com.usuario.grpc.CreateUsuarioRequest;
 import com.usuario.grpc.CreateUsuarioResponse;
 import com.usuario.grpc.DeleteUsuarioRequest;
 import com.usuario.grpc.DeleteUsuarioResponse;
 import com.usuario.grpc.ModifyUsuarioRequest;
 import com.usuario.grpc.ModifyUsuarioResponse;
+import com.usuario.grpc.GetUsuariosRequest;
+import com.usuario.grpc.GetUsuariosResponse;
 import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
 
 import io.grpc.stub.StreamObserver;
@@ -139,7 +143,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<Set<Usuario>> buscarUsuarios(String username, Long tiendaId) {
+	public Optional<Set<Usuario>> findUsuarios(String username, Long tiendaId) {
 		// Solo disponible para usuarios de casa central
 		Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
 		if (optionalUsuario.isPresent() && !optionalUsuario.get().esDeCasaCentral())
@@ -162,13 +166,13 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 	@Transactional(readOnly = true)
 	@Override
-	public void buscarUsuarios(BuscarUsuariosRequest request, StreamObserver<BuscarUsuariosResponse> responseObserver) {
+	public void findUsuarios(FindUsuariosRequest request, StreamObserver<FindUsuariosResponse> responseObserver) {
 		String username = request.getUsername();
 		Long tiendaId = request.getTiendaId();
 
-		Optional<Set<Usuario>> usuariosOpt = buscarUsuarios(username, tiendaId);
+		Optional<Set<Usuario>> usuariosOpt = findUsuarios(username, tiendaId);
 
-		BuscarUsuariosResponse.Builder responseBuilder = BuscarUsuariosResponse.newBuilder();
+		FindUsuariosResponse.Builder responseBuilder = FindUsuariosResponse.newBuilder();
 		usuariosOpt.ifPresent(usuarios -> {
 			for (Usuario usuario : usuarios) {
 				responseBuilder.addUsuarios(convertToProtoUsuario(usuario)); // Aquí usas el convert
@@ -182,6 +186,43 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	// ==========================
 	// GETTERS
 	// ==========================
+
+	@Transactional(readOnly = true)
+	public Optional<List<Usuario>> getUsuarios() {
+		List<Usuario> usuarios = usuarioRepository.findAll();
+		List<Usuario> usuariosModificados = new ArrayList<>();
+
+		for (Usuario u : usuarios) {
+			Usuario usuarioNuevo = new Usuario(
+					u.getId(),
+					u.getNombre(),
+					u.getApellido(),
+					u.getUsername(),
+					u.getPassword(),
+					u.isHabilitado(),
+					u.getRol(),
+					u.getTienda());
+			usuariosModificados.add(usuarioNuevo);
+		}
+
+		return usuariosModificados.isEmpty() ? Optional.empty() : Optional.of(usuariosModificados);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
+		Optional<List<Usuario>> usuarios = getUsuarios();
+		GetUsuariosResponse.Builder responseBuilder = GetUsuariosResponse.newBuilder();
+
+		if (usuarios.isPresent()) {
+			for (Usuario usuario : usuarios.get()) {
+				responseBuilder.addUsuarios(convertToProtoUsuario(usuario));
+			}
+		}
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
 
 	public UsuarioRepository getUsuarioRepository() {
 		return usuarioRepository;

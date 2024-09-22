@@ -7,7 +7,8 @@ service TiendaService {
   rpc DeleteTienda (DeleteTiendaRequest) returns (DeleteTiendaResponse);
   rpc ModifyTienda (ModifyTiendaRequest) returns (ModifyTiendaResponse);
 
-  rpc BuscarTiendas(BuscarTiendasRequest) returns (BuscarTiendasResponse);
+  rpc FindTiendas(FindTiendasRequest) returns (FindTiendasResponse);
+  rpc GetTiendas(GetTiendasRequest) returns (GetTiendasResponse);
 }
 
 message Tienda {
@@ -46,13 +47,21 @@ message ModifyTiendaResponse {
 }
 
 // Request para buscar tiendas
-message BuscarTiendasRequest {
+message FindTiendasRequest {
   string codigo = 1;       // Código de la tienda a buscar (opcional)
   bool habilitada = 2;     // Si la tienda está habilitada o no (opcional)
   string username = 3;     // Nombre de usuario para validación de permisos
 }
 
 // Response para la búsqueda de tiendas
-message BuscarTiendasResponse {
+message FindTiendasResponse {
   repeated Tienda tiendas = 1; // Lista de tiendas encontradas
+}
+
+// Request para obtener todas las tiendas
+message GetTiendasRequest {}
+
+// Response para obtener todas las tiendas
+message GetTiendasResponse {
+    repeated Tienda tiendas = 1; // Lista de todas las tiendas
 }

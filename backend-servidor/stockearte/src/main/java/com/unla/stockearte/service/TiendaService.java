@@ -1,5 +1,7 @@
 package com.unla.stockearte.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Optional;
@@ -9,14 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tienda.grpc.BuscarTiendasRequest;
-import com.tienda.grpc.BuscarTiendasResponse;
+import com.tienda.grpc.FindTiendasRequest;
+import com.tienda.grpc.FindTiendasResponse;
 import com.tienda.grpc.CreateTiendaRequest;
 import com.tienda.grpc.CreateTiendaResponse;
 import com.tienda.grpc.DeleteTiendaRequest;
 import com.tienda.grpc.DeleteTiendaResponse;
 import com.tienda.grpc.ModifyTiendaRequest;
 import com.tienda.grpc.ModifyTiendaResponse;
+import com.tienda.grpc.GetTiendasRequest;
+import com.tienda.grpc.GetTiendasResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
@@ -139,7 +143,7 @@ public class TiendaService extends TiendaServiceImplBase {
 	}
 
 	@Transactional(readOnly = true)
-	public Tienda buscarTienda(String codigo) {
+	public Tienda findTienda(String codigo) {
 		return tiendaRepository.findByCodigo(codigo);
 	}
 
@@ -148,7 +152,7 @@ public class TiendaService extends TiendaServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<Set<Tienda>> buscarTiendas(String codigo, Boolean habilitada, String username) {
+	public Optional<Set<Tienda>> findTiendas(String codigo, Boolean habilitada, String username) {
 		// Solo disponible para usuarios de casa central
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("Acceso denegado: usuario no encontrado."));
@@ -161,7 +165,7 @@ public class TiendaService extends TiendaServiceImplBase {
 		if (codigo != null && habilitada != null) {
 			resultado.addAll(tiendaRepository.findByCodigoAndHabilitada(codigo, habilitada));
 		} else if (codigo != null) {
-			Tienda tienda = buscarTienda(codigo);
+			Tienda tienda = findTienda(codigo);
 			if (tienda != null)
 				resultado.add(tienda);
 		} else if (habilitada != null) {
@@ -175,17 +179,17 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Transactional(readOnly = true)
 	@Override
-	public void buscarTiendas(BuscarTiendasRequest request, StreamObserver<BuscarTiendasResponse> responseObserver) {
+	public void findTiendas(FindTiendasRequest request, StreamObserver<FindTiendasResponse> responseObserver) {
 		// Obtener los parámetros del request
 		String codigo = request.getCodigo().isEmpty() ? null : request.getCodigo();
 		Boolean habilitada = request.getHabilitada();
 		String username = request.getUsername();
 
 		try {
-			Optional<Set<Tienda>> tiendasOptional = buscarTiendas(codigo, habilitada, username);
+			Optional<Set<Tienda>> tiendasOptional = findTiendas(codigo, habilitada, username);
 
 			// Crear la respuesta gRPC
-			BuscarTiendasResponse.Builder responseBuilder = BuscarTiendasResponse.newBuilder();
+			FindTiendasResponse.Builder responseBuilder = FindTiendasResponse.newBuilder();
 
 			if (tiendasOptional.isPresent()) {
 				Set<Tienda> tiendas = tiendasOptional.get();
@@ -206,6 +210,43 @@ public class TiendaService extends TiendaServiceImplBase {
 	// ==========================
 	// GETTERS
 	// ==========================
+
+	@Transactional(readOnly = true)
+	public Optional<List<Tienda>> getTiendas() {
+		List<Tienda> tiendas = tiendaRepository.findAll();
+		List<Tienda> tiendasModificadas = new ArrayList<>();
+
+		for (Tienda t : tiendas) {
+			Tienda tiendaNueva = new Tienda(
+					t.getId(),
+					t.getCodigo(),
+					t.getDireccion(),
+					t.getCiudad(),
+					t.getProvincia(),
+					t.isHabilitada(),
+					t.getEsCasaCentral(),
+					t.getProductos());
+			tiendasModificadas.add(tiendaNueva);
+		}
+
+		return tiendasModificadas.isEmpty() ? Optional.empty() : Optional.of(tiendasModificadas);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void getTiendas(GetTiendasRequest request, StreamObserver<GetTiendasResponse> responseObserver) {
+		Optional<List<Tienda>> tiendas = getTiendas();
+		GetTiendasResponse.Builder responseBuilder = GetTiendasResponse.newBuilder();
+
+		if (tiendas.isPresent()) {
+			for (Tienda tienda : tiendas.get()) {
+				responseBuilder.addTiendas(convertToProtoTienda(tienda));
+			}
+		}
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;

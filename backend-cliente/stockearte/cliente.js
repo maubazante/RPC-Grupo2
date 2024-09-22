@@ -44,7 +44,7 @@ app.delete('/deleteTienda', (req, res) => {
 
   const request = { codigo };
 
-  clienteTienda.DeleteTienda(request, (error, response) => {
+  clienteTienda.deleteTienda(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -77,7 +77,7 @@ app.put('/modifyTienda', (req, res) => {
 })
 
 // Endpoint para buscar tiendas
-app.post('/buscarTiendas', (req, res) => {
+app.post('/findTiendas', (req, res) => {
   const { codigo, habilitada, username } = req.body;
 
   const request = {
@@ -86,7 +86,7 @@ app.post('/buscarTiendas', (req, res) => {
     username: username || ''
   };
 
-  clienteTienda.buscarTiendas(request, (error, response) => {
+  clienteTienda.findTiendas(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -94,6 +94,20 @@ app.post('/buscarTiendas', (req, res) => {
     }
   });
 });
+
+// Endpoint para obtener todas las tiendas
+app.post('/getTiendas', (req, res) => {
+  const request = {}; // No necesitas enviar datos en la solicitud
+
+  clienteTienda.getTiendas(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
 
 
 //                                                                                    ENDPOINTS PARA USUARIO
@@ -128,7 +142,7 @@ app.delete('/deleteUsuario', (req, res) => {
 
   const request = { usuarioId };
 
-  clienteUsuario.DeleteUsuario(request, (error, response) => {
+  clienteUsuario.deleteUsuario(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -163,7 +177,7 @@ app.put('/modifyUsuario', (req, res) => {
 })
 
 // Endpoint para buscar usuarios
-app.post('/buscarUsuarios', (req, res) => {
+app.post('/findUsuarios', (req, res) => {
   const { username, tiendaId } = req.body;
 
   const request = {
@@ -171,7 +185,7 @@ app.post('/buscarUsuarios', (req, res) => {
     tiendaId: tiendaId || 0
   };
 
-  clienteUsuario.BuscarUsuarios(request, (error, response) => {
+  clienteUsuario.findUsuarios(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -180,6 +194,18 @@ app.post('/buscarUsuarios', (req, res) => {
   });
 });
 
+// Endpoint para obtener todos los usuarios
+app.post('/getUsuarios', (req, res) => {
+  const request = {}; // No necesitas enviar datos en la solicitud
+
+  clienteUsuario.getUsuarios(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
 
 
 //                                                                                          ENDPOINTS PARA PRODUCTO
@@ -215,7 +241,7 @@ app.delete('/deleteProducto', (req, res) => {
 
   const request = { productoId };
 
-  clienteProducto.DeleteProducto(request, (error, response) => {
+  clienteProducto.deleteProducto(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -250,7 +276,7 @@ app.put('/modifyProducto', (req, res) => {
 })
 
 // Endpoint para buscar productos
-app.post('/buscarProductos', (req, res) => {
+app.post('/findProductos', (req, res) => {
   const { nombre, codigo, talle, color } = req.body;
 
   const request = {
@@ -260,7 +286,24 @@ app.post('/buscarProductos', (req, res) => {
     color: color || ''
   };
 
-  clienteProducto.BuscarProductos(request, (error, response) => {
+  clienteProducto.findProductos(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
+// Endpoint para traer productos
+app.post('/getProductos', (req, res) => {
+  const { username } = req.body;
+
+  const request = {
+    username: username || ''
+  };
+
+  clienteProducto.getProductos(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
