@@ -8,12 +8,14 @@ package tienda;
 
 // Definición del mensaje Tienda
 message Tienda {
-    string codigo = 1;         // Código alfanumérico
-    string direccion = 2;      // Dirección de la tienda
-    string ciudad = 3;         // Ciudad donde se encuentra la tienda
-    string provincia = 4;      // Provincia donde se encuentra la tienda
-    bool habilitada = 5;       // Indica si la tienda está habilitada o deshabilitada
-	int64 usuarioId = 6;	   // Indica el id del usuario al cual queremos asociar la nueva tienda	 
+    int64 id = 1;              // ID único de la tienda
+    string codigo = 2;         // Código alfanumérico
+    string direccion = 3;      // Dirección de la tienda
+    string ciudad = 4;         // Ciudad donde se encuentra la tienda
+    string provincia = 5;      // Provincia donde se encuentra la tienda
+    bool habilitada = 6;       // Indica si la tienda está habilitada o deshabilitada
+    int64 usuarioId = 7;       // Indica el id del usuario al cual queremos asociar la nueva tienda
+    bool es_casa_central = 8;   // Indica si es es Casa Central
 }
 
 // Request para crear una tienda
@@ -46,9 +48,23 @@ message ModifyTiendaResponse{
 	string message = 1;
 }
 
+// Request para buscar tiendas
+message BuscarTiendasRequest {
+    string codigo = 1;       // Código de la tienda a buscar (opcional)
+    bool habilitada = 2;     // Si la tienda está habilitada o no (opcional)
+    string username = 3;     // Nombre de usuario para validación de permisos
+}
+
+// Response para la búsqueda de tiendas
+message BuscarTiendasResponse {
+    repeated Tienda tiendas = 1; // Lista de tiendas encontradas
+}
+
 // Servicio para manejar las tiendas
 service TiendaService {
     rpc CreateTienda(CreateTiendaRequest) returns (CreateTiendaResponse);
     rpc DeleteTienda(DeleteTiendaRequest) returns (DeleteTiendaResponse);
 	rpc ModifyTienda(ModifyTiendaRequest) returns (ModifyTiendaResponse);
+
+    rpc BuscarTiendas(BuscarTiendasRequest) returns (BuscarTiendasResponse);
 }

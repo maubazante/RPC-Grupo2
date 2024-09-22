@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tienda.grpc.BuscarTiendasRequest;
+import com.tienda.grpc.BuscarTiendasResponse;
 import com.tienda.grpc.CreateTiendaRequest;
 import com.tienda.grpc.CreateTiendaResponse;
 import com.tienda.grpc.DeleteTiendaRequest;
@@ -16,6 +18,7 @@ import com.tienda.grpc.DeleteTiendaResponse;
 import com.tienda.grpc.ModifyTiendaRequest;
 import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
+import com.unla.stockearte.model.Stock;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.StockRepository;
@@ -42,6 +45,30 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	private com.tienda.grpc.Tienda convertToProtoTienda(Tienda tienda) {
+		com.tienda.grpc.Tienda.Builder tiendaBuilder = com.tienda.grpc.Tienda.newBuilder()
+				.setId(tienda.getId())
+				.setCodigo(tienda.getCodigo())
+				.setDireccion(tienda.getDireccion())
+				.setCiudad(tienda.getCiudad())
+				.setProvincia(tienda.getProvincia())
+				.setHabilitada(tienda.isHabilitada())
+				.setEsCasaCentral(tienda.getEsCasaCentral());
+
+		/*
+		 * // Convertir la lista de Productos de Tienda a gRPC.
+		 * if (tienda.getProductos() != null) {
+		 * for (Stock producto : tienda.getProductos()) {
+		 * tiendaBuilder.addProductos(convertToProtoStock(producto)); // Suponiendo que
+		 * tienes un método para
+		 * // convertir Stock a gRPC.
+		 * }
+		 * }
+		 */
+
+		return tiendaBuilder.build();
+	}
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -71,7 +98,7 @@ public class TiendaService extends TiendaServiceImplBase {
 		DeleteTiendaResponse response = null;
 
 		if (tienda != null) {
-			tienda.setHabilitado(false);
+			tienda.setHabilitada(false);
 			getTiendaRepository().save(tienda);
 
 			response = DeleteTiendaResponse.newBuilder()
@@ -89,7 +116,7 @@ public class TiendaService extends TiendaServiceImplBase {
 		ModifyTiendaResponse response = null;
 
 		if (tienda != null) {
-			tienda.setHabilitado(request.getTienda().getHabilitada());
+			tienda.setHabilitada(request.getTienda().getHabilitada());
 			tienda.setCiudad(request.getTienda().getCiudad());
 			tienda.setCodigo(request.getTienda().getCodigo());
 			tienda.setDireccion(request.getTienda().getDireccion());
@@ -137,6 +164,35 @@ public class TiendaService extends TiendaServiceImplBase {
 		}
 
 		return resultado.isEmpty() ? Optional.empty() : Optional.of(resultado);
+	}
+
+	@Override
+	public void buscarTiendas(BuscarTiendasRequest request, StreamObserver<BuscarTiendasResponse> responseObserver) {
+		// Obtener los parámetros del request
+		String codigo = request.getCodigo().isEmpty() ? null : request.getCodigo();
+		Boolean habilitada = request.getHabilitada();
+		String username = request.getUsername();
+
+		try {
+			Optional<Set<Tienda>> tiendasOptional = buscarTiendas(codigo, habilitada, username);
+
+			// Crear la respuesta gRPC
+			BuscarTiendasResponse.Builder responseBuilder = BuscarTiendasResponse.newBuilder();
+
+			if (tiendasOptional.isPresent()) {
+				Set<Tienda> tiendas = tiendasOptional.get();
+				for (Tienda tienda : tiendas) {
+					com.tienda.grpc.Tienda grpcTienda = convertToProtoTienda(tienda);
+					responseBuilder.addTiendas(grpcTienda);
+				}
+			}
+
+			responseObserver.onNext(responseBuilder.build());
+			responseObserver.onCompleted();
+
+		} catch (Exception e) {
+			responseObserver.onError(e);
+		}
 	}
 
 	public TiendaRepository getTiendaRepository() {

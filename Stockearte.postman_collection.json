@@ -108,6 +108,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Buscar Tienda",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"codigo\": \"T006\",\r\n  \"habilitada\": true,\r\n  \"username\": \"andresUsername\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/BuscarTiendas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"BuscarTiendas"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

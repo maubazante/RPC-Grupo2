@@ -97,11 +97,11 @@ public class Tienda {
 		this.provincia = provincia;
 	}
 
-	public Boolean getHabilitada() {
+	public Boolean isHabilitada() {
 		return habilitada;
 	}
 
-	public void setHabilitado(Boolean habilitada) {
+	public void setHabilitada(Boolean habilitada) {
 		this.habilitada = habilitada;
 	}
 

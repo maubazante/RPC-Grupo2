@@ -70,6 +70,25 @@ app.put('/modifyTienda', (req, res) => {
   })
 })
 
+// Endpoint para buscar tiendas
+app.post('/buscarTiendas', (req, res) => {
+  const { codigo, habilitada, username } = req.body;
+
+  const request = {
+    codigo: codigo || '',
+    habilitada: habilitada !== undefined ? habilitada : null,
+    username: username || ''
+  };
+
+  clienteTienda.buscarTiendas(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
 
 //                                                                                    ENDPOINTS PARA USUARIO
 app.post('/createUsuario', (req, res) => {
