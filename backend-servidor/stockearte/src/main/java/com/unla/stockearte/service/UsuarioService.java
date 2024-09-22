@@ -1,5 +1,7 @@
 package com.unla.stockearte.service;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +109,24 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<Set<Usuario>> buscarUsuarios(String username, Long tiendaId) {
+		// TODO solo disponible para usuarios de casa central
+		Set<Usuario> usuarios;
+
+		if (username != null && tiendaId != null) {
+			usuarios = usuarioRepository.findByUsernameContainingAndTiendaId(username, tiendaId);
+		} else if (username != null) {
+			usuarios = usuarioRepository.findByUsernameContaining(username);
+		} else if (tiendaId != null) {
+			usuarios = usuarioRepository.findByTiendaId(tiendaId);
+		} else {
+			usuarios = new HashSet<>(usuarioRepository.findAll());
+		}
+
+		return usuarios.isEmpty() ? Optional.empty() : Optional.of(usuarios);
 	}
 
 	public UsuarioRepository getUsuarioRepository() {

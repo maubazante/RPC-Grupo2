@@ -1,5 +1,7 @@
 package com.unla.stockearte.service;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +96,31 @@ public class TiendaService extends TiendaServiceImplBase {
 
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
+	}
+
+	@Transactional(readOnly = true)
+	public Tienda buscarTienda(String codigo) {
+		return tiendaRepository.findByCodigo(codigo);
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<Set<Tienda>> buscarTiendas(String codigo, Boolean habilitada) {
+		// TODO solo disponible para usuarios de casa central
+		Set<Tienda> resultado = new HashSet<>();
+
+		if (codigo != null && habilitada != null) {
+			resultado.addAll(tiendaRepository.findByCodigoAndHabilitada(codigo, habilitada));
+		} else if (codigo != null) {
+			Tienda tienda = buscarTienda(codigo);
+			if (tienda != null)
+				resultado.add(tienda);
+		} else if (habilitada != null) {
+			resultado = tiendaRepository.findByHabilitada(habilitada);
+		} else {
+			resultado.addAll(tiendaRepository.findAll());
+		}
+
+		return resultado.isEmpty() ? Optional.empty() : Optional.of(resultado);
 	}
 
 	public TiendaRepository getTiendaRepository() {
