@@ -6,6 +6,12 @@ const clienteProducto = require('./producto')
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
 
+// Iniciar el servidor en el puerto 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
+});
+
 
 //                                                                                        ENDPOINTS PARA TIENDA
 
@@ -243,9 +249,22 @@ app.put('/modifyProducto', (req, res) => {
   })
 })
 
+// Endpoint para buscar productos
+app.post('/buscarProductos', (req, res) => {
+  const { nombre, codigo, talle, color } = req.body;
 
-// Iniciar el servidor en el puerto 3000
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
+  const request = {
+    nombre: nombre || '',
+    codigo: codigo || '',
+    talle: talle || '',
+    color: color || ''
+  };
+
+  clienteProducto.BuscarProductos(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
 });

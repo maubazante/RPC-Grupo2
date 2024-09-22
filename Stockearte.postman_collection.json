@@ -110,7 +110,7 @@
 					"response": []
 				},
 				{
-					"name": "Buscar Tienda",
+					"name": "Buscar Tiendas",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -294,6 +294,33 @@
 							"port": "{{port}}",
 							"path": [
 								"createProducto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Productos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Producto 2\",\r\n    \"codigo\": null,\r\n    \"talle\": \"M\",\r\n    \"color\": \"Rojo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/buscarProductos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"buscarProductos"
 							]
 						}
 					},

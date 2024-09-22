@@ -147,6 +147,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		return usuarios.isEmpty() ? Optional.empty() : Optional.of(usuarios);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public void buscarUsuarios(BuscarUsuariosRequest request, StreamObserver<BuscarUsuariosResponse> responseObserver) {
 		String username = request.getUsername();

@@ -18,14 +18,12 @@ import com.tienda.grpc.DeleteTiendaResponse;
 import com.tienda.grpc.ModifyTiendaRequest;
 import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
-import com.unla.stockearte.model.Stock;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
 
 import com.unla.stockearte.repository.UsuarioRepository;
-import com.unla.stockearte.service.UsuarioService;
 
 import io.grpc.stub.StreamObserver;
 
@@ -166,6 +164,7 @@ public class TiendaService extends TiendaServiceImplBase {
 		return resultado.isEmpty() ? Optional.empty() : Optional.of(resultado);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public void buscarTiendas(BuscarTiendasRequest request, StreamObserver<BuscarTiendasResponse> responseObserver) {
 		// Obtener los parámetros del request

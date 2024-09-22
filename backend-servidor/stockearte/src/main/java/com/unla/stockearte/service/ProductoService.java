@@ -2,6 +2,7 @@ package com.unla.stockearte.service;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,13 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.protobuf.ByteString;
+import com.producto.grpc.BuscarProductosRequest;
+import com.producto.grpc.BuscarProductosResponse;
 import com.producto.grpc.CreateProductoRequest;
 import com.producto.grpc.CreateProductoResponse;
 import com.producto.grpc.DeleteProductoRequest;
 import com.producto.grpc.DeleteProductoResponse;
 import com.producto.grpc.ModifyProductoRequest;
 import com.producto.grpc.ModifyProductoResponse;
+import com.producto.grpc.ProductoProto;
 import com.producto.grpc.ProductoServiceGrpc.ProductoServiceImplBase;
+
 import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Stock;
@@ -41,6 +47,18 @@ public class ProductoService extends ProductoServiceImplBase {
 
 	@Autowired()
 	StockRepository stockRepository;
+
+	public com.producto.grpc.Producto convertToProto(Producto producto) {
+		return com.producto.grpc.Producto.newBuilder()
+				.setId(producto.getId())
+				.setNombre(producto.getNombre())
+				.setCodigo(producto.getCodigo())
+				.setFoto(ByteString.copyFrom(producto.getFoto()))
+				.setColor(producto.getColor())
+				.setTalle(producto.getTalle())
+				.setHabilitado(producto.isHabilitado())
+				.build();
+	}
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -132,6 +150,24 @@ public class ProductoService extends ProductoServiceImplBase {
 						nombre, codigo, talle, color);
 
 		return productos.isEmpty() ? Optional.empty() : Optional.of(productos);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public void buscarProductos(BuscarProductosRequest request,
+			StreamObserver<BuscarProductosResponse> responseObserver) {
+		Optional<Set<Producto>> productos = buscarProductos(request.getNombre(), request.getCodigo(),
+				request.getTalle(), request.getColor());
+		BuscarProductosResponse.Builder responseBuilder = BuscarProductosResponse.newBuilder();
+
+		if (productos.isPresent()) {
+			for (Producto producto : productos.get()) {
+				responseBuilder.addProductos(convertToProto(producto));
+			}
+		}
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
 	}
 
 	public ProductoRepository getProductoRepository() {
