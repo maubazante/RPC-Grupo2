@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "5c3ef077-089a-424b-bb47-9d9348342db1",
-		"name": "Sistema Stocks",
+		"_postman_id": "20c2929f-1f5d-4abc-8b99-996d7873be19",
+		"name": "Stockearte",
+		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26268488"
+		"_exporter_id": "28681801"
 	},
 	"item": [
 		{
@@ -30,12 +31,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/createTienda",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/createTienda",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"createTienda"
 							]
@@ -64,28 +64,20 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/deleteTienda",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/deleteTienda",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"deleteTienda"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Eliminar Tienda por codigo Copy",
+					"name": "Modificar Tienda",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -105,21 +97,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/modifyTienda",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/modifyTienda",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"modifyTienda"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -145,12 +129,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/createUsuario",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/createUsuario",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"createUsuario"
 							]
@@ -173,12 +156,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/modifyUsuario",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/modifyUsuario",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"modifyUsuario"
 							]
@@ -207,21 +189,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/deleteUsuario",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/deleteUsuario",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"deleteUsuario"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -247,12 +221,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/createProducto",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/createProducto",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"createProducto"
 							]
@@ -261,7 +234,7 @@
 					"response": []
 				},
 				{
-					"name": "Agregar Producto",
+					"name": "Modificar Producto",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -275,12 +248,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/modifyProducto",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/modifyProducto",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"modifyProducto"
 							]
@@ -292,16 +264,10 @@
 					"name": "Eliminar Producto",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"productoId\": 2\r\n}",
+							"raw": "{\r\n    \"productoId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -309,27 +275,53 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/deleteProducto",
-							"protocol": "http",
+							"raw": "{{baseUrl}}:{{port}}/deleteProducto",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"deleteProducto"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "3000",
+			"type": "string"
 		}
 	]
 }
