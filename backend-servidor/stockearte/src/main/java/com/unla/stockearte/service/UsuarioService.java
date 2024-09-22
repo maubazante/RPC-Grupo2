@@ -46,10 +46,8 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 		Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
 
-		if (tienda.isPresent()) {
+		if (tienda.isPresent())
 			usuario.setTienda(tienda.get());
-			tienda.get().setUsuario(usuario);
-		}
 
 		getUsuarioRepository().save(usuario);
 
@@ -86,27 +84,25 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	public void modifyUsuario(ModifyUsuarioRequest request, StreamObserver<ModifyUsuarioResponse> responseObserver) {
 		Optional<Usuario> usuario = getUsuarioRepository().findById(request.getUsuario().getId());
 		ModifyUsuarioResponse response = null;
-		
-		if(usuario.isPresent()) {
+
+		if (usuario.isPresent()) {
 			usuario.get().setApellido(request.getUsuario().getApellido());
 			usuario.get().setHabilitado(request.getUsuario().getHabilitado());
 			usuario.get().setNombre(request.getUsuario().getNombre());
 			usuario.get().setPassword(request.getUsuario().getPassword());
 			usuario.get().setUsername(request.getUsuario().getUsername());
 			usuario.get().setRol(Rol.fromValue(request.getUsuario().getRol()));
-			
+
 			Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
-			
-			if (tienda.isPresent()) {
+			if (tienda.isPresent())
 				usuario.get().setTienda(tienda.get());
-				tienda.get().setUsuario(usuario.get());
-			}
-			
+
 			getUsuarioRepository().save(usuario.get());
-			
-			response = ModifyUsuarioResponse.newBuilder().setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito")
+
+			response = ModifyUsuarioResponse.newBuilder()
+					.setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito")
 					.build();
-			
+
 		}
 
 		responseObserver.onNext(response);

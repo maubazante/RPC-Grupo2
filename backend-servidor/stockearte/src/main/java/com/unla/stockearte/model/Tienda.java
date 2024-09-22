@@ -8,13 +8,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tienda")
+@Table(name = "tiendas")
 public class Tienda {
 
 	@Id
@@ -33,26 +31,21 @@ public class Tienda {
 	@Column(name = "provincia", nullable = false, length = 100)
 	private String provincia;
 
-	@Column(name = "habilitado", nullable = false)
-	private Boolean habilitado = true;
-
-	@OneToOne
-	@JoinColumn(name = "fk_usuario_id", referencedColumnName = "id")
-	private Usuario usuario;
+	@Column(name = "habilitada", nullable = false)
+	private Boolean habilitada = true;
 
 	@OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL)
 	private List<Stock> productos;
 
-	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitado,
-			Usuario usuario, List<Stock> productos) {
+	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitada,
+			List<Stock> productos) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
 		this.direccion = direccion;
 		this.ciudad = ciudad;
 		this.provincia = provincia;
-		this.habilitado = habilitado;
-		this.usuario = usuario;
+		this.habilitada = habilitada;
 		this.productos = productos;
 	}
 
@@ -100,20 +93,12 @@ public class Tienda {
 		this.provincia = provincia;
 	}
 
-	public Boolean getHabilitado() {
-		return habilitado;
+	public Boolean getHabilitada() {
+		return habilitada;
 	}
 
-	public void setHabilitado(Boolean habilitado) {
-		this.habilitado = habilitado;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setHabilitado(Boolean habilitada) {
+		this.habilitada = habilitada;
 	}
 
 	public List<Stock> getProductos() {

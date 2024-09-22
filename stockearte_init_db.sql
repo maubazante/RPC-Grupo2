@@ -18,56 +18,54 @@ CREATE SCHEMA IF NOT EXISTS `stockearte` DEFAULT CHARACTER SET utf8 ;
 USE `stockearte` ;
 
 -- -----------------------------------------------------
--- Table `stockearte`.`usuario`
+-- Table `stockearte`.`usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`usuario` (
+CREATE TABLE IF NOT EXISTS `stockearte`.`usuarios` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(100) NOT NULL,
+  `username` VARCHAR(100) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
   `rol` ENUM("ADMIN", "STOREMANAGER") NOT NULL,
-  `habilitado` TINYINT NOT NULL,
+  `habilitado` BOOLEAN NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   `apellido` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+  `fk_tienda_id` bigint NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_usuario_tienda`
+    FOREIGN KEY (`fk_tienda_id`)
+    REFERENCES `stockearte`.`tiendas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `stockearte`.`tienda`
+-- Table `stockearte`.`tiendas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`tienda` (
+CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `codigo` VARCHAR(20) NOT NULL,
-  `habilitado` TINYINT NOT NULL,
+  `codigo` VARCHAR(20) NOT NULL UNIQUE,
   `direccion` VARCHAR(255) NOT NULL,
   `ciudad` VARCHAR(100) NOT NULL,
   `provincia` VARCHAR(100) NOT NULL,
-  `fk_usuario_id` bigint,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE,
-  INDEX `fk_store_user_idx` (`fk_usuario_id` ASC) VISIBLE,
-  CONSTRAINT `fk_store_user`
-    FOREIGN KEY (`fk_usuario_id`)
-    REFERENCES `stockearte`.`usuario` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  `habilitada` BOOLEAN NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `stockearte`.`producto`
+-- Table `stockearte`.`productos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`producto` (
+CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NULL,
+  `nombre` VARCHAR(100) NOT NULL,
   `codigo` VARCHAR(10) NULL,
   `talle` VARCHAR(5) NULL,
   `foto` BLOB NULL,
   `color` VARCHAR(50) NULL,
-  `habilitado` TINYINT NULL,
+  `habilitado` BOOLEAN NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE)
-ENGINE = InnoDB;
+  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
+) ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -76,22 +74,21 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
   `fk_tienda_id` bigint NOT NULL,
   `fk_producto_id` bigint NOT NULL,
-  `stock` INT NULL,
-  `habilitado` TINYINT NULL,
+  `stock` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`fk_tienda_id`, `fk_producto_id`),
   INDEX `fk_store_has_product_product1_idx` (`fk_producto_id` ASC) VISIBLE,
   INDEX `fk_store_has_product_store1_idx` (`fk_tienda_id` ASC) VISIBLE,
   CONSTRAINT `fk_store_has_product_store1`
     FOREIGN KEY (`fk_tienda_id`)
-    REFERENCES `stockearte`.`tienda` (`id`)
+    REFERENCES `stockearte`.`tiendas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_store_has_product_product1`
     FOREIGN KEY (`fk_producto_id`)
-    REFERENCES `stockearte`.`producto` (`id`)
+    REFERENCES `stockearte`.`productos` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

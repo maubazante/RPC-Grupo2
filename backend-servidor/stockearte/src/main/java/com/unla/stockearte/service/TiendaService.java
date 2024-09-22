@@ -15,10 +15,8 @@ import com.tienda.grpc.ModifyTiendaRequest;
 import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
 import com.unla.stockearte.model.Tienda;
-import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
-import com.unla.stockearte.repository.UsuarioRepository;
 
 import io.grpc.stub.StreamObserver;
 
@@ -29,9 +27,6 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Autowired
 	private TiendaRepository tiendaRepository;
-
-	@Autowired
-	private UsuarioRepository usuarioRepository;
 
 	@Autowired
 	private StockRepository stockRepository;
@@ -46,11 +41,6 @@ public class TiendaService extends TiendaServiceImplBase {
 		tienda.setDireccion(request.getTienda().getDireccion());
 		tienda.setCiudad(request.getTienda().getCiudad());
 		tienda.setProvincia(request.getTienda().getProvincia());
-
-		Optional<Usuario> usuario = usuarioRepository.findById(request.getTienda().getUsuarioId());
-		if (usuario.isPresent()) {
-			tienda.setUsuario(usuario.get());
-		}
 
 		getTiendaRepository().save(tienda);
 
@@ -93,11 +83,6 @@ public class TiendaService extends TiendaServiceImplBase {
 			tienda.setDireccion(request.getTienda().getDireccion());
 			tienda.setProvincia(request.getTienda().getProvincia());
 
-			Optional<Usuario> usuario = usuarioRepository.findById(request.getTienda().getUsuarioId());
-			if (usuario.isPresent()) {
-				tienda.setUsuario(usuario.get());
-			}
-
 			// TODO: Ver el tema de la asignacion de productos
 
 			getTiendaRepository().save(tienda);
@@ -113,10 +98,6 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
-	}
-
-	public UsuarioRepository getUsuarioRepository() {
-		return usuarioRepository;
 	}
 
 	public StockRepository getStockRepository() {

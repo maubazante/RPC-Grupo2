@@ -17,12 +17,12 @@ public class Stock {
 
 	@ManyToOne
 	@MapsId("tiendaId")
-	@JoinColumn(name = "fk_tienda_id")
+	@JoinColumn(name = "fk_tienda_id", nullable = false)
 	private Tienda tienda;
 
 	@ManyToOne
 	@MapsId("productoId")
-	@JoinColumn(name = "fk_producto_id")
+	@JoinColumn(name = "fk_producto_id", nullable = false)
 	private Producto producto;
 
 	@Column(nullable = false)
