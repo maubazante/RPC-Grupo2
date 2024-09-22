@@ -34,11 +34,14 @@ public class Tienda {
 	@Column(name = "habilitada", nullable = false)
 	private Boolean habilitada = true;
 
+	@Column(name = "es_casa_central", nullable = false)
+	private Boolean esCasaCentral = false;
+
 	@OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL)
 	private List<Stock> productos;
 
 	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitada,
-			List<Stock> productos) {
+			Boolean esCasaCentral, List<Stock> productos) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
@@ -46,6 +49,7 @@ public class Tienda {
 		this.ciudad = ciudad;
 		this.provincia = provincia;
 		this.habilitada = habilitada;
+		this.esCasaCentral = esCasaCentral;
 		this.productos = productos;
 	}
 
@@ -99,6 +103,14 @@ public class Tienda {
 
 	public void setHabilitado(Boolean habilitada) {
 		this.habilitada = habilitada;
+	}
+
+	public Boolean getEsCasaCentral() {
+		return esCasaCentral;
+	}
+
+	public void setEsCasaCentral(Boolean esCasaCentral) {
+		this.esCasaCentral = esCasaCentral;
 	}
 
 	public List<Stock> getProductos() {

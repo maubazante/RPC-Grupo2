@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema stockearte
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `stockearte` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `stockearte` DEFAULT CHARACTER SET utf8MB4 ;
 USE `stockearte` ;
 
 -- -----------------------------------------------------
@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
   `ciudad` VARCHAR(100) NOT NULL,
   `provincia` VARCHAR(100) NOT NULL,
   `habilitada` BOOLEAN NOT NULL,
+  `es_casa_central` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
