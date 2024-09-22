@@ -91,7 +91,19 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- Insertar datos iniciales para la tienda central
+
+-- La tienda será marcada como casa central
+INSERT INTO `stockearte`.`tiendas` (`codigo`, `direccion`, `ciudad`, `provincia`, `habilitada`, `es_casa_central`)
+VALUES ('T001', 'Av. 29 de Septiembre 3901', 'Lanús', 'Buenos Aires', TRUE, TRUE);
+
+SET @tienda_id = LAST_INSERT_ID();
+
+-- Insertar un usuario admin asociado a la tienda central
+INSERT INTO `stockearte`.`usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `apellido`, `fk_tienda_id`)
+VALUES ('admin', 'admintienda', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
+
