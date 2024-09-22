@@ -37,6 +37,10 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	@Autowired()
 	private TiendaRepository tiendaRepository;
 
+	// ==========================
+	// CONVERSION
+	// ==========================
+
 	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
 		return com.usuario.grpc.Usuario.newBuilder()
 				.setId(usuario.getId())
@@ -49,6 +53,10 @@ public class UsuarioService extends UsuarioServiceImplBase {
 				.setHabilitado(usuario.isHabilitado())
 				.build();
 	}
+
+	// ==========================
+	// CRUD
+	// ==========================
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -126,10 +134,15 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		responseObserver.onCompleted();
 	}
 
+	// ==========================
+	// BUSQUEDA
+	// ==========================
+
 	@Transactional(readOnly = true)
 	public Optional<Set<Usuario>> buscarUsuarios(String username, Long tiendaId) {
 		// Solo disponible para usuarios de casa central
-		if (!esUsuarioDeCasaCentral(usuarioRepository.findByUsername(username).get().getTienda().getId()))
+		Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
+		if (optionalUsuario.isPresent() && !optionalUsuario.get().esDeCasaCentral())
 			throw new RuntimeException("Acceso no permitido: el usuario no pertenece a casa central.");
 
 		Set<Usuario> usuarios;
@@ -166,17 +179,16 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		responseObserver.onCompleted();
 	}
 
+	// ==========================
+	// GETTERS
+	// ==========================
+
 	public UsuarioRepository getUsuarioRepository() {
 		return usuarioRepository;
 	}
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
-	}
-
-	public boolean esUsuarioDeCasaCentral(Long tiendaId) {
-		Tienda tienda = tiendaRepository.findById(tiendaId).orElse(null);
-		return tienda != null && tienda.getEsCasaCentral();
 	}
 
 }

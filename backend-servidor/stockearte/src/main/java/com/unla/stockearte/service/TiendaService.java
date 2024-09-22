@@ -41,8 +41,9 @@ public class TiendaService extends TiendaServiceImplBase {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private UsuarioService usuarioService;
+	// ==========================
+	// CONVERSION
+	// ==========================
 
 	private com.tienda.grpc.Tienda convertToProtoTienda(Tienda tienda) {
 		com.tienda.grpc.Tienda.Builder tiendaBuilder = com.tienda.grpc.Tienda.newBuilder()
@@ -67,6 +68,10 @@ public class TiendaService extends TiendaServiceImplBase {
 
 		return tiendaBuilder.build();
 	}
+
+	// ==========================
+	// CRUD
+	// ==========================
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -138,13 +143,17 @@ public class TiendaService extends TiendaServiceImplBase {
 		return tiendaRepository.findByCodigo(codigo);
 	}
 
+	// ==========================
+	// BUSQUEDA
+	// ==========================
+
 	@Transactional(readOnly = true)
 	public Optional<Set<Tienda>> buscarTiendas(String codigo, Boolean habilitada, String username) {
 		// Solo disponible para usuarios de casa central
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("Acceso denegado: usuario no encontrado."));
 
-		if (usuario.getTienda() == null || !usuarioService.esUsuarioDeCasaCentral(usuario.getTienda().getId()))
+		if (usuario.getTienda() == null || !usuario.esDeCasaCentral())
 			throw new RuntimeException("Acceso denegado: solo usuarios de casa central pueden realizar esta acción.");
 
 		Set<Tienda> resultado = new HashSet<>();
@@ -193,6 +202,10 @@ public class TiendaService extends TiendaServiceImplBase {
 			responseObserver.onError(e);
 		}
 	}
+
+	// ==========================
+	// GETTERS
+	// ==========================
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;

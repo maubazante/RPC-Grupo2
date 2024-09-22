@@ -20,7 +20,6 @@ import com.producto.grpc.DeleteProductoRequest;
 import com.producto.grpc.DeleteProductoResponse;
 import com.producto.grpc.ModifyProductoRequest;
 import com.producto.grpc.ModifyProductoResponse;
-import com.producto.grpc.ProductoProto;
 import com.producto.grpc.ProductoServiceGrpc.ProductoServiceImplBase;
 
 import com.unla.stockearte.helpers.Helper;
@@ -48,6 +47,10 @@ public class ProductoService extends ProductoServiceImplBase {
 	@Autowired()
 	StockRepository stockRepository;
 
+	// ==========================
+	// CONVERSION
+	// ==========================
+
 	public com.producto.grpc.Producto convertToProto(Producto producto) {
 		return com.producto.grpc.Producto.newBuilder()
 				.setId(producto.getId())
@@ -59,6 +62,10 @@ public class ProductoService extends ProductoServiceImplBase {
 				.setHabilitado(producto.isHabilitado())
 				.build();
 	}
+
+	// ==========================
+	// CRUD
+	// ==========================
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -143,6 +150,10 @@ public class ProductoService extends ProductoServiceImplBase {
 		responseObserver.onCompleted();
 	}
 
+	// ==========================
+	// BUSQUEDA
+	// ==========================
+
 	@Transactional(readOnly = true)
 	public Optional<Set<Producto>> buscarProductos(String nombre, String codigo, String talle, String color) {
 		Set<Producto> productos = productoRepository
@@ -169,6 +180,10 @@ public class ProductoService extends ProductoServiceImplBase {
 		responseObserver.onNext(responseBuilder.build());
 		responseObserver.onCompleted();
 	}
+
+	// ==========================
+	// GETTERS
+	// ==========================
 
 	public ProductoRepository getProductoRepository() {
 		return productoRepository;

@@ -123,4 +123,9 @@ public class Usuario {
 		this.tienda = tienda;
 	}
 
+	public boolean esDeCasaCentral() {
+		Tienda tienda = this.tienda;
+		return tienda != null && tienda.getEsCasaCentral();
+	}
+
 }
