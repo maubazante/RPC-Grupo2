@@ -14,6 +14,8 @@ import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.TiendaRepository;
 import com.unla.stockearte.repository.UsuarioRepository;
+import com.usuario.grpc.BuscarUsuariosRequest;
+import com.usuario.grpc.BuscarUsuariosResponse;
 import com.usuario.grpc.CreateUsuarioRequest;
 import com.usuario.grpc.CreateUsuarioResponse;
 import com.usuario.grpc.DeleteUsuarioRequest;
@@ -34,6 +36,19 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 	@Autowired()
 	private TiendaRepository tiendaRepository;
+
+	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
+		return com.usuario.grpc.Usuario.newBuilder()
+				.setId(usuario.getId())
+				.setNombre(usuario.getNombre())
+				.setApellido(usuario.getApellido())
+				.setUsername(usuario.getUsername())
+				.setPassword(usuario.getPassword())
+				.setRol(usuario.getRol().toString())
+				.setTiendaId(usuario.getTienda().getId())
+				.setHabilitado(usuario.isHabilitado())
+				.build();
+	}
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -113,7 +128,10 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 	@Transactional(readOnly = true)
 	public Optional<Set<Usuario>> buscarUsuarios(String username, Long tiendaId) {
-		// TODO solo disponible para usuarios de casa central
+		// Solo disponible para usuarios de casa central
+		if (!esUsuarioDeCasaCentral(usuarioRepository.findByUsername(username).get().getTienda().getId()))
+			throw new RuntimeException("Acceso no permitido: el usuario no pertenece a casa central.");
+
 		Set<Usuario> usuarios;
 
 		if (username != null && tiendaId != null) {
@@ -129,12 +147,35 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		return usuarios.isEmpty() ? Optional.empty() : Optional.of(usuarios);
 	}
 
+	@Override
+	public void buscarUsuarios(BuscarUsuariosRequest request, StreamObserver<BuscarUsuariosResponse> responseObserver) {
+		String username = request.getUsername();
+		Long tiendaId = request.getTiendaId();
+
+		Optional<Set<Usuario>> usuariosOpt = buscarUsuarios(username, tiendaId);
+
+		BuscarUsuariosResponse.Builder responseBuilder = BuscarUsuariosResponse.newBuilder();
+		usuariosOpt.ifPresent(usuarios -> {
+			for (Usuario usuario : usuarios) {
+				responseBuilder.addUsuarios(convertToProtoUsuario(usuario)); // Aquí usas el convert
+			}
+		});
+
+		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
+
 	public UsuarioRepository getUsuarioRepository() {
 		return usuarioRepository;
 	}
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
+	}
+
+	public boolean esUsuarioDeCasaCentral(Long tiendaId) {
+		Tienda tienda = tiendaRepository.findById(tiendaId).orElse(null);
+		return tienda != null && tienda.getEsCasaCentral();
 	}
 
 }

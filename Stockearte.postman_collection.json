@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "20c2929f-1f5d-4abc-8b99-996d7873be19",
+		"_postman_id": "4c1347b4-e66f-4814-b6d1-a5eaf7fd3896",
 		"name": "Stockearte",
 		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -196,6 +196,39 @@
 							"port": "{{port}}",
 							"path": [
 								"deleteUsuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"andresUsername\",\r\n  \"tiendaId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/BuscarUsuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"BuscarUsuarios"
 							]
 						}
 					},

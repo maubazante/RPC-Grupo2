@@ -6,6 +6,8 @@ service UsuarioService {
   rpc CreateUsuario (CreateUsuarioRequest) returns (CreateUsuarioResponse);
   rpc DeleteUsuario (DeleteUsuarioRequest) returns (DeleteUsuarioResponse);
   rpc ModifyUsuario (ModifyUsuarioRequest) returns (ModifyUsuarioResponse);
+
+  rpc BuscarUsuarios(BuscarUsuariosRequest) returns (BuscarUsuariosResponse);
 }
 
 message Usuario {
@@ -41,4 +43,15 @@ message ModifyUsuarioRequest{
 
 message ModifyUsuarioResponse {
   string message = 1;
+}
+
+// Request para buscar usuarios
+message BuscarUsuariosRequest {
+  string username = 1;   // nombre de usuario para buscar
+  int64 tiendaId = 2;    // ID de la tienda para filtrar usuarios
+}
+
+// Response para la búsqueda de usuarios
+message BuscarUsuariosResponse {
+  repeated Usuario usuarios = 1; // Lista de usuarios encontrados
 }

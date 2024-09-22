@@ -17,8 +17,12 @@ import com.tienda.grpc.ModifyTiendaRequest;
 import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
 import com.unla.stockearte.model.Tienda;
+import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
+
+import com.unla.stockearte.repository.UsuarioRepository;
+import com.unla.stockearte.service.UsuarioService;
 
 import io.grpc.stub.StreamObserver;
 
@@ -32,6 +36,12 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Autowired
 	private StockRepository stockRepository;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -104,8 +114,14 @@ public class TiendaService extends TiendaServiceImplBase {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<Set<Tienda>> buscarTiendas(String codigo, Boolean habilitada) {
-		// TODO solo disponible para usuarios de casa central
+	public Optional<Set<Tienda>> buscarTiendas(String codigo, Boolean habilitada, String username) {
+		// Solo disponible para usuarios de casa central
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RuntimeException("Acceso denegado: usuario no encontrado."));
+
+		if (usuario.getTienda() == null || !usuarioService.esUsuarioDeCasaCentral(usuario.getTienda().getId()))
+			throw new RuntimeException("Acceso denegado: solo usuarios de casa central pueden realizar esta acción.");
+
 		Set<Tienda> resultado = new HashSet<>();
 
 		if (codigo != null && habilitada != null) {

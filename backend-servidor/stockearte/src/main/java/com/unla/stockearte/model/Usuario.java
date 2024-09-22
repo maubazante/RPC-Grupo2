@@ -99,7 +99,7 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public Boolean getHabilitado() {
+	public Boolean isHabilitado() {
 		return habilitado;
 	}
 

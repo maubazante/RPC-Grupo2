@@ -1,5 +1,5 @@
 const express = require('express');
-const clienteTienda = require('./tienda'); 
+const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
 
@@ -136,6 +136,25 @@ app.put('/modifyUsuario', (req, res) => {
     }
   })
 })
+
+// Endpoint para buscar usuarios
+app.post('/buscarUsuarios', (req, res) => {
+  const { username, tiendaId } = req.body;
+
+  const request = {
+    username: username || '',
+    tiendaId: tiendaId || 0
+  };
+
+  clienteUsuario.BuscarUsuarios(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
 
 
 //                                                                                          ENDPOINTS PARA PRODUCTO
