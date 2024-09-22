@@ -7,10 +7,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StoreListComponent } from './store-list/store-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { StoreFormComponent } from './store-form/store-form.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
-  declarations: [StoreListComponent],
+  declarations: [StoreListComponent, StoreFormComponent],
   imports: [
     CommonModule,
     StoresRoutingModule,   
@@ -18,6 +25,12 @@ import { StoreListComponent } from './store-list/store-list.component';
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatInputModule
   ],
   exports: [StoreListComponent]
 })

@@ -1,1 +1,66 @@
-<p>product-form works!</p>
+<h2 mat-dialog-title>Editar Producto</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="productForm">
+    <!-- Nombre -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required>
+      <mat-error *ngIf="productForm.get('nombre')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Código -->
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" required>
+      <mat-error *ngIf="productForm.get('codigo')?.hasError('required')">
+        El código es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Foto -->
+    <mat-form-field appearance="outline">
+      <mat-label>Foto</mat-label>
+      <input matInput formControlName="foto" placeholder="URL o base64 de la imagen">
+    </mat-form-field>
+
+    <!-- Color -->
+    <mat-form-field appearance="outline">
+      <mat-label>Color</mat-label>
+      <input matInput formControlName="color">
+    </mat-form-field>
+
+    <!-- Talle -->
+    <mat-form-field appearance="outline">
+      <mat-label>Talle</mat-label>
+      <input matInput formControlName="talle">
+    </mat-form-field>
+
+    <!-- Habilitado -->
+    <mat-form-field appearance="outline">
+      <mat-label>Habilitado</mat-label>
+      <mat-select formControlName="habilitado">
+        <mat-option [value]="true">Sí</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+      <mat-error *ngIf="productForm.get('habilitado')?.hasError('required')">
+        Estado es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Tiendas -->
+    <mat-form-field appearance="outline" *ngIf="tiendas.length > 0">
+      <mat-label>Tiendas</mat-label>
+      <mat-select formControlName="tiendas" multiple>
+        <mat-option *ngFor="let tienda of tiendas" [value]="tienda">{{ tienda.codigo }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="productForm.invalid">Guardar</button>
+</mat-dialog-actions>

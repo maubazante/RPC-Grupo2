@@ -1,1 +1,60 @@
-<p>store-form works!</p>
+<h2 mat-dialog-title>Editar Tienda</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="storeForm">
+    <!-- Código -->
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" required>
+      <mat-error *ngIf="storeForm.get('codigo')?.hasError('required')">
+        El código es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Dirección -->
+    <mat-form-field appearance="outline">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="direccion">
+    </mat-form-field>
+
+    <!-- Ciudad -->
+    <mat-form-field appearance="outline">
+      <mat-label>Ciudad</mat-label>
+      <input matInput formControlName="ciudad">
+    </mat-form-field>
+
+    <!-- Provincia -->
+    <mat-form-field appearance="outline">
+      <mat-label>Provincia</mat-label>
+      <input matInput formControlName="provincia">
+    </mat-form-field>
+
+    <!-- Habilitado -->
+    <mat-form-field appearance="outline">
+      <mat-label>Habilitado</mat-label>
+      <mat-select formControlName="habilitado">
+        <mat-option [value]="true">Sí</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+      <mat-error *ngIf="storeForm.get('habilitado')?.hasError('required')">
+        Estado es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Usuario asignado -->
+    <mat-form-field appearance="outline">
+      <mat-label>Usuario</mat-label>
+      <mat-select formControlName="usuario">
+        <mat-option [value]="null">Sin usuario</mat-option>
+        <mat-option *ngFor="let usuario of usuarios" [value]="usuario">
+          {{ usuario.nombre }} {{ usuario.apellido }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="storeForm.invalid">Guardar</button>
+</mat-dialog-actions>
