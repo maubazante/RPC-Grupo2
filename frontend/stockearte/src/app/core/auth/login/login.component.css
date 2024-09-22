@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 112px);
+    background-color: transparent;
+    font-family: "Roboto Slab", serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 600 !important;
+    font-style: normal;
+    user-select: none;
+    text-align: center;
+}
+
+/* Por alguna vez tuve que repetir el selector */
+h4 {
+    padding: 20px;
+    font-family: "Roboto Slab", serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 600 !important;
+    font-style: normal;
+    user-select: none;
+}
+
+.content-container {
+    width: 30%;
+    max-width: 1200px;
+    /* Ancho máximo para pantallas grandes */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    margin: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+mat-card {
+    padding: 4em;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+}
+
+.register-notice {
+    font-size: 14px;
+    padding: 10px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 400 !important;
+}
+
+.register-btn {
+    font-size: small;
+}
