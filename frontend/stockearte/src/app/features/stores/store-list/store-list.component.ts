@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { StoreFormComponent } from '../store-form/store-form.component';
 import { Notyf } from 'notyf';
 import { StoresService } from '../../../core/services/stores.service';
+import { UsersService } from '../../../core/services/users.service';
+import { Usuario } from '../../../shared/types/Usuario';
 
 @Component({
   selector: 'app-store-list',
@@ -41,7 +43,7 @@ export class StoreListComponent implements OnInit {
 
   editTienda(tienda: Tienda): void {
     const dialogRef = this.dialog.open(StoreFormComponent, {
-      width: '400px',
+      width: '450px',
       data: { tienda: tienda }
     });
 
@@ -101,5 +103,4 @@ export class StoreListComponent implements OnInit {
       });
     }
   }
-
 }

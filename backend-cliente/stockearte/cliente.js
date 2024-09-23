@@ -305,7 +305,7 @@ app.post('/findProductos', (req, res) => {
 });
 
 // Endpoint para traer productos
-app.get('/getProductos', (req, res) => {
+app.post('/getProductos', (req, res) => {
   const { username } = req.body;
 
   const request = {

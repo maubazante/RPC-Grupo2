@@ -35,7 +35,6 @@ export class UsersService {
     return this.http.post(`${environment.clientURL}/findUsuarios`, { body: { username } });
   }
 
-
   getUsers(): Observable<UsuariosArray> {
     return this.http.get<UsuariosArray>(`${environment.clientURL}/getUsuarios`);
   }

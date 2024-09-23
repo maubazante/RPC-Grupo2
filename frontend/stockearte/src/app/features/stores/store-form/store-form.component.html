@@ -5,7 +5,7 @@
     <!-- Código -->
     <mat-form-field appearance="outline">
       <mat-label>Código</mat-label>
-      <input matInput formControlName="codigo" required>
+      <input matInput formControlName="codigo" readonly="readonly">
       <mat-error *ngIf="storeForm.get('codigo')?.hasError('required')">
         El código es requerido
       </mat-error>
@@ -41,16 +41,12 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Es casa central</mat-label>
-      <mat-select formControlName="es_casa_central">
-        <mat-option value=true>Si</mat-option>
-        <mat-option value=false>No</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-slide-toggle formControlName="es_casa_central">
+      Es Casa Central
+    </mat-slide-toggle>
     
 
-    <!-- Usuario asignado -->
+    <!-- Usuario asignado ESTO DEBERÍA TENER UNA LISTA DE USUARIOS -->
     <!-- <mat-form-field appearance="outline">
       <mat-label>Usuario</mat-label>
       <mat-select formControlName="usuario">

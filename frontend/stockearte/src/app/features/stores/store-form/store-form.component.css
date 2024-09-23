@@ -10,3 +10,7 @@ h2 {
 mat-form-field {
     display: flex;
 }
+
+mat-slide-toggle {
+    padding-bottom: 15px;
+}

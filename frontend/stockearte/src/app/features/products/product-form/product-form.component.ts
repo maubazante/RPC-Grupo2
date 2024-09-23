@@ -28,7 +28,7 @@ export class ProductFormComponent {
       color: [data.product.color],
       talle: [data.product.talle],
       habilitado: [data.product.habilitado, Validators.required],
-      tiendas: [data.product.tiendas.map(stock => stock.tienda)]
+      // tiendas: [data.product.tiendas.map(stock => stock.tienda)]
     });
   }
 
