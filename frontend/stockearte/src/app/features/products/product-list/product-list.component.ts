@@ -12,7 +12,7 @@ import { ProductsService } from '../../../core/services/products.service';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'edit', 'erase'];
+  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'foto', 'edit', 'erase'];
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
 
@@ -41,12 +41,14 @@ export class ProductListComponent {
   }
 
   editProduct(product: Producto): void {
+    console.log(product)
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
       data: { product: product }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log("RESULT:", result)
       if (result) {
         this.updateProduct(result);
       }
@@ -92,11 +94,11 @@ export class ProductListComponent {
   }
 
   deleteProduct(id: string): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+    if (confirm('Eliminar no funcionará esta entrega')) {
       this.productsService.deleteProduct(id).subscribe({
         next: () => {
-          this.dataSource = this.dataSource.filter(p => p.id !== id);
-          this.notyf.success('Producto eliminado con éxito');
+          // this.dataSource = this.dataSource.filter(p => p.id !== id);
+          // this.notyf.success('Producto eliminado con éxito');
         },
         error: (err) => {
           this.notyf.error('Error al eliminar producto');

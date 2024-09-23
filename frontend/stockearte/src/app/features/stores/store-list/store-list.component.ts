@@ -91,10 +91,10 @@ export class StoreListComponent implements OnInit {
 
   // No funciona
   deleteTienda(id: string): void {
-    if (confirm('¿Estás seguro de que quieres eliminar esta tienda?')) {
+    if (confirm('Eliminar tienda no funcionará esta entrega')) {
       this.tiendaService.deleteStore(id).subscribe({
         next: () => {
-          this.notyf.success('Tienda eliminada con éxito');
+          // this.notyf.success('Tienda eliminada con éxito');
         },
         error: (err) => {
           this.notyf.error('Error al eliminar tienda');

@@ -14,7 +14,6 @@ import { UsersService } from '../../../core/services/users.service';
 export class StoreFormComponent {
   storeForm: FormGroup;
   usuarios: Usuario[];  
-  usuario: Usuario | null; 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StoreFormComponent>,
@@ -22,7 +21,6 @@ export class StoreFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: { tienda: Tienda, usuarios: Usuario[] }
   ) {
     this.usuarios = data.usuarios || [];  
-    this.usuario = this.loadUsers();
     this.storeForm = this.fb.group({
       id: [this.data.tienda.id],
       codigo: [this.data.tienda.codigo],
@@ -31,12 +29,8 @@ export class StoreFormComponent {
       provincia: [this.data.tienda.provincia],
       habilitado: [this.data.tienda.habilitada, Validators.required],
       es_casa_central: [this.data.tienda.es_casa_central],
-      usuarioId: ""
+      usuarioId: null
     }); 
-  }
-
-  ngOnInit() {
-    this.storeForm.controls['usuario'].setValue(this.usuario)
   }
 
   onClose(): void {
@@ -49,23 +43,5 @@ export class StoreFormComponent {
       console.log(updatedStore)
       this.dialogRef.close(updatedStore);  
     }
-  }
-
-  loadUsers(): Usuario | null {
-    let userReturn: Usuario | null = null;
-    this.userService.getUsers().subscribe({
-      next: (users) => {
-        this.usuarios = users.usuarios
-      },
-      error: (err) => {
-        console.error(err);
-      },
-      complete: () => {
-        this.usuarios.map((user) => {
-          if(user.id === this.data.tienda.usuarioId) userReturn = user;
-        })
-      }
-    });
-    return userReturn;
   }
 }

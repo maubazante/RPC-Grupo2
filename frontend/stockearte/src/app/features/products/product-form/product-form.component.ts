@@ -24,7 +24,7 @@ export class ProductFormComponent {
       id: [data.product.id],
       nombre: [data.product.nombre, Validators.required],
       codigo: [data.product.codigo, Validators.required],
-      foto: [data.product.foto],
+      foto: [{value: "Formato no soportado temporalmente", disabled: true}],
       color: [data.product.color],
       talle: [data.product.talle],
       habilitado: [data.product.habilitado, Validators.required],

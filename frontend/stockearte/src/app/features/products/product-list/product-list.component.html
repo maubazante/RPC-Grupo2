@@ -1,5 +1,8 @@
 <div class="table-container">
   <div class="content-container">
+    <button mat-icon-button matTooltip="Las imagenes están rotas por no manejar blobs, en la próxima entrega vamos a usar uRLs">
+      <mat-icon>info</mat-icon>
+    </button>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
 
       <!-- ID Column -->
@@ -40,7 +43,7 @@
 
       <!-- Foto Column -->
       <ng-container matColumnDef="foto">
-        <th mat-header-cell *matHeaderCellDef> Foto </th>
+        <th mat-header-cell *matHeaderCellDef class="foto-header">Foto</th>
         <td mat-cell *matCellDef="let producto">
           <img [src]="producto.foto" alt="{{producto.nombre}}" width="50" height="50" class="imagen" />
         </td>

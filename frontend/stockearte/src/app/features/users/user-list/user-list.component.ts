@@ -90,11 +90,11 @@ export class UserListComponent {
 
   // Eliminar usuario no funciona
   deleteUser(id: string): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+    if (confirm('Eliminar no funcionará esta entrega')) {
       this.usersService.deleteUser(id).subscribe({
         next: () => {
-          this.notyf.success('Usuario eliminado con éxito');
-          this.loadUsers();
+          // this.notyf.success('Usuario eliminado con éxito');
+          // this.loadUsers();
         },
         error: (err) => {
           this.notyf.error('Error al eliminar usuario');

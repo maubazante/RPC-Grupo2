@@ -14,7 +14,7 @@
     <!-- Código -->
     <mat-form-field appearance="outline">
       <mat-label>Código</mat-label>
-      <input matInput formControlName="codigo" required>
+      <input matInput formControlName="codigo" readonly="readonly">
       <mat-error *ngIf="productForm.get('codigo')?.hasError('required')">
         El código es requerido
       </mat-error>
