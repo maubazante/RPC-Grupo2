@@ -32,7 +32,7 @@ export class StoreListComponent implements OnInit {
     this.tiendaService.getTiendas().subscribe({
       next: (tiendas) => {
         this.dataSource = tiendas.tiendas;
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.notyf.error('Error al cargar tiendas');
@@ -80,11 +80,13 @@ export class StoreListComponent implements OnInit {
     this.tiendaService.modifyStore(tienda).subscribe({
       next: (updatedTienda) => {
         this.notyf.success(updatedTienda);
-        this.loadTiendas()
       },
       error: (err) => {
         this.notyf.error('Error al actualizar tienda');
         console.error(err);
+      },
+      complete: () => {
+        this.loadTiendas();
       }
     });
   }

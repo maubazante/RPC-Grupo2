@@ -51,6 +51,7 @@ export class ProductListComponent {
       console.log("RESULT:", result)
       if (result) {
         this.updateProduct(result);
+        this.loadProducts();
       }
     });
   }
