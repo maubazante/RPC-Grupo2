@@ -4,13 +4,13 @@
 ### Integrantes del Grupo 2
 
 - **Nombre:** Mauro Bazante
-- **DNI:** 
+- **DNI:** 42231423
 
 - **Nombre:** Andres Ezequiel Cupo
-- **DNI:** 
+- **DNI:** 40903206
 
 - **Nombre:** Valentin Olivero
-- **DNI:** 
+- **DNI:** 43057692
 
 - **Nombre:** Sergio Simón Robles Flores
 - **DNI:** 35355978
@@ -463,3 +463,5 @@ Antes de comenzar, asegurate de tener instalado lo siguiente en **Windows 11 x64
 
 ### Pruebas con Postman
 También se puede probar el cliente y el servidor utilizando Postman. Se incluye una colección de prueba en el archivo [Stockearte.postman_collection.json](Stockearte.postman_collection.json).
+
+![Prueba Postman createProducto](images/postman_createProducto.png)
