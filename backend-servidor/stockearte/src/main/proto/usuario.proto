@@ -16,6 +16,7 @@ message Usuario {
 	int64 tiendaId = 6;	       // Indica el id de la tienda que tiene asociado el usuario
 	bool habilitado = 7;       // Indica si esta habilitado el usuario o no
 	int64 id = 8;              // is del usuario
+	int64 idUserAdmin = 9;      // El id del usuario de casas central
 }
 
 // Request para crear un usuario

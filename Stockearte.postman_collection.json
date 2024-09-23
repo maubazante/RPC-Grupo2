@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "febb4d3a-ba58-4b33-b17a-0b78b1045c46",
+		"_postman_id": "76fa66e0-e0b2-49f4-b795-78ff0963caae",
 		"name": "Stockearte",
 		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28681801"
+		"_exporter_id": "26268488"
 	},
 	"item": [
 		{
@@ -23,7 +23,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"codigo\": \"T006\",\r\n  \"direccion\": \"Larrea 425\",\r\n  \"ciudad\": \"Buenos Aires\",\r\n  \"provincia\": \"Buenos Aires\",\r\n  \"habilitada\": true,\r\n  \"usuarioId\": 1\r\n}",
+							"raw": "{\r\n  \"codigo\": \"T006\",\r\n  \"direccion\": \"Larrea 425\",\r\n  \"ciudad\": \"Buenos Aires\",\r\n  \"provincia\": \"Buenos Aires\",\r\n  \"habilitada\": true,\r\n  \"usuarioId\": 1,\r\n  \"idUsuarioAdmin\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -187,7 +187,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"Andres\",\r\n  \"apellido\": \"Cupo\",\r\n  \"username\": \"andresUsername\",\r\n  \"password\": \"andresPassword\",\r\n  \"rol\": \"ADMIN\",\r\n  \"tiendaId\": 1\r\n}",
+							"raw": "{\r\n  \"nombre\": \"Andres\",\r\n  \"apellido\": \"Cupo\",\r\n  \"username\": \"andresUsername\",\r\n  \"password\": \"andresPassword\",\r\n  \"rol\": \"ADMIN\",\r\n  \"tiendaId\": 1,\r\n  \"idUserAdmin\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -345,7 +345,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Producto 2\",\r\n    \"color\": \"Rojo\",\r\n    \"talle\": \"M\",\r\n    \"tiendaIds\": [1,2]\r\n}",
+							"raw": "{\r\n    \"nombre\": \"Producto 2\",\r\n    \"color\": \"Rojo\",\r\n    \"talle\": \"M\",\r\n    \"tiendaIds\": [1,2],\r\n    \"idUsuarioAdmin\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

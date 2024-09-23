@@ -17,6 +17,7 @@ message Producto {
 	int64 stock = 7;	          // Indica el id de la tienda que tiene asociado el usuario
 	int64 id = 8;                 // id del producto
 	bytes foto = 9;               // foto del producto
+	int64 idUserAdmin = 10;    // Id del usuario de casa central
 }
 
 // Request para crear un producto

@@ -24,6 +24,7 @@ import com.producto.grpc.GetProductosRequest;
 import com.producto.grpc.GetProductosResponse;
 import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.model.Producto;
+import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Stock;
 import com.unla.stockearte.model.StockId;
 import com.unla.stockearte.model.Tienda;
@@ -76,37 +77,44 @@ public class ProductoService extends ProductoServiceImplBase {
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createProducto(CreateProductoRequest request, StreamObserver<CreateProductoResponse> responseObserver) {
-		Producto producto = new Producto();
-		producto.setCodigo(Helper.generarCadenaAleatoria());
-		producto.setColor(request.getProducto().getColor());
-		producto.setFoto(request.getProducto().getFoto().toByteArray());
-		producto.setNombre(request.getProducto().getNombre());
-		producto.setTalle(request.getProducto().getTalle());
-
-		getProductoRepository().save(producto);
-
-		List<Stock> stockList = new ArrayList<>();
-		for (Long tiendaid : request.getProducto().getTiendaIdsList()) {
-			Optional<Tienda> tienda = getTiendaRepository().findById(tiendaid);
-			if (tienda.isPresent()) {
-				Stock stock = new Stock();
-				StockId stockId = new StockId();
-
-				stockId.setProductoId(producto.getId());
-				stock.setProducto(producto);
-				stock.setTienda(tienda.get());
-				stockId.setTiendaId(tienda.get().getId());
-				stock.setId(stockId);
-				stock.setStock(Integer.valueOf(0));
-				stockList.add(stock);
+		
+		CreateProductoResponse response = null;
+		if(getUsuarioRepository().existsByIdAndRol(request.getProducto().getIdUserAdmin(), Rol.ADMIN)) {
+			Producto producto = new Producto();
+			producto.setCodigo(Helper.generarCadenaAleatoria());
+			producto.setColor(request.getProducto().getColor());
+			producto.setFoto(request.getProducto().getFoto().toByteArray());
+			producto.setNombre(request.getProducto().getNombre());
+			producto.setTalle(request.getProducto().getTalle());
+			
+			getProductoRepository().save(producto);
+			
+			List<Stock> stockList = new ArrayList<>();
+			for (Long tiendaid : request.getProducto().getTiendaIdsList()) {
+				Optional<Tienda> tienda = getTiendaRepository().findById(tiendaid);
+				if (tienda.isPresent()) {
+					Stock stock = new Stock();
+					StockId stockId = new StockId();
+					
+					stockId.setProductoId(producto.getId());
+					stock.setProducto(producto);
+					stock.setTienda(tienda.get());
+					stockId.setTiendaId(tienda.get().getId());
+					stock.setId(stockId);
+					stock.setStock(Integer.valueOf(0));
+					stockList.add(stock);
+				}
+				
 			}
-
+			
+			getStockRepository().saveAll(stockList);
+			
+			response = CreateProductoResponse.newBuilder()
+					.setMessage("Producto con codigo " + producto.getCodigo() + " creado exitosamente").build();
+		} else {
+			response = CreateProductoResponse.newBuilder()
+					.setMessage("Error al crear el producto: el usuario autenticado no existe o carece de los permisos necesarios para crear productos.").build();
 		}
-
-		getStockRepository().saveAll(stockList);
-
-		CreateProductoResponse response = CreateProductoResponse.newBuilder()
-				.setMessage("Producto con codigo " + producto.getCodigo() + " creado exitosamente").build();
 
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
@@ -241,5 +249,11 @@ public class ProductoService extends ProductoServiceImplBase {
 	public StockRepository getStockRepository() {
 		return stockRepository;
 	}
+
+	public UsuarioRepository getUsuarioRepository() {
+		return usuarioRepository;
+	}
+	
+	
 
 }

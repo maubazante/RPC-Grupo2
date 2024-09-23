@@ -25,7 +25,8 @@ app.post('/createTienda', (req, res) => {
       ciudad: tiendaData.ciudad,
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
-      usuarioId: tiendaData.usuarioId
+      usuarioId: tiendaData.usuarioId,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
 
@@ -64,7 +65,8 @@ app.put('/modifyTienda', (req, res) => {
       ciudad: tiendaData.ciudad,
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
-      usuarioId: tiendaData.usuarioId
+      usuarioId: tiendaData.usuarioId,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
   clienteTienda.modifyTienda(request, (error, response) => {
@@ -123,7 +125,8 @@ app.post('/createUsuario', (req, res) => {
       rol: usuarioData.rol,
       tiendaId: usuarioData.tiendaId,
       habilitado: usuarioData.habilitado,
-      id: usuarioData.id
+      id: usuarioData.id,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
 
@@ -164,7 +167,8 @@ app.put('/modifyUsuario', (req, res) => {
       rol: usuarioData.rol,
       tiendaId: usuarioData.tiendaId,
       habilitado: usuarioData.habilitado,
-      id: usuarioData.id
+      id: usuarioData.id,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
   clienteUsuario.modifyUsuario(request, (error, response) => {
@@ -222,7 +226,8 @@ app.post('/createProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
-      foto: productoData.foto
+      foto: productoData.foto,
+      idUserAdmin: productoData.idUserAdmin
     }
   };
 
@@ -263,7 +268,8 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
-      foto: productoData.foto
+      foto: productoData.foto,
+      idUserAdmin: productoData.idUserAdmin
     }
   };
   clienteProducto.modifyProducto(request, (error, response) => {

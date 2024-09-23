@@ -1,10 +1,10 @@
 package com.unla.stockearte.service;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,16 +16,16 @@ import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.TiendaRepository;
 import com.unla.stockearte.repository.UsuarioRepository;
-import com.usuario.grpc.FindUsuariosRequest;
-import com.usuario.grpc.FindUsuariosResponse;
 import com.usuario.grpc.CreateUsuarioRequest;
 import com.usuario.grpc.CreateUsuarioResponse;
 import com.usuario.grpc.DeleteUsuarioRequest;
 import com.usuario.grpc.DeleteUsuarioResponse;
-import com.usuario.grpc.ModifyUsuarioRequest;
-import com.usuario.grpc.ModifyUsuarioResponse;
+import com.usuario.grpc.FindUsuariosRequest;
+import com.usuario.grpc.FindUsuariosResponse;
 import com.usuario.grpc.GetUsuariosRequest;
 import com.usuario.grpc.GetUsuariosResponse;
+import com.usuario.grpc.ModifyUsuarioRequest;
+import com.usuario.grpc.ModifyUsuarioResponse;
 import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
 
 import io.grpc.stub.StreamObserver;
@@ -46,16 +46,10 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	// ==========================
 
 	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
-		return com.usuario.grpc.Usuario.newBuilder()
-				.setId(usuario.getId())
-				.setNombre(usuario.getNombre())
-				.setApellido(usuario.getApellido())
-				.setUsername(usuario.getUsername())
-				.setPassword(usuario.getPassword())
-				.setRol(usuario.getRol().toString())
-				.setTiendaId(usuario.getTienda().getId())
-				.setHabilitado(usuario.isHabilitado())
-				.build();
+		return com.usuario.grpc.Usuario.newBuilder().setId(usuario.getId()).setNombre(usuario.getNombre())
+				.setApellido(usuario.getApellido()).setUsername(usuario.getUsername())
+				.setPassword(usuario.getPassword()).setRol(usuario.getRol().toString())
+				.setTiendaId(usuario.getTienda().getId()).setHabilitado(usuario.isHabilitado()).build();
 	}
 
 	// ==========================
@@ -66,22 +60,29 @@ public class UsuarioService extends UsuarioServiceImplBase {
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createUsuario(CreateUsuarioRequest request, StreamObserver<CreateUsuarioResponse> responseObserver) {
-		Usuario usuario = new Usuario();
-		usuario.setApellido(request.getUsuario().getApellido());
-		usuario.setNombre(request.getUsuario().getNombre());
-		usuario.setPassword(request.getUsuario().getPassword());
-		usuario.setUsername(request.getUsuario().getUsername());
-		usuario.setRol(Rol.fromValue(request.getUsuario().getRol()));
+		CreateUsuarioResponse response = null;
 
-		Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
+		if (getUsuarioRepository().existsByIdAndRol(request.getUsuario().getIdUserAdmin(), Rol.ADMIN)) {
+			Usuario usuario = new Usuario();
+			usuario.setApellido(request.getUsuario().getApellido());
+			usuario.setNombre(request.getUsuario().getNombre());
+			usuario.setPassword(request.getUsuario().getPassword());
+			usuario.setUsername(request.getUsuario().getUsername());
+			usuario.setRol(Rol.fromValue(request.getUsuario().getRol()));
 
-		if (tienda.isPresent())
-			usuario.setTienda(tienda.get());
+			Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
 
-		getUsuarioRepository().save(usuario);
+			if (tienda.isPresent())
+				usuario.setTienda(tienda.get());
 
-		CreateUsuarioResponse response = CreateUsuarioResponse.newBuilder().setMessage("Cuenta creada con exito")
-				.build();
+			getUsuarioRepository().save(usuario);
+
+			response = CreateUsuarioResponse.newBuilder().setMessage("Cuenta creada con exito").build();
+		} else {
+			response = CreateUsuarioResponse.newBuilder().setMessage(
+					"Error al crear la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para registrar nuevos usuarios.")
+					.build();
+		}
 
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
@@ -114,24 +115,28 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		Optional<Usuario> usuario = getUsuarioRepository().findById(request.getUsuario().getId());
 		ModifyUsuarioResponse response = null;
 
-		if (usuario.isPresent()) {
-			usuario.get().setApellido(request.getUsuario().getApellido());
-			usuario.get().setHabilitado(request.getUsuario().getHabilitado());
-			usuario.get().setNombre(request.getUsuario().getNombre());
-			usuario.get().setPassword(request.getUsuario().getPassword());
-			usuario.get().setUsername(request.getUsuario().getUsername());
-			usuario.get().setRol(Rol.fromValue(request.getUsuario().getRol()));
+		if (getUsuarioRepository().existsByIdAndRol(request.getUsuario().getIdUserAdmin(), Rol.ADMIN)) {
+			if (usuario.isPresent()) {
+				usuario.get().setApellido(request.getUsuario().getApellido());
+				usuario.get().setHabilitado(request.getUsuario().getHabilitado());
+				usuario.get().setNombre(request.getUsuario().getNombre());
+				usuario.get().setPassword(request.getUsuario().getPassword());
+				usuario.get().setUsername(request.getUsuario().getUsername());
+				usuario.get().setRol(Rol.fromValue(request.getUsuario().getRol()));
 
-			Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
-			if (tienda.isPresent())
-				usuario.get().setTienda(tienda.get());
+				Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
+				if (tienda.isPresent())
+					usuario.get().setTienda(tienda.get());
 
-			getUsuarioRepository().save(usuario.get());
+				getUsuarioRepository().save(usuario.get());
 
+				response = ModifyUsuarioResponse.newBuilder()
+						.setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito").build();
+			}
+
+		}else {
 			response = ModifyUsuarioResponse.newBuilder()
-					.setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito")
-					.build();
-
+					.setMessage("Error al modificar la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para modificar usuarios.").build();
 		}
 
 		responseObserver.onNext(response);
@@ -193,15 +198,8 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		List<Usuario> usuariosModificados = new ArrayList<>();
 
 		for (Usuario u : usuarios) {
-			Usuario usuarioNuevo = new Usuario(
-					u.getId(),
-					u.getNombre(),
-					u.getApellido(),
-					u.getUsername(),
-					u.getPassword(),
-					u.isHabilitado(),
-					u.getRol(),
-					u.getTienda());
+			Usuario usuarioNuevo = new Usuario(u.getId(), u.getNombre(), u.getApellido(), u.getUsername(),
+					u.getPassword(), u.isHabilitado(), u.getRol(), u.getTienda());
 			usuariosModificados.add(usuarioNuevo);
 		}
 

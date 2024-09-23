@@ -18,8 +18,8 @@ message Tienda {
   string ciudad = 4;         // Ciudad donde se encuentra la tienda
   string provincia = 5;      // Provincia donde se encuentra la tienda
   bool habilitada = 6;       // Indica si la tienda está habilitada o deshabilitada
-  int64 usuarioId = 7;       // Indica el id del usuario al cual queremos asociar la nueva tienda
-  bool es_casa_central = 8;   // Indica si es es Casa Central
+  bool es_casa_central = 7;  // Indica si es es Casa Central
+  int64 idUserAdmin = 8;     // Id del usuario de casa central
 }
 
 message CreateTiendaRequest {
