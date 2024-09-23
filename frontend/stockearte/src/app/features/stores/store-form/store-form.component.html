@@ -41,8 +41,17 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-form-field>
+      <mat-label>Es casa central</mat-label>
+      <mat-select formControlName="es_casa_central">
+        <mat-option value=true>Si</mat-option>
+        <mat-option value=false>No</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+
     <!-- Usuario asignado -->
-    <mat-form-field appearance="outline">
+    <!-- <mat-form-field appearance="outline">
       <mat-label>Usuario</mat-label>
       <mat-select formControlName="usuario">
         <mat-option [value]="null">Sin usuario</mat-option>
@@ -50,7 +59,7 @@
           {{ usuario.nombre }} {{ usuario.apellido }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
   </form>
 </mat-dialog-content>
 

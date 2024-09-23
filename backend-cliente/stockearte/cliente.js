@@ -1,10 +1,19 @@
 const express = require('express');
+const cors = require('cors');  
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
+
+// CORS
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true  
+}));
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;

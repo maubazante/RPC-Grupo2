@@ -32,7 +32,7 @@ export class UserFormComponent implements OnInit{
       password: [data.user.password],
       habilitado: [data.user.habilitado, Validators.required],
       rol: [data.user.rol, Validators.required],
-      tienda: [data.user.tienda]  // Puede ser null
+      tienda: [null]  // Puede ser null
     });
   }
 

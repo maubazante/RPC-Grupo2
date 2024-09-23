@@ -17,17 +17,18 @@ export class StoreFormComponent {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StoreFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { store: Tienda, usuarios: Usuario[] }
+    @Inject(MAT_DIALOG_DATA) public data: { tienda: Tienda, usuarios: Usuario[] }
   ) {
     this.usuarios = data.usuarios || [];  
     this.storeForm = this.fb.group({
-      id: [data.store.id],
-      codigo: [data.store.codigo, Validators.required],
-      direccion: [data.store.direccion],
-      ciudad: [data.store.ciudad],
-      provincia: [data.store.provincia],
-      habilitado: [data.store.habilitado, Validators.required],
-      usuario: [data.store.usuario]  // Puede ser null
+      id: [data.tienda.id],
+      codigo: [{value: data.tienda.codigo, disabled: true}],
+      direccion: [data.tienda.direccion],
+      ciudad: [data.tienda.ciudad],
+      provincia: [data.tienda.provincia],
+      habilitado: [data.tienda.habilitada, Validators.required],
+      es_casa_central: [data.tienda.es_casa_central]
+      // usuario: [data.store.usuarioId]  // Puede ser null
     });
   }
 
