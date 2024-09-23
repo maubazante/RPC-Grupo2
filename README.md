@@ -3,17 +3,10 @@
 
 ### Integrantes del Grupo 2
 
-- **Nombre:** Mauro Bazante
-- **DNI:** 42231423
-
-- **Nombre:** Andres Ezequiel Cupo
-- **DNI:** 40903206
-
-- **Nombre:** Valentin Olivero
-- **DNI:** 43057692
-
-- **Nombre:** Sergio Simón Robles Flores
-- **DNI:** 35355978
+- **Mauro Bazante**
+- **Andres Ezequiel Cupo**
+- **Valentin Olivero**
+- **Sergio Robles Flores**
 
 ## Link al repositorio:
 
