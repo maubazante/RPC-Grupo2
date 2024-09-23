@@ -449,17 +449,18 @@ Antes de comenzar, asegurate de tener instalado lo siguiente en **Windows 11 x64
 
 ### Lado Cliente (NodeJS)
 1. **Descargá e instala NodeJS**: [Descargar NodeJS](https://nodejs.org/)
-2. Navegá al directorio del cliente utilizando **PowerShell** o **CMD**.
+2. Navegá al [directorio del cliente](backend-cliente/stockearte) utilizando **PowerShell** o **CMD**.
 3. Ejecutá el siguiente comando para instalar las dependencias: ```npm install```
 4. **Para correr el cliente** usa el comando: ```node cliente.js```
 
 ### Lado Servidor (Java Springboot)
 1. **Instalá Java 22 y Maven:** [Descargar Java 22](https://www.oracle.com/java/technologies/javase-jdk22-downloads.html) | [Descargar Maven](https://maven.apache.org/download.cgi)
 2. **Instalá MySQL:** [MySQL 8](https://dev.mysql.com/downloads/installer/)
-3. **Crea la base de datos ejecutando el script** [stockearte_init_db.sql](stockearte_init_db.sql). Este archivo incluye un usuario llamado **admin** con la contraseña **admintienda** y una tienda "Casa Central" de prueba.
-4. **Configurá tus credenciales de BD en el ``application.properties``**
-5. **Ante cualquier falla**, podes tirar un **ALT + F5** para actualizar el proyecto maven, o ir a la carpeta raíz del proyecto; abrir **CMD** y usar el comando: ```mvn clean install```
-6. **Para correr el servidor** ejecuta: ```mvn spring-boot:run```
+3. **Crea la base de datos** ejecutando el script [stockearte_init_db.sql](stockearte_init_db.sql). Este archivo incluye un usuario llamado **admin** con la contraseña **admintienda** y una tienda "Casa Central" de prueba.
+4. **Configurá tus credenciales de BD** en el [application.properties](backend-servidor\stockearte\src\main\resources\application.properties).
+5. Navegá al [directorio del servidor](backend-servidor/stockearte)  utilizando **PowerShell** o **CMD**.
+6. **Si hay algún problema**, podés presionar **ALT + F5** para actualizar el proyecto Maven, o abrir **CMD** en la carpeta raíz del proyecto y usar el comando: ```mvn clean install```
+7. **Para correr el servidor**, ejecuta: ```mvn spring-boot:run```
 
 ### Pruebas con Postman
 También se puede probar el cliente y el servidor utilizando Postman. Se incluye una colección de prueba en el archivo [Stockearte.postman_collection.json](Stockearte.postman_collection.json).
