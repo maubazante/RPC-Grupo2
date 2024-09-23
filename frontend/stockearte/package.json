@@ -22,6 +22,7 @@
     "@angular/router": "^18.2.0",
     "notyf": "^3.10.0",
     "rxjs": "~7.8.0",
+    "stockearte": "file:",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },

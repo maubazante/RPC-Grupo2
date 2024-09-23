@@ -8,13 +8,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tienda")
+@Table(name = "tiendas")
 public class Tienda {
 
 	@Id
@@ -33,26 +31,25 @@ public class Tienda {
 	@Column(name = "provincia", nullable = false, length = 100)
 	private String provincia;
 
-	@Column(name = "habilitado", nullable = false)
-	private Boolean habilitado = true;
+	@Column(name = "habilitada", nullable = false)
+	private Boolean habilitada = true;
 
-	@OneToOne
-	@JoinColumn(name = "fk_usuario_id", referencedColumnName = "id")
-	private Usuario usuario;
+	@Column(name = "es_casa_central", nullable = false)
+	private Boolean esCasaCentral = false;
 
 	@OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL)
 	private List<Stock> productos;
 
-	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitado,
-			Usuario usuario, List<Stock> productos) {
+	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitada,
+			Boolean esCasaCentral, List<Stock> productos) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
 		this.direccion = direccion;
 		this.ciudad = ciudad;
 		this.provincia = provincia;
-		this.habilitado = habilitado;
-		this.usuario = usuario;
+		this.habilitada = habilitada;
+		this.esCasaCentral = esCasaCentral;
 		this.productos = productos;
 	}
 
@@ -100,20 +97,20 @@ public class Tienda {
 		this.provincia = provincia;
 	}
 
-	public Boolean getHabilitado() {
-		return habilitado;
+	public Boolean isHabilitada() {
+		return habilitada;
 	}
 
-	public void setHabilitado(Boolean habilitado) {
-		this.habilitado = habilitado;
+	public void setHabilitada(Boolean habilitada) {
+		this.habilitada = habilitada;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public Boolean getEsCasaCentral() {
+		return esCasaCentral;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setEsCasaCentral(Boolean esCasaCentral) {
+		this.esCasaCentral = esCasaCentral;
 	}
 
 	public List<Stock> getProductos() {

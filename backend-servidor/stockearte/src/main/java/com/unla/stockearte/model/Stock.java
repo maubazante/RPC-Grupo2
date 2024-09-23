@@ -16,14 +16,14 @@ public class Stock {
 	private StockId id;
 
 	@ManyToOne
-	@MapsId("tiendaId")
-	@JoinColumn(name = "fk_tienda_id")
-	private Tienda tienda;
+	@MapsId("productoId")
+	@JoinColumn(name = "fk_producto_id", nullable = false)
+	private Producto producto;
 
 	@ManyToOne
-	@MapsId("productoId")
-	@JoinColumn(name = "fk_producto_id")
-	private Producto producto;
+	@MapsId("tiendaId")
+	@JoinColumn(name = "fk_tienda_id", nullable = false)
+	private Tienda tienda;
 
 	@Column(nullable = false)
 	private Integer stock = 0;
