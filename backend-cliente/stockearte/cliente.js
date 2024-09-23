@@ -96,7 +96,7 @@ app.post('/findTiendas', (req, res) => {
 });
 
 // Endpoint para obtener todas las tiendas
-app.post('/getTiendas', (req, res) => {
+app.get('/getTiendas', (req, res) => {
   const request = {}; // No necesitas enviar datos en la solicitud
 
   clienteTienda.getTiendas(request, (error, response) => {
@@ -195,7 +195,7 @@ app.post('/findUsuarios', (req, res) => {
 });
 
 // Endpoint para obtener todos los usuarios
-app.post('/getUsuarios', (req, res) => {
+app.get('/getUsuarios', (req, res) => {
   const request = {}; // No necesitas enviar datos en la solicitud
 
   clienteUsuario.getUsuarios(request, (error, response) => {
@@ -296,7 +296,7 @@ app.post('/findProductos', (req, res) => {
 });
 
 // Endpoint para traer productos
-app.post('/getProductos', (req, res) => {
+app.get('/getProductos', (req, res) => {
   const { username } = req.body;
 
   const request = {
