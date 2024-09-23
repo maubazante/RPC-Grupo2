@@ -9,6 +9,10 @@ import { USUARIOS_MOCK } from '../../../shared/mock/usuario-mock';
   styleUrl: './user-list.component.css'
 })
 export class UserListComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'username', 'rol', 'tienda', 'habilitado'];
+  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'username', 'rol', 'tienda', 'habilitado', 'edit', 'erase'];
   usuarios: Usuario[] = USUARIOS_MOCK;
+
+  constructor() {
+    
+  }
 }

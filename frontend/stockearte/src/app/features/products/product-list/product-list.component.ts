@@ -9,6 +9,6 @@ import { Producto } from '../../../shared/types/Producto';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'foto'];
+  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'foto', 'edit', 'erase'];
   productos: Producto[] = PRODUCTOS_MOCK;
 }
