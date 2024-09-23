@@ -1,7 +1,5 @@
 package com.unla.stockearte.model;
 
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,11 +7,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuarios")
 public class Usuario {
 
 	@Id
@@ -39,7 +38,8 @@ public class Usuario {
 	@Enumerated(EnumType.STRING)
 	private Rol rol;
 
-	@OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(name = "fk_tienda_id", referencedColumnName = "id")
 	private Tienda tienda;
 
 	public Usuario(Long id, String nombre, String apellido, String username, String password, Boolean habilitado,
@@ -51,6 +51,20 @@ public class Usuario {
 		this.username = username;
 		this.password = password;
 		this.habilitado = habilitado;
+		this.habilitado = true;
+		this.rol = rol;
+		this.tienda = tienda;
+	}
+
+	public Usuario(Long id, String nombre, String apellido, String username, String password,
+			Rol rol, Tienda tienda) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.username = username;
+		this.password = password;
+		this.habilitado = true;
 		this.rol = rol;
 		this.tienda = tienda;
 	}
@@ -99,11 +113,13 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public Boolean getHabilitado() {
+	public Boolean isHabilitado() {
 		return habilitado;
 	}
 
 	public void setHabilitado(Boolean habilitado) {
+		if (habilitado == null)
+			throw new IllegalArgumentException("El estado de habilitación no puede ser null.");
 		this.habilitado = habilitado;
 	}
 
@@ -122,7 +138,10 @@ public class Usuario {
 	public void setTienda(Tienda tienda) {
 		this.tienda = tienda;
 	}
-	
-	
+
+	public boolean esDeCasaCentral() {
+		Tienda tienda = this.tienda;
+		return tienda != null && tienda.getEsCasaCentral();
+	}
 
 }

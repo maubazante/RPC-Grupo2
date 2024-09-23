@@ -1,10 +1,16 @@
 const express = require('express');
-const clienteTienda = require('./tienda'); 
+const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
+
+// Iniciar el servidor en el puerto 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
+});
 
 
 //                                                                                        ENDPOINTS PARA TIENDA
@@ -38,7 +44,7 @@ app.delete('/deleteTienda', (req, res) => {
 
   const request = { codigo };
 
-  clienteTienda.DeleteTienda(request, (error, response) => {
+  clienteTienda.deleteTienda(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -69,6 +75,39 @@ app.put('/modifyTienda', (req, res) => {
     }
   })
 })
+
+// Endpoint para buscar tiendas
+app.post('/findTiendas', (req, res) => {
+  const { codigo, habilitada, username } = req.body;
+
+  const request = {
+    codigo: codigo || '',
+    habilitada: habilitada !== undefined ? habilitada : null,
+    username: username || ''
+  };
+
+  clienteTienda.findTiendas(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
+// Endpoint para obtener todas las tiendas
+app.post('/getTiendas', (req, res) => {
+  const request = {}; // No necesitas enviar datos en la solicitud
+
+  clienteTienda.getTiendas(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
 
 
 //                                                                                    ENDPOINTS PARA USUARIO
@@ -103,7 +142,7 @@ app.delete('/deleteUsuario', (req, res) => {
 
   const request = { usuarioId };
 
-  clienteUsuario.DeleteUsuario(request, (error, response) => {
+  clienteUsuario.deleteUsuario(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -136,6 +175,37 @@ app.put('/modifyUsuario', (req, res) => {
     }
   })
 })
+
+// Endpoint para buscar usuarios
+app.post('/findUsuarios', (req, res) => {
+  const { username, tiendaId } = req.body;
+
+  const request = {
+    username: username || '',
+    tiendaId: tiendaId || 0
+  };
+
+  clienteUsuario.findUsuarios(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
+// Endpoint para obtener todos los usuarios
+app.post('/getUsuarios', (req, res) => {
+  const request = {}; // No necesitas enviar datos en la solicitud
+
+  clienteUsuario.getUsuarios(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
 
 
 //                                                                                          ENDPOINTS PARA PRODUCTO
@@ -171,7 +241,7 @@ app.delete('/deleteProducto', (req, res) => {
 
   const request = { productoId };
 
-  clienteProducto.DeleteProducto(request, (error, response) => {
+  clienteProducto.deleteProducto(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -205,9 +275,39 @@ app.put('/modifyProducto', (req, res) => {
   })
 })
 
+// Endpoint para buscar productos
+app.post('/findProductos', (req, res) => {
+  const { nombre, codigo, talle, color } = req.body;
 
-// Iniciar el servidor en el puerto 3000
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
+  const request = {
+    nombre: nombre || '',
+    codigo: codigo || '',
+    talle: talle || '',
+    color: color || ''
+  };
+
+  clienteProducto.findProductos(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
+});
+
+// Endpoint para traer productos
+app.post('/getProductos', (req, res) => {
+  const { username } = req.body;
+
+  const request = {
+    username: username || ''
+  };
+
+  clienteProducto.getProductos(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  });
 });

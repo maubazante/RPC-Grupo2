@@ -2,6 +2,8 @@ package com.unla.stockearte.model;
 
 import java.util.List;
 
+import org.hibernate.mapping.Set;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "producto")
+@Table(name = "productos")
 public class Producto {
 
 	@Id
@@ -26,31 +28,30 @@ public class Producto {
 	@Column(nullable = false, unique = true, length = 10)
 	private String codigo;
 
+	@Column(nullable = false, length = 5)
+	private String talle;
 	@Lob
+
 	private byte[] foto; // La imagen se almacena como un blob
 
 	@Column(nullable = false, length = 50)
 	private String color;
 
-	@Column(nullable = false, length = 5)
-	private String talle;
-
-	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
-	private List<Stock> tiendas;
+	@OneToMany(mappedBy = "producto")
+	private List<Stock> stock;
 
 	@Column(name = "habilitado", nullable = false)
 	private boolean habilitado = true;
 
-	public Producto(Long id, String nombre, String codigo, byte[] foto, String color, String talle, List<Stock> tiendas,
+	public Producto(Long id, String nombre, String codigo, byte[] foto, String color, String talle,
 			boolean habilitado) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.codigo = codigo;
+		this.talle = talle;
 		this.foto = foto;
 		this.color = color;
-		this.talle = talle;
-		this.tiendas = tiendas;
 		this.habilitado = habilitado;
 	}
 
@@ -82,6 +83,14 @@ public class Producto {
 		this.codigo = codigo;
 	}
 
+	public String getTalle() {
+		return talle;
+	}
+
+	public void setTalle(String talle) {
+		this.talle = talle;
+	}
+
 	public byte[] getFoto() {
 		return foto;
 	}
@@ -96,22 +105,6 @@ public class Producto {
 
 	public void setColor(String color) {
 		this.color = color;
-	}
-
-	public String getTalle() {
-		return talle;
-	}
-
-	public void setTalle(String talle) {
-		this.talle = talle;
-	}
-
-	public List<Stock> getTiendas() {
-		return tiendas;
-	}
-
-	public void setTiendas(List<Stock> tiendas) {
-		this.tiendas = tiendas;
 	}
 
 	public boolean isHabilitado() {
