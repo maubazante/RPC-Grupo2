@@ -4,13 +4,13 @@
 ### Integrantes del Grupo 2
 
 - Mauro Bazante
-- Andres Ezequiel Cupo
-- Valentin Olivero
+- Andrés Ezequiel Cupo
+- Valentín Olivero
 - Sergio Robles Flore
 
-## Link a la Demo En YouTube:
+## Link a la demo del proyecto en YouTube:
 
-Proximamente...
+[https://youtu.be/m7Y2N5eE9b4](https://youtu.be/m7Y2N5eE9b4)
 
 ## Link al repositorio:
 
