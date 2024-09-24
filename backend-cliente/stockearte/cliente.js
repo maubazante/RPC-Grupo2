@@ -35,7 +35,7 @@ app.post('/createTienda', (req, res) => {
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
       usuarioId: tiendaData.usuarioId,
-      idUserAdmin: usuarioData.idUserAdmin
+      idUserAdmin: tiendaData.idUserAdmin
     }
   };
 
