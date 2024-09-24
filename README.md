@@ -3,10 +3,10 @@
 
 ### Integrantes del Grupo 2
 
-- Mauro Bazante
 - Andrés Ezequiel Cupo
+- Mauro Bazante
+- Sergio Simón Robles Flores
 - Valentín Olivero
-- Sergio Robles Flore
 
 ## Link a la demo del proyecto en YouTube:
 
