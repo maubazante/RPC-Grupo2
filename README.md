@@ -97,7 +97,7 @@ Para el frontend, optamos por utilizar Angular. Aunque no todos los integrantes 
 
 **Angular** es un framework de JavaScript robusto y ampliamente utilizado, mantenido por Google. Lo elegimos para desarrollar el frontend debido a su capacidad para crear interfaces de usuario interactivas y con componentes reutilizables. Además, ofrece servicios como el enrutamiento, lo que facilita la navegación dentro de la aplicación.
 
-A continuación se muestran capturas del frontend desarrollado con Angular:
+A continuación, se muestran capturas del frontend desarrollado con Angular:
 
 **Pantalla de Inicio de Sesión (Login)**
 ![Frontend - Login](images/stockearte%20login.png)
