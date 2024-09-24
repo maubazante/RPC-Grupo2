@@ -6,9 +6,9 @@ service UsuarioService {
   rpc CreateUsuario (CreateUsuarioRequest) returns (CreateUsuarioResponse);
   rpc DeleteUsuario (DeleteUsuarioRequest) returns (DeleteUsuarioResponse);
   rpc ModifyUsuario (ModifyUsuarioRequest) returns (ModifyUsuarioResponse);
-
   rpc FindUsuarios(FindUsuariosRequest) returns (FindUsuariosResponse);
   rpc GetUsuarios(GetUsuariosRequest) returns (GetUsuariosResponse);
+  rpc LoginUsuario(UserLoginRequest) returns (UserLoginResponse);
 }
 
 message Usuario {
@@ -21,6 +21,11 @@ message Usuario {
 	bool habilitado = 7;       // Indica si esta habilitado el usuario o no
 	int64 id = 8;              // id del usuario
 	int64 idUserAdmin = 9;      // El id del usuario de casas central
+}
+
+message UserLoginMessage {
+	string username = 1;
+	string password = 2;
 }
 
 message CreateUsuarioRequest {
@@ -64,4 +69,18 @@ message GetUsuariosRequest {}
 // Response para obtener todos los usuarios
 message GetUsuariosResponse {
     repeated Usuario usuarios = 1; // Lista de usuarios
+}
+
+// Request para logear un usuario
+message UserLoginRequest	{
+	UserLoginMessage userLogin = 1;
+}
+
+// Response para obtener el usuario logeado
+message UserLoginResponse	{
+	string username = 1;
+	string password = 2;
+	string rol = 3;
+	int64 userId = 4;
+	string errorMessage = 5;
 }

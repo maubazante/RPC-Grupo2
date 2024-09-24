@@ -26,6 +26,8 @@ import com.usuario.grpc.GetUsuariosRequest;
 import com.usuario.grpc.GetUsuariosResponse;
 import com.usuario.grpc.ModifyUsuarioRequest;
 import com.usuario.grpc.ModifyUsuarioResponse;
+import com.usuario.grpc.UserLoginRequest;
+import com.usuario.grpc.UserLoginResponse;
 import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
 
 import io.grpc.stub.StreamObserver;
@@ -219,6 +221,30 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		}
 
 		responseObserver.onNext(responseBuilder.build());
+		responseObserver.onCompleted();
+	}
+	
+	
+	
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public void loginUsuario(UserLoginRequest request, StreamObserver<UserLoginResponse> responseObserver) {
+		Optional<Usuario> user = getUsuarioRepository().findByUsernameAndPassword(request.getUserLogin().getUsername(), request.getUserLogin().getPassword());
+		UserLoginResponse response = null;
+		if(user.isPresent()) {
+			response = UserLoginResponse.newBuilder()
+					.setPassword(user.get().getPassword())
+					.setUsername(user.get().getUsername())
+					.setRol(user.get().getRol().getValue())
+					.setUserId(user.get().getId())
+					.build();
+		} else {
+			response = UserLoginResponse.newBuilder()
+					.setErrorMessage("El usuario ingresado no existe en la base de datos.")
+					.build();
+		}
+		
+		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}
 

@@ -19,6 +19,11 @@ message Usuario {
 	int64 idUserAdmin = 9;      // El id del usuario de casas central
 }
 
+message UserLoginMessage {
+	string username = 1;
+	string password = 2;
+}
+
 // Request para crear un usuario
 message CreateUsuarioRequest {
     Usuario usuario = 1;
@@ -68,6 +73,20 @@ message GetUsuariosResponse {
     repeated Usuario usuarios = 1; // Lista de usuarios
 }
 
+// Request para logear un usuario
+message UserLoginRequest	{
+	UserLoginMessage userLogin = 1;
+}
+
+// Response para obtener el usuario logeado
+message UserLoginResponse	{
+	string username = 1;
+	string password = 2;
+	string rol = 3;
+	int64 userId = 4;
+	string errorMessage = 5;
+}
+
 // Servicios para manejar usuarios
 service UsuarioService {
     rpc CreateUsuario(CreateUsuarioRequest) returns (CreateUsuarioResponse);
@@ -76,4 +95,5 @@ service UsuarioService {
 
     rpc FindUsuarios(FindUsuariosRequest) returns (FindUsuariosResponse);
     rpc GetUsuarios(GetUsuariosRequest) returns (GetUsuariosResponse);
+	rpc LoginUsuario(UserLoginRequest) returns (UserLoginResponse);
 }

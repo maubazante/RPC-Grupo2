@@ -211,6 +211,23 @@ app.post('/getUsuarios', (req, res) => {
   });
 });
 
+app.post('/login', (req, res) => {
+  const data = req.body;
+  const request = {
+    userLogin: {
+      username: data.username,
+      password: data.password,
+    }
+  };
+  clienteUsuario.loginUsuario(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  })
+})
+
 
 //                                                                                          ENDPOINTS PARA PRODUCTO
 
