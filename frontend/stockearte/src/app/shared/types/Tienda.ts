@@ -1,11 +1,14 @@
-import { Usuario } from "./Usuario";
+export interface TiendaArray {
+  tiendas: Tienda[]
+}
 
 export interface Tienda {
-    id: number;
-    codigo: string;
-    direccion?: string;
-    ciudad?: string;
-    provincia?: string;
-    habilitado: boolean;
-    usuario: Usuario | null;  // Puede ser null si no hay usuario asignado
-  }
+  id: string
+  codigo: string
+  direccion: string
+  ciudad: string
+  provincia: string
+  habilitada: boolean
+  usuarioId: string
+  es_casa_central: boolean
+}
