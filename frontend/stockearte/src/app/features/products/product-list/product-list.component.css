@@ -2,24 +2,24 @@
     display: flex;
     justify-content: center;
     height: calc(100vh - 112px);
-    background-color: transparent;  /* Fondo transparente */
+    background-color: transparent; 
   }
   
   .content-container {
     padding: 2px;
-    width: 80%;  /* Ancho más grande */
-    max-width: 1200px;  /* Ancho máximo para pantallas grandes */
+    width: 80%; 
+    max-width: 1200px;  
   }
   
   table {
-    width: 100%;  /* Ancho completo dentro del contenedor */
-    color: #fff;  /* Texto en blanco */
+    width: 100%;  
+    color: #fff;  
     padding: 20px;
   }
  
-  /* Opcional: Ajusta el tamaño del texto si es necesario */
+
   .mat-cell {
-    font-size: 16px;  /* Aumenta el tamaño del texto */
+    font-size: 16px;  
   }
 
   .imagen {

@@ -1,1 +1,74 @@
-<p>user-form works!</p>
+<h2 mat-dialog-title>Editar Usuario</h2>
+<mat-dialog-content>
+  <form [formGroup]="userForm">
+    <div class="nombre-apellido">
+        <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" required>
+            <mat-error *ngIf="userForm.get('nombre')?.hasError('required')">
+              Nombre es requerido
+            </mat-error>
+          </mat-form-field>
+      
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" required>
+            <mat-error *ngIf="userForm.get('apellido')?.hasError('required')">
+              Apellido es requerido
+            </mat-error>
+          </mat-form-field>
+    </div>
+    
+    <div class="username-password">
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username">
+          </mat-form-field>
+      
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+              <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+    </div>
+    
+    <div class="selectors">
+        <mat-form-field appearance="outline">
+            <mat-label>Habilitado</mat-label>
+            <mat-select formControlName="habilitado">
+              <mat-option [value]="true">Sí</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="userForm.get('habilitado')?.hasError('required')">
+              Estado es requerido
+            </mat-error>
+          </mat-form-field>
+      
+          <mat-form-field appearance="outline">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="rol" required>
+              <mat-option *ngFor="let rol of roles" [value]="rol">{{ rol }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="userForm.get('rol')?.hasError('required')">
+              El rol es requerido
+            </mat-error>
+          </mat-form-field>
+    </div>
+    
+
+    <mat-form-field appearance="outline" *ngIf="tiendas.length > 0">
+      <mat-label>Tienda</mat-label>
+      <mat-select formControlName="tienda">
+        <mat-option [value]="null">Sin tienda</mat-option>
+        <mat-option *ngFor="let tienda of tiendas" [value]="tienda">{{ tienda.codigo }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="userForm.invalid">Guardar</button>
+</mat-dialog-actions>

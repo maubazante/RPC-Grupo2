@@ -3,10 +3,14 @@
 
 ### Integrantes del Grupo 2
 
-- **Mauro Bazante**
-- **Andres Ezequiel Cupo**
-- **Valentin Olivero**
-- **Sergio Robles Flores**
+- Andrés Ezequiel Cupo
+- Mauro Bazante
+- Sergio Simón Robles Flores
+- Valentín Olivero
+
+## Link a la demo del proyecto en YouTube:
+
+[https://youtu.be/m7Y2N5eE9b4](https://youtu.be/m7Y2N5eE9b4)
 
 ## Link al repositorio:
 
@@ -19,7 +23,6 @@ Para clonar este repositorio, utilizar el siguiente comando en la terminal o con
 ```bash
 git clone https://github.com/maubazante/RPC-Grupo2.git
 ```
-
 
 # Enunciado
 
@@ -88,8 +91,22 @@ Decidimos utilizar diversas tecnologías en el proyecto basándonos en nuestras 
 
 En cuanto a la comunicación entre servicios, cada entidad cuenta con un archivo `.proto` que define su estructura. Iniciamos el proyecto con un ejemplo proporcionado por el docente, utilizando `protoc` en Windows. Sin embargo, nos cruzamos con varios problemas de compilación por lo que decidimos utilizar el plugin de Google para Protobuf en el [pom.xml](backend-servidor\stockearte\pom.xml).
 
-Para el frontend, optamos por utilizar Angular. Aunque no todos los integrantes del equipo tienen experiencia previa con este framework, dos de ellos lo dominan bastante. Luego la elección de Node.js fue por su rapidez y simplicidad en el desarrollo, lo que nos permite mantener un entorno de trabajo ordenado y segmentado.
+Para el frontend, optamos por utilizar Angular. Aunque no todos los integrantes del equipo tienen experiencia previa con este framework, dos de ellos lo dominan bastante. Angular permite crear una interfaz de usuario dinámica con componentes reutilizables. La elección de Node.js se basó en su rapidez y simplicidad en el desarrollo, lo que nos permite mantener un entorno de trabajo ordenado y bien segmentado.
 
+### Frontend con Angular
+
+**Angular** es un framework de JavaScript robusto y ampliamente utilizado, mantenido por Google. Lo elegimos para desarrollar el frontend debido a su capacidad para crear interfaces de usuario interactivas y con componentes reutilizables. Además, ofrece servicios como el enrutamiento, lo que facilita la navegación dentro de la aplicación.
+
+A continuación, se muestran capturas del frontend desarrollado con Angular:
+
+**Pantalla de Inicio de Sesión (Login)**
+![Frontend - Login](images/stockearte%20login.png)
+
+**Pantalla de Listado de Usuarios (Landing)**
+![Frontend - Landing](images/stockearte%20landing.png)
+
+**Pantalla de Edición de Usuarios:**
+![Frontend - Edicion de usuarios](images/stockearte%20edit.png)
 
 ## Arquitectura
 

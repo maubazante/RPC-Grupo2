@@ -22,6 +22,7 @@ import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.GetTiendasRequest;
 import com.tienda.grpc.GetTiendasResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
+import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.StockRepository;
@@ -50,24 +51,17 @@ public class TiendaService extends TiendaServiceImplBase {
 	// ==========================
 
 	private com.tienda.grpc.Tienda convertToProtoTienda(Tienda tienda) {
-		com.tienda.grpc.Tienda.Builder tiendaBuilder = com.tienda.grpc.Tienda.newBuilder()
-				.setId(tienda.getId())
-				.setCodigo(tienda.getCodigo())
-				.setDireccion(tienda.getDireccion())
-				.setCiudad(tienda.getCiudad())
-				.setProvincia(tienda.getProvincia())
-				.setHabilitada(tienda.isHabilitada())
+		com.tienda.grpc.Tienda.Builder tiendaBuilder = com.tienda.grpc.Tienda.newBuilder().setId(tienda.getId())
+				.setCodigo(tienda.getCodigo()).setDireccion(tienda.getDireccion()).setCiudad(tienda.getCiudad())
+				.setProvincia(tienda.getProvincia()).setHabilitada(tienda.isHabilitada())
 				.setEsCasaCentral(tienda.getEsCasaCentral());
 
 		/*
-		 * // Convertir la lista de Productos de Tienda a gRPC.
-		 * if (tienda.getProductos() != null) {
-		 * for (Stock producto : tienda.getProductos()) {
+		 * // Convertir la lista de Productos de Tienda a gRPC. if
+		 * (tienda.getProductos() != null) { for (Stock producto :
+		 * tienda.getProductos()) {
 		 * tiendaBuilder.addProductos(convertToProtoStock(producto)); // Suponiendo que
-		 * tienes un método para
-		 * // convertir Stock a gRPC.
-		 * }
-		 * }
+		 * tienes un método para // convertir Stock a gRPC. } }
 		 */
 
 		return tiendaBuilder.build();
@@ -81,17 +75,23 @@ public class TiendaService extends TiendaServiceImplBase {
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createTienda(CreateTiendaRequest request, StreamObserver<CreateTiendaResponse> responseObserver) {
-
-		Tienda tienda = new Tienda();
-		tienda.setCodigo(request.getTienda().getCodigo());
-		tienda.setDireccion(request.getTienda().getDireccion());
-		tienda.setCiudad(request.getTienda().getCiudad());
-		tienda.setProvincia(request.getTienda().getProvincia());
-
-		getTiendaRepository().save(tienda);
-
-		CreateTiendaResponse response = CreateTiendaResponse.newBuilder()
-				.setMessage("Tienda creada con codigo " + tienda.getCodigo() + " con exito").build();
+		
+		CreateTiendaResponse response = null;
+		if(getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
+			Tienda tienda = new Tienda();
+			tienda.setCodigo(request.getTienda().getCodigo());
+			tienda.setDireccion(request.getTienda().getDireccion());
+			tienda.setCiudad(request.getTienda().getCiudad());
+			tienda.setProvincia(request.getTienda().getProvincia());
+			
+			getTiendaRepository().save(tienda);
+			
+			response = CreateTiendaResponse.newBuilder()
+					.setMessage("Tienda creada con codigo " + tienda.getCodigo() + " con exito").build();			
+		} else {
+			response = CreateTiendaResponse.newBuilder()
+					.setMessage("Error al crear la tienda: el usuario autenticado no existe o carece de los permisos necesarios para crear nuevas tiendas.").build();
+		}
 
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
@@ -122,19 +122,25 @@ public class TiendaService extends TiendaServiceImplBase {
 		Tienda tienda = getTiendaRepository().findByCodigo(request.getTienda().getCodigo());
 		ModifyTiendaResponse response = null;
 
-		if (tienda != null) {
-			tienda.setHabilitada(request.getTienda().getHabilitada());
-			tienda.setCiudad(request.getTienda().getCiudad());
-			tienda.setCodigo(request.getTienda().getCodigo());
-			tienda.setDireccion(request.getTienda().getDireccion());
-			tienda.setProvincia(request.getTienda().getProvincia());
-
-			// TODO: Ver el tema de la asignacion de productos
-
-			getTiendaRepository().save(tienda);
-
+		if(getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
+			if (tienda != null) {
+				tienda.setHabilitada(request.getTienda().getHabilitada());
+				tienda.setCiudad(request.getTienda().getCiudad());
+				tienda.setCodigo(request.getTienda().getCodigo());
+				tienda.setDireccion(request.getTienda().getDireccion());
+				tienda.setProvincia(request.getTienda().getProvincia());
+				
+				// TODO: Ver el tema de la asignacion de productos
+				
+				getTiendaRepository().save(tienda);
+				
+				response = ModifyTiendaResponse.newBuilder()
+						.setMessage("Tienda con codigo " + request.getTienda().getCodigo() + " modificada exitosamente")
+						.build();
+			}			
+		}else {
 			response = ModifyTiendaResponse.newBuilder()
-					.setMessage("Tienda con codigo " + request.getTienda().getCodigo() + " modificada exitosamente")
+					.setMessage("Error al modificar la tienda: el usuario autenticado no existe o carece de los permisos necesarios para modificar tiendas.")
 					.build();
 		}
 
@@ -217,15 +223,8 @@ public class TiendaService extends TiendaServiceImplBase {
 		List<Tienda> tiendasModificadas = new ArrayList<>();
 
 		for (Tienda t : tiendas) {
-			Tienda tiendaNueva = new Tienda(
-					t.getId(),
-					t.getCodigo(),
-					t.getDireccion(),
-					t.getCiudad(),
-					t.getProvincia(),
-					t.isHabilitada(),
-					t.getEsCasaCentral(),
-					t.getProductos());
+			Tienda tiendaNueva = new Tienda(t.getId(), t.getCodigo(), t.getDireccion(), t.getCiudad(), t.getProvincia(),
+					t.isHabilitada(), t.getEsCasaCentral(), t.getProductos());
 			tiendasModificadas.add(tiendaNueva);
 		}
 
@@ -254,6 +253,10 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	public StockRepository getStockRepository() {
 		return stockRepository;
+	}
+
+	public UsuarioRepository getUsuarioRepository() {
+		return usuarioRepository;
 	}
 
 }

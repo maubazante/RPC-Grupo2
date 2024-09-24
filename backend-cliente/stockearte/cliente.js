@@ -1,10 +1,19 @@
 const express = require('express');
+const cors = require('cors');  
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
+
+// CORS
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true  
+}));
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;
@@ -25,7 +34,8 @@ app.post('/createTienda', (req, res) => {
       ciudad: tiendaData.ciudad,
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
-      usuarioId: tiendaData.usuarioId
+      usuarioId: tiendaData.usuarioId,
+      idUserAdmin: tiendaData.idUserAdmin
     }
   };
 
@@ -64,7 +74,8 @@ app.put('/modifyTienda', (req, res) => {
       ciudad: tiendaData.ciudad,
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
-      usuarioId: tiendaData.usuarioId
+      usuarioId: tiendaData.usuarioId,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
   clienteTienda.modifyTienda(request, (error, response) => {
@@ -96,7 +107,7 @@ app.post('/findTiendas', (req, res) => {
 });
 
 // Endpoint para obtener todas las tiendas
-app.post('/getTiendas', (req, res) => {
+app.get('/getTiendas', (req, res) => {
   const request = {}; // No necesitas enviar datos en la solicitud
 
   clienteTienda.getTiendas(request, (error, response) => {
@@ -123,7 +134,8 @@ app.post('/createUsuario', (req, res) => {
       rol: usuarioData.rol,
       tiendaId: usuarioData.tiendaId,
       habilitado: usuarioData.habilitado,
-      id: usuarioData.id
+      id: usuarioData.id,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
 
@@ -164,7 +176,8 @@ app.put('/modifyUsuario', (req, res) => {
       rol: usuarioData.rol,
       tiendaId: usuarioData.tiendaId,
       habilitado: usuarioData.habilitado,
-      id: usuarioData.id
+      id: usuarioData.id,
+      idUserAdmin: usuarioData.idUserAdmin
     }
   };
   clienteUsuario.modifyUsuario(request, (error, response) => {
@@ -195,7 +208,7 @@ app.post('/findUsuarios', (req, res) => {
 });
 
 // Endpoint para obtener todos los usuarios
-app.post('/getUsuarios', (req, res) => {
+app.get('/getUsuarios', (req, res) => {
   const request = {}; // No necesitas enviar datos en la solicitud
 
   clienteUsuario.getUsuarios(request, (error, response) => {
@@ -206,6 +219,23 @@ app.post('/getUsuarios', (req, res) => {
     }
   });
 });
+
+app.post('/login', (req, res) => {
+  const data = req.body;
+  const request = {
+    userLogin: {
+      username: data.username,
+      password: data.password,
+    }
+  };
+  clienteUsuario.loginUsuario(request, (error, response) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.json(response);
+    }
+  })
+})
 
 
 //                                                                                          ENDPOINTS PARA PRODUCTO
@@ -222,7 +252,8 @@ app.post('/createProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
-      foto: productoData.foto
+      foto: productoData.foto,
+      idUserAdmin: productoData.idUserAdmin
     }
   };
 
@@ -259,11 +290,12 @@ app.put('/modifyProducto', (req, res) => {
       nombre: productoData.nombre,
       codigo: productoData.apellido,
       color: productoData.color,
-      talle: productoData.talla,
+      talle: productoData.talle,
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
-      foto: productoData.foto
+      foto: productoData.foto,
+      idUserAdmin: productoData.idUserAdmin
     }
   };
   clienteProducto.modifyProducto(request, (error, response) => {

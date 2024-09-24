@@ -1,15 +1,16 @@
 import { Rol } from "./Rol";
-import { Tienda } from "./Tienda";
 
 export interface Usuario {
-    id: number;
+    id: string;
     nombre: string;
     apellido: string;
     username?: string;
     password?: string;
     habilitado: boolean;
     rol: Rol;
-    tienda?: Tienda | null; // Puede ser null si no tiene tienda asignada
+    tiendaId: string | ""; // Puede ser null si no tiene tienda asignada
 }
-  
- 
+
+export interface UsuariosArray { 
+    usuarios: Usuario[];
+}

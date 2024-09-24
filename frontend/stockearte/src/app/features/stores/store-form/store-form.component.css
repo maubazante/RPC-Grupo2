@@ -1,0 +1,16 @@
+form {
+    padding: 15px;
+}
+
+h2 {
+    margin: 0.5em;
+    margin-bottom: 0;
+}
+
+mat-form-field {
+    display: flex;
+}
+
+mat-slide-toggle {
+    padding-bottom: 15px;
+}

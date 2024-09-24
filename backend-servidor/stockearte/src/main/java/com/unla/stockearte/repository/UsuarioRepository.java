@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Usuario;
 
 @Repository
@@ -21,4 +22,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Set<Usuario> findByUsernameContainingAndTiendaId(String username, Long tiendaId);
 
     Optional<Usuario> findByUsername(String username);
+    
+    Optional<Usuario> findByUsernameAndPassword(String username, String password);
+    
+    boolean existsByIdAndRol(Long idUsuario, Rol rol);
 }
