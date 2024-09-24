@@ -74,10 +74,12 @@ app.put('/modifyTienda', (req, res) => {
       ciudad: tiendaData.ciudad,
       provincia: tiendaData.provincia,
       habilitada: tiendaData.habilitada,
-      usuarioId: tiendaData.usuarioId,
-      idUserAdmin: usuarioData.idUserAdmin
     }
   };
+
+  if(tiendaData.usuarioId) request.tienda.usuarioId = tiendaData.usuarioId;
+  if(tiendaData.idUserAdmin) request.tienda.idUserAdmin = tiendaData.idUserAdmin
+
   clienteTienda.modifyTienda(request, (error, response) => {
     if (error) {
       res.status(500).send(error);

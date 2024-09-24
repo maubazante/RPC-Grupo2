@@ -28,14 +28,16 @@ export class ProductListComponent {
 
   loadProducts(): void {
     // Persistir nombre de usuario y ROL
-    this.productsService.getProductos("baumamamam").subscribe({
+    this.productsService.getAllProductos().subscribe({
       next: (products) => {
         this.dataSource = products.productos;
-        this.cdr.detectChanges();
       },
       error: (err) => {
         this.notyf.error('Error al cargar productos');
         console.error(err);
+      }, 
+      complete: () => {
+        this.cdr.detectChanges();
       }
     });
   }
@@ -51,7 +53,6 @@ export class ProductListComponent {
       console.log("RESULT:", result)
       if (result) {
         this.updateProduct(result);
-        this.loadProducts();
       }
     });
   }
@@ -81,15 +82,14 @@ export class ProductListComponent {
   updateProduct(product: Producto): void {
     this.productsService.modifyProduct(product).subscribe({
       next: (updatedProduct) => {
-        const index = this.dataSource.findIndex(p => p.id === updatedProduct.id);
-        if (index !== -1) {
-          this.dataSource[index] = updatedProduct;  
-        }
-        this.notyf.success('Producto actualizado con éxito');
+        updatedProduct.message.includes('Error') ? this.notyf.error(updatedProduct) : this.notyf.success(updatedProduct);
       },
       error: (err) => {
         this.notyf.error('Error al actualizar producto');
         console.error(err);
+      },
+      complete: () => {
+        this.loadProducts();
       }
     });
   }

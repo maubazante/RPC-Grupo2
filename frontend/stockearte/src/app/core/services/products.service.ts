@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { IProductoRequest } from '../../shared/types/IProductoRequest';
 import { UsuariosArray } from '../../shared/types/Usuario';
 import { Producto, ProductoArray } from '../../shared/types/Producto';
+import { IPutUserResponse } from '../../shared/types/IUsuarioResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class ProductsService {
     return this.http.delete(`${environment.clientURL}/deleteProducto`, { body: { productoId: productId } });
   }
 
-  modifyProduct(productData: Producto): Observable<any> {
-    return this.http.put(`${environment.clientURL}/modifyProducto`, productData);
+  modifyProduct(productData: Producto): Observable<IPutUserResponse> {
+    return this.http.put<IPutUserResponse>(`${environment.clientURL}/modifyProducto`, productData);
   }
 
   // búsqueda
@@ -38,5 +39,10 @@ export class ProductsService {
   getProductos(usernameParam: string): Observable<ProductoArray> {
     let body = { username: usernameParam }
     return this.http.post<ProductoArray>(`${environment.clientURL}/getProductos`, body);
+  }
+
+  getAllProductos(): Observable<ProductoArray> {
+    let body = { }
+    return this.http.post<ProductoArray>(`${environment.clientURL}/findProductos`, body);
   }
 }
