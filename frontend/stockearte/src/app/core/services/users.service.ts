@@ -5,6 +5,10 @@ import { environment } from '../../../environments/environment';
 import { IUsuarioRequest } from '../../shared/types/IUsuarioRequest';
 import { Usuario, UsuariosArray } from '../../shared/types/Usuario';
 import { IPutUserResponse } from '../../shared/types/IUsuarioResponse';
+import { ILoginResponse } from '../../shared/types/ILoginResponse';
+import { ILoginRequest } from '../../shared/types/ILoginRequest';
+import { IRegisterRequest } from '../../shared/types/IRegisterRequest';
+import { IRegisterResponse } from '../../shared/types/IRegisterResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +41,13 @@ export class UsersService {
 
   getUsers(): Observable<UsuariosArray> {
     return this.http.get<UsuariosArray>(`${environment.clientURL}/getUsuarios`);
+  }
+
+  loginUsuario(request: ILoginRequest): Observable<ILoginResponse> {
+    return this.http.post<ILoginResponse>(`${environment.clientURL}/login`, request);
+  }
+
+  registerUsuario(request: IRegisterRequest): Observable<IRegisterResponse> {
+    return this.http.post<IRegisterResponse>(`${environment.clientURL}/createUsuario`, request);
   }
 }

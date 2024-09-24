@@ -1,17 +1,31 @@
 <div class="register-container">
     <div class="content-container">
         <mat-card class="mat-elevation-z8" >
-            <h4>¡Bienvenido a <b style="font-weight: 800;">stockearte</b>!</h4>
-            <p><b style="font-weight: 800;">stockearte</b> te ayuda a administrar tus tiendas, tus productos y tu organización completa en un solo lugar</p>
-            <p>Registrate para acceder a todas las funcionalidades</p>
+            <h5>¡Bienvenido a <b style="font-weight: 800;">stockearte</b>!</h5>
                 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="nombre">
+                        <mat-error *ngIf="registerForm.get('nombre')?.hasError('required')">
+                            El nombre es requerido
+                          </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Apellido</mat-label>
+                        <input matInput formControlName="apellido">
+                        <mat-error *ngIf="registerForm.get('apellido')?.hasError('required')">
+                            El apellido es requerido
+                          </mat-error>
+                    </mat-form-field>
+                    
                 <mat-form-field appearance="outline">
                     <mat-label>Usuario</mat-label>
                     <input matInput formControlName="username">
                     <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
                         El nombre de usuario es requerido
                       </mat-error>
-              
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
@@ -24,6 +38,8 @@
                         La contraseña es requerida
                     </mat-error>
                 </mat-form-field>
+
+
 
                 <button mat-stroked-button type="submit">Registrarse</button>
                 </form>

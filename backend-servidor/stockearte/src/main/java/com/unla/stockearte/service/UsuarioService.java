@@ -48,10 +48,21 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	// ==========================
 
 	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
-		return com.usuario.grpc.Usuario.newBuilder().setId(usuario.getId()).setNombre(usuario.getNombre())
-				.setApellido(usuario.getApellido()).setUsername(usuario.getUsername())
-				.setPassword(usuario.getPassword()).setRol(usuario.getRol().toString())
-				.setTiendaId(usuario.getTienda().getId()).setHabilitado(usuario.isHabilitado()).build();
+		com.usuario.grpc.Usuario.Builder protoUsuarioBuilder = com.usuario.grpc.Usuario.newBuilder()
+	            .setId(usuario.getId())
+	            .setNombre(usuario.getNombre())
+	            .setApellido(usuario.getApellido())
+	            .setUsername(usuario.getUsername())
+	            .setPassword(usuario.getPassword())
+	            .setRol(usuario.getRol().toString())
+	            .setHabilitado(usuario.isHabilitado());
+
+	    // Verifica si el usuario tiene una tienda asignada
+	    if (usuario.getTienda() != null) {
+	        protoUsuarioBuilder.setTiendaId(usuario.getTienda().getId());
+	    }
+
+	    return protoUsuarioBuilder.build();
 	}
 
 	// ==========================

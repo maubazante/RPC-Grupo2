@@ -1,7 +1,11 @@
 <div class="login-container">
+    
     <div class="content-container">
+        
         <mat-card class="mat-elevation-z8" >
-            <h4>¡Bienvenido de vuelta!</h4>
+            <h4>¡Bienvenido de vuelta!<button mat-icon-button matTooltip="Usuario ADMIN: u- admin p- admintienda">
+                <mat-icon>info</mat-icon>
+              </button></h4> 
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <mat-form-field appearance="outline">
                     <mat-label>Usuario</mat-label>
