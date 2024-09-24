@@ -281,7 +281,7 @@ app.put('/modifyProducto', (req, res) => {
       nombre: productoData.nombre,
       codigo: productoData.apellido,
       color: productoData.color,
-      talle: productoData.talla,
+      talle: productoData.talle,
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
