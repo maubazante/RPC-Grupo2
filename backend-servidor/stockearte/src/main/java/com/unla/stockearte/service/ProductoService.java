@@ -58,15 +58,19 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 
 	public com.producto.grpc.Producto convertToProtoProducto(Producto producto) {
-		return com.producto.grpc.Producto.newBuilder()
+		com.producto.grpc.Producto.Builder protoProductoBuilder = com.producto.grpc.Producto.newBuilder()
 				.setId(producto.getId())
 				.setNombre(producto.getNombre())
 				.setCodigo(producto.getCodigo())
-				.setFoto(ByteString.copyFrom(producto.getFoto()))
 				.setColor(producto.getColor())
 				.setTalle(producto.getTalle())
-				.setHabilitado(producto.isHabilitado())
-				.build();
+				.setHabilitado(producto.isHabilitado());
+				
+				if (producto.getFoto() != null) {
+			        protoProductoBuilder.setFoto(ByteString.copyFrom(producto.getFoto()));
+			    }
+
+		return protoProductoBuilder.build();
 	}
 
 	// ==========================

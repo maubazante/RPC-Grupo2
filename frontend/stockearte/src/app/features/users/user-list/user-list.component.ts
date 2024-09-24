@@ -14,13 +14,13 @@ import { Notyf } from 'notyf';
 export class UserListComponent {
   displayedColumns: string[] = ['id', 'nombre', 'apellido', 'username', 'rol', 'tienda', 'habilitado', 'edit', 'erase'];
   dataSource: Usuario[] = []
-  notyf = new Notyf({duration: 2000, position: {x: 'right', y: 'top',},});
-  
+  notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top', }, });
+
   constructor(
     private usersService: UsersService,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -30,11 +30,13 @@ export class UserListComponent {
     this.usersService.getUsers().subscribe({
       next: (users) => {
         this.dataSource = users.usuarios
-        this.cdr.detectChanges();
       },
       error: (err) => {
         this.notyf.error('Error al cargar usuarios');
         console.error(err);
+      },
+      complete: () => {
+        this.cdr.detectChanges();
       }
     });
   }
@@ -62,7 +64,7 @@ export class UserListComponent {
       if (result) {
         this.usersService.createUser(result).subscribe({
           next: (newUser) => {
-            this.dataSource.push(newUser);  
+            this.dataSource.push(newUser);
             this.notyf.success('Usuario creado con éxito');
           },
           error: (err) => {
@@ -78,12 +80,14 @@ export class UserListComponent {
     console.log("USUARIO DTO", usuario)
     this.usersService.modifyUser(usuario).subscribe({
       next: (response) => {
-        this.notyf.success(response);
-        this.loadUsers();
+        response.message.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
       },
       error: (err) => {
         this.notyf.error('Error al actualizar usuario');
         console.error(err);
+      },
+      complete: () => {
+        this.loadUsers();
       }
     });
   }

@@ -112,7 +112,6 @@ VALUES ('admin', 'admintienda', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
 -- -----------------------------------------------------
 INSERT INTO `tiendas` (`codigo`, `direccion`, `ciudad`, `provincia`, `habilitada`, `es_casa_central`)
 VALUES 
-('T001', '29 de Septiembre', 'Lanus', 'Buenos Aires', TRUE, TRUE),
 ('T002', 'Alsina 100', 'CABA', 'Buenos Aires', TRUE, FALSE),
 ('T003', '16 de Julio', 'Rosario', 'Santa Fe', TRUE, FALSE),
 ('T004', 'Mercedes 742', 'Córdoba', 'Córdoba', TRUE, FALSE);
