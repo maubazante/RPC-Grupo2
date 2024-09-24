@@ -31,12 +31,12 @@
 
     <!-- Habilitado -->
     <mat-form-field appearance="outline">
-      <mat-label>Habilitado</mat-label>
-      <mat-select formControlName="habilitado">
+      <mat-label>Habilitada</mat-label>
+      <mat-select formControlName="habilitada">
         <mat-option [value]="true">Sí</mat-option>
         <mat-option [value]="false">No</mat-option>
       </mat-select>
-      <mat-error *ngIf="storeForm.get('habilitado')?.hasError('required')">
+      <mat-error *ngIf="storeForm.get('habilitada')?.hasError('required')">
         Estado es requerido
       </mat-error>
     </mat-form-field>

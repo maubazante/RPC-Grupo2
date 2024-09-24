@@ -27,7 +27,7 @@ export class StoreFormComponent {
       direccion: [this.data.tienda.direccion],
       ciudad: [this.data.tienda.ciudad],
       provincia: [this.data.tienda.provincia],
-      habilitado: [this.data.tienda.habilitada, Validators.required],
+      habilitada: [this.data.tienda.habilitada, Validators.required],
       es_casa_central: [this.data.tienda.es_casa_central],
       usuarioId: null
     }); 
