@@ -107,3 +107,64 @@ SET @tienda_id = LAST_INSERT_ID();
 INSERT INTO `stockearte`.`usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `apellido`, `fk_tienda_id`)
 VALUES ('admin', 'admintienda', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
 
+-- -----------------------------------------------------
+-- Insertar tiendas
+-- -----------------------------------------------------
+INSERT INTO `tiendas` (`codigo`, `direccion`, `ciudad`, `provincia`, `habilitada`, `es_casa_central`)
+VALUES 
+('T001', '29 de Septiembre', 'Lanus', 'Buenos Aires', TRUE, TRUE),
+('T002', 'Alsina 100', 'CABA', 'Buenos Aires', TRUE, FALSE),
+('T003', '16 de Julio', 'Rosario', 'Santa Fe', TRUE, FALSE),
+('T004', 'Mercedes 742', 'Córdoba', 'Córdoba', TRUE, FALSE);
+
+-- -----------------------------------------------------
+-- Insertar usuarios
+-- -----------------------------------------------------
+INSERT INTO `usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `apellido`, `fk_tienda_id`)
+VALUES 
+('juanperez', 'password1', 'STOREMANAGER', TRUE, 'Juan', 'Perez', (SELECT id FROM `tiendas` WHERE codigo = 'T001')),
+('mariasanchez', 'password2', 'STOREMANAGER', TRUE, 'Maria', 'Sanchez', (SELECT id FROM `tiendas` WHERE codigo = 'T002')),
+('luisgomez', 'password3', 'STOREMANAGER', TRUE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
+('analuque', 'password4', 'STOREMANAGER', TRUE, 'Ana', 'Luque', (SELECT id FROM `tiendas` WHERE codigo = 'T004'));
+
+-- -----------------------------------------------------
+-- Insertar productos
+-- -----------------------------------------------------
+INSERT INTO `productos` (`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`)
+VALUES 
+('Camiseta', 'P001', 'M', NULL, 'Blanco', TRUE),
+('Pantalón', 'P002', 'L', NULL, 'Negro', TRUE),
+('Zapatillas', 'P003', '42', NULL, 'Rojo', TRUE),
+('Chaqueta', 'P004', 'XL', NULL, 'Azul', TRUE),
+('Bufanda', 'P005', 'Único', NULL, 'Verde', TRUE),
+('Gorro de Lana', 'P006', 'Único', NULL, 'Negro', TRUE),
+('Chaleco', 'P007', 'L', NULL, 'Marrón', TRUE),
+('Guantes', 'P008', 'M', NULL, 'Rojo', TRUE),
+('Cinturón', 'P009', 'Único', NULL, 'Negro', TRUE),
+('Pantalón Corto', 'P010', 'L', NULL, 'Gris', TRUE),
+('Buzo', 'P011', 'L', NULL, 'Verde', TRUE),
+('Sandalias', 'P012', '41', NULL, 'Marrón', TRUE),
+('Cartera', 'P013', 'Único', NULL, 'Rojo', TRUE),
+('Chaqueta Ligera', 'P014', 'M', NULL, 'Azul', TRUE),
+('Pijama', 'P015', 'L', NULL, 'Rosa', TRUE);
+
+-- -----------------------------------------------------
+-- Insertar stock
+-- -----------------------------------------------------
+INSERT INTO `stock` (`fk_tienda_id`, `fk_producto_id`, `stock`)
+VALUES 
+((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P001'), 100),
+((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P002'), 50),
+((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P003'), 75),
+((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P004'), 30),
+((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P005'), 80),
+((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P006'), 60),
+((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P007'), 45),
+((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P008'), 100),
+((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P009'), 90),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P010'), 70),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P011'), 50),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P012'), 40),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P013'), 80),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P014'), 30),
+((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P015'), 20);
