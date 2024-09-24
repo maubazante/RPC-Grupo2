@@ -3,10 +3,14 @@
 
 ### Integrantes del Grupo 2
 
-- **Mauro Bazante**
-- **Andres Ezequiel Cupo**
-- **Valentin Olivero**
-- **Sergio Robles Flores**
+- Mauro Bazante
+- Andres Ezequiel Cupo
+- Valentin Olivero
+- Sergio Robles Flore
+
+## Link a la Demo En YouTube:
+
+Proximamente...
 
 ## Link al repositorio:
 
@@ -19,7 +23,6 @@ Para clonar este repositorio, utilizar el siguiente comando en la terminal o con
 ```bash
 git clone https://github.com/maubazante/RPC-Grupo2.git
 ```
-
 
 # Enunciado
 
