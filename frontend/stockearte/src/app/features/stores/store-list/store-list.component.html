@@ -1,6 +1,6 @@
 <div class="table-container">
 <div class="content-container">
-<table mat-table [dataSource]="tiendas" class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -36,21 +36,21 @@
     <ng-container matColumnDef="usuario">
       <th mat-header-cell *matHeaderCellDef> Usuario </th>
       <td mat-cell *matCellDef="let tienda">
-        {{tienda.usuario ? tienda.usuario.nombre : 'Sin usuario'}}
+        {{tienda.usuarioid ? tienda.usuarioId : 'Sin usuario'}}
       </td>
     </ng-container>
   
     <!-- Habilitado Column -->
-    <ng-container matColumnDef="habilitado">
-      <th mat-header-cell *matHeaderCellDef> Habilitado </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.habilitado ? 'Sí' : 'No'}} </td>
+    <ng-container matColumnDef="habilitada">
+      <th mat-header-cell *matHeaderCellDef> Habilitada </th>
+      <td mat-cell *matCellDef="let tienda"> {{tienda.habilitada ? 'Sí' : 'No'}} </td>
     </ng-container>
 
     <!-- Edit Column -->
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let tienda">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="editTienda(tienda)">
           <mat-icon>edit</mat-icon>
         </button>
       </td>
@@ -60,7 +60,7 @@
      <ng-container matColumnDef="erase">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let tienda">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="deleteTienda(tienda)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

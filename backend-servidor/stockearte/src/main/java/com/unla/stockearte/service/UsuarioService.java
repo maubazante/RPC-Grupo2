@@ -1,6 +1,5 @@
 package com.unla.stockearte.service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,7 @@ import com.usuario.grpc.GetUsuariosRequest;
 import com.usuario.grpc.GetUsuariosResponse;
 import com.usuario.grpc.ModifyUsuarioRequest;
 import com.usuario.grpc.ModifyUsuarioResponse;
+
 import com.usuario.grpc.UserLoginRequest;
 import com.usuario.grpc.UserLoginResponse;
 import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
@@ -195,23 +195,9 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<List<Usuario>> getUsuarios() {
-		List<Usuario> usuarios = usuarioRepository.findAll();
-		List<Usuario> usuariosModificados = new ArrayList<>();
-
-		for (Usuario u : usuarios) {
-			Usuario usuarioNuevo = new Usuario(u.getId(), u.getNombre(), u.getApellido(), u.getUsername(),
-					u.getPassword(), u.isHabilitado(), u.getRol(), u.getTienda());
-			usuariosModificados.add(usuarioNuevo);
-		}
-
-		return usuariosModificados.isEmpty() ? Optional.empty() : Optional.of(usuariosModificados);
-	}
-
-	@Transactional(readOnly = true)
 	@Override
 	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
-		Optional<List<Usuario>> usuarios = getUsuarios();
+		Optional<List<Usuario>> usuarios = Optional.ofNullable(usuarioRepository.findAll());
 		GetUsuariosResponse.Builder responseBuilder = GetUsuariosResponse.newBuilder();
 
 		if (usuarios.isPresent()) {

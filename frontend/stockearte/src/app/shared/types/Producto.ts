@@ -1,13 +1,21 @@
-import { Stock } from "./Stock";
-
-export interface Producto {
-    id: number;
-    nombre: string;
-    codigo: string;
-    foto: string; // base64 o url
-    color: string;
-    talle: string;
-    tiendas: Stock[]; 
-    habilitado: boolean;
-}
+export interface ProductoArray {
+    productos: Producto[]
+  }
+  
+  export interface Producto {
+    tiendaIds: any[]
+    nombre: string
+    codigo: string
+    color: string
+    talle: string
+    habilitado: boolean
+    stock: string
+    id: string
+    foto: Foto
+  }
+  
+  export interface Foto {
+    type: string
+    data: any[]
+  }
   

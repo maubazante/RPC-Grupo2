@@ -9,7 +9,7 @@ import { Notyf } from 'notyf';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css', 
 })
-export class RegisterComponent implements OnInit{
+export class RegisterComponent {
   registerForm: FormGroup;
   hide = true;
   notyf = new Notyf({duration: 2000, position: {x: 'right', y: 'top',},});
@@ -19,10 +19,6 @@ export class RegisterComponent implements OnInit{
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-  }
-  
-  ngOnInit(): void {
-    console.log("Register Component works!")
   }
 
   onSubmit() {
