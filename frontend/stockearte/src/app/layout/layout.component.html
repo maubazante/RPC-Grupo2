@@ -7,7 +7,7 @@
 
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav"  mode="side" [style.width]="'250px'" >
-    <app-navbar></app-navbar>
+    <app-navbar *ngIf="showHamburgerMenu"></app-navbar>
   </mat-drawer>
 
   <div mat-drawer-content class="content">
