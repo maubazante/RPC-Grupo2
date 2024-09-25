@@ -3,9 +3,9 @@
         <button mat-stroked-button (click)="logout()">Logout</button>
     <span class="spacer"></span>
        
-    <button mat-button routerLink="/users">Usuarios</button>
+    <button mat-button routerLink="/users" *ngIf="this.isAdmin">Usuarios</button>
     <button mat-button routerLink="/products">Productos</button>
-    <button mat-button routerLink="/stores">Tiendas</button>
+    <button mat-button routerLink="/stores" *ngIf="this.isAdmin">Tiendas</button>
     </div>
   </mat-toolbar>
   

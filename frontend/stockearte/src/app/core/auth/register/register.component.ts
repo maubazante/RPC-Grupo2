@@ -50,7 +50,7 @@ export class RegisterComponent {
           sessionStorage.setItem("ROLE", request.rol);
           sessionStorage.setItem("USERNAME", request.username);
           this.notyf.success(response);
-          this.router.navigate(['/users']);
+          request.rol === Rol.ADMIN ? this.router.navigate(['/users']) : this.router.navigate(['/products']);
         }
       },
       error: (error: string | Partial<INotyfNotificationOptions>) => {

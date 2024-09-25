@@ -9,8 +9,13 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-
-  constructor(private authService: AuthService) {}
+  
+  isAdmin: boolean = false;
+  constructor(private authService: AuthService) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   logout = () => { this.authService.logout() }
+
+
 }

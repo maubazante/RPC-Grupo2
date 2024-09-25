@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -19,16 +20,33 @@ export class ProductListComponent {
   constructor(
     private productsService: ProductsService,
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private AuthService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.AuthService.isAdmin() ? this.loadAllProducts() : this.loadProductsByUsername();
   }
 
-  loadProducts(): void {
+  loadAllProducts(): void {
     // Persistir nombre de usuario y ROL
     this.productsService.getAllProductos().subscribe({
+      next: (products) => {
+        this.dataSource = products.productos;
+      },
+      error: (err) => {
+        this.notyf.error('Error al cargar productos');
+        console.error(err);
+      }, 
+      complete: () => {
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadProductsByUsername(): void {
+    // Persistir nombre de usuario y ROL
+    this.productsService.getProductos(this.AuthService.getUsername()).subscribe({
       next: (products) => {
         this.dataSource = products.productos;
       },
@@ -89,7 +107,7 @@ export class ProductListComponent {
         console.error(err);
       },
       complete: () => {
-        this.loadProducts();
+        this.ngOnInit();
       }
     });
   }

@@ -7,6 +7,7 @@ import 'notyf/notyf.min.css'; // for React, Vue and Svelte
 import { UsersService } from '../../services/users.service';
 import { ILoginRequest } from '../../../shared/types/ILoginRequest';
 import { ILoginResponse } from '../../../shared/types/ILoginResponse';
+import { Rol } from '../../../shared/types/Rol';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,7 @@ export class LoginComponent {
           sessionStorage.setItem("USERNAME", response.username);
           sessionStorage.setItem("USER_ID", response.userId);
           this.notyf.success("Usuario ingresado exitosamente")
-          this.router.navigate(['/users']);
+          response.rol === Rol.ADMIN ? this.router.navigate(['/users']) : this.router.navigate(['/products']);
         }
       },
       error: (error) => {
