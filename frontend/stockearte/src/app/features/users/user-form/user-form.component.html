@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Editar Usuario</h2>
+<h2 mat-dialog-title>{{isEdit ? 'Editar' : 'Crear'}} Usuario</h2>
 <mat-dialog-content>
   <form [formGroup]="userForm">
     <div class="nombre-apellido">
@@ -25,13 +25,13 @@
             <input matInput formControlName="username">
           </mat-form-field>
       
-          <mat-form-field appearance="outline">
+          <!-- <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
             <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
             <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
               <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-          </mat-form-field>
+          </mat-form-field> -->
     </div>
     
     <div class="selectors">
@@ -60,9 +60,9 @@
 
     <mat-form-field appearance="outline" *ngIf="tiendas.length > 0">
       <mat-label>Tienda</mat-label>
-      <mat-select formControlName="tienda">
+      <mat-select formControlName="tiendaId">
         <mat-option [value]="null">Sin tienda</mat-option>
-        <mat-option *ngFor="let tienda of tiendas" [value]="tienda">{{ tienda.codigo }}</mat-option>
+        <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">{{ tienda.codigo }}</mat-option>
       </mat-select>
     </mat-form-field>
   </form>

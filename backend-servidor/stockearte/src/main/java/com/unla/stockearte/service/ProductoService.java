@@ -67,7 +67,7 @@ public class ProductoService extends ProductoServiceImplBase {
 				.setHabilitado(producto.isHabilitado());
 				
 				if (producto.getFoto() != null) {
-			        protoProductoBuilder.setFoto(ByteString.copyFrom(producto.getFoto()));
+			        protoProductoBuilder.setFoto(producto.getFoto());
 			    }
 
 		return protoProductoBuilder.build();
@@ -87,7 +87,7 @@ public class ProductoService extends ProductoServiceImplBase {
 			Producto producto = new Producto();
 			producto.setCodigo(Helper.generarCadenaAleatoria());
 			producto.setColor(request.getProducto().getColor());
-			producto.setFoto(request.getProducto().getFoto().toByteArray());
+			producto.setFoto(request.getProducto().getFoto());
 			producto.setNombre(request.getProducto().getNombre());
 			producto.setTalle(request.getProducto().getTalle());
 			
@@ -152,9 +152,9 @@ public class ProductoService extends ProductoServiceImplBase {
 
 		if (producto.isPresent()) {
 			producto.get().setColor(request.getProducto().getColor());
-			producto.get().setFoto(request.getProducto().getFoto().toByteArray());
 			producto.get().setNombre(request.getProducto().getNombre());
 			producto.get().setTalle(request.getProducto().getTalle());
+			producto.get().setFoto(request.getProducto().getFoto());
 
 			getProductoRepository().save(producto.get());
 
@@ -162,7 +162,9 @@ public class ProductoService extends ProductoServiceImplBase {
 					.setMessage("Producto con id " + request.getProducto().getId() + " modificado exitosamente")
 					.build();
 		}
-
+		
+		else response = ModifyProductoResponse.newBuilder().setMessage("Error - Producto no existe").build();
+		
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}

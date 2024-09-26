@@ -17,6 +17,7 @@ message Usuario {
 	bool habilitado = 7;       // Indica si esta habilitado el usuario o no
 	int64 id = 8;              // is del usuario
 	int64 idUserAdmin = 9;      // El id del usuario de casas central
+	string tiendaCodigo = 10; 	// Me haces un favor si me mandas esto
 }
 
 message UserLoginMessage {

@@ -11,11 +11,6 @@ export interface Producto {
   habilitado: boolean
   stock: string
   id: string
-  foto: Foto
+  foto: string
   idUserAdmin: string
-}
-
-export interface Foto {
-  type: string
-  data: any[]
 }

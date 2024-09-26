@@ -1,5 +1,7 @@
 <div class="table-container">
   <div class="content-container">
+    <button mat-button (click)="createUser()" *ngIf="isAdmin"><mat-icon>add</mat-icon>Agregar usuario</button>
+
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <!-- ID Column -->
       <ng-container matColumnDef="id">
@@ -35,7 +37,7 @@
       <ng-container matColumnDef="tienda">
         <th mat-header-cell *matHeaderCellDef> Tienda </th>
         <td mat-cell *matCellDef="let usuario">
-          {{usuario.tiendaId !== "0" ? usuario.tiendaId : 'Sin tienda'}}
+          {{usuario.tiendaCodigo !== "" ? usuario.tiendaCodigo : 'Sin tienda'}}
         </td>
       </ng-container>
 

@@ -1,75 +1,76 @@
 <div class="table-container">
-<div class="content-container">
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <div class="content-container">
+    <button mat-button *ngIf="isAdmin" (click)="createTienda()"><mat-icon>add</mat-icon>Agregar tienda</button>
 
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> ID </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.id}} </td>
-    </ng-container>
-  
-    <!-- Código Column -->
-    <ng-container matColumnDef="codigo">
-      <th mat-header-cell *matHeaderCellDef> Código </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.codigo}} </td>
-    </ng-container>
-  
-    <!-- Dirección Column -->
-    <ng-container matColumnDef="direccion">
-      <th mat-header-cell *matHeaderCellDef> Dirección </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.direccion}} </td>
-    </ng-container>
-  
-    <!-- Ciudad Column -->
-    <ng-container matColumnDef="ciudad">
-      <th mat-header-cell *matHeaderCellDef> Ciudad </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.ciudad}} </td>
-    </ng-container>
-  
-    <!-- Provincia Column -->
-    <ng-container matColumnDef="provincia">
-      <th mat-header-cell *matHeaderCellDef> Provincia </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.provincia}} </td>
-    </ng-container>
-  
-    <!-- Usuario Column -->
-    <ng-container matColumnDef="usuario">
-      <th mat-header-cell *matHeaderCellDef> Usuario </th>
-      <td mat-cell *matCellDef="let tienda">
-        {{tienda.usuarioid ? tienda.usuarioId : 'Sin usuario'}}
-      </td>
-    </ng-container>
-  
-    <!-- Habilitado Column -->
-    <ng-container matColumnDef="habilitada">
-      <th mat-header-cell *matHeaderCellDef> Habilitada </th>
-      <td mat-cell *matCellDef="let tienda"> {{tienda.habilitada ? 'Sí' : 'No'}} </td>
-    </ng-container>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.id}} </td>
+      </ng-container>
 
-    <!-- Edit Column -->
-    <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let tienda">
-        <button mat-icon-button (click)="editTienda(tienda)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <!-- Código Column -->
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.codigo}} </td>
+      </ng-container>
 
-     <!-- Erase Column -->
-     <ng-container matColumnDef="erase">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let tienda">
-        <button mat-icon-button (click)="deleteTienda(tienda)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-  
-    <!-- Header Row -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <!-- Data Rows -->
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-</div>
+      <!-- Dirección Column -->
+      <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef> Dirección </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.direccion}} </td>
+      </ng-container>
+
+      <!-- Ciudad Column -->
+      <ng-container matColumnDef="ciudad">
+        <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.ciudad}} </td>
+      </ng-container>
+
+      <!-- Provincia Column -->
+      <ng-container matColumnDef="provincia">
+        <th mat-header-cell *matHeaderCellDef> Provincia </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.provincia}} </td>
+      </ng-container>
+
+      <!-- Usuario Column -->
+      <ng-container matColumnDef="usuario">
+        <th mat-header-cell *matHeaderCellDef> Usuario </th>
+        <td mat-cell *matCellDef="let tienda">
+          {{tienda.usuarioid ? tienda.usuarioId : 'Sin usuario'}}
+        </td>
+      </ng-container>
+
+      <!-- Habilitado Column -->
+      <ng-container matColumnDef="habilitada">
+        <th mat-header-cell *matHeaderCellDef> Habilitada </th>
+        <td mat-cell *matCellDef="let tienda"> {{tienda.habilitada ? 'Sí' : 'No'}} </td>
+      </ng-container>
+
+      <!-- Edit Column -->
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let tienda">
+          <button mat-icon-button (click)="editTienda(tienda)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Erase Column -->
+      <ng-container matColumnDef="erase">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let tienda">
+          <button mat-icon-button (click)="deleteTienda(tienda)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Data Rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
 </div>

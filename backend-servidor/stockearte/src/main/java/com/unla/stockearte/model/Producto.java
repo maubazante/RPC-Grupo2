@@ -30,9 +30,9 @@ public class Producto {
 
 	@Column(nullable = false, length = 5)
 	private String talle;
-	@Lob
-
-	private byte[] foto; // La imagen se almacena como un blob
+	
+	@Column(nullable = false, length = 300)
+	private String foto;
 
 	@Column(nullable = false, length = 50)
 	private String color;
@@ -43,7 +43,7 @@ public class Producto {
 	@Column(name = "habilitado", nullable = false)
 	private boolean habilitado = true;
 
-	public Producto(Long id, String nombre, String codigo, byte[] foto, String color, String talle,
+	public Producto(Long id, String nombre, String codigo, String foto, String color, String talle,
 			boolean habilitado) {
 		super();
 		this.id = id;
@@ -91,11 +91,11 @@ public class Producto {
 		this.talle = talle;
 	}
 
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
-	public void setFoto(byte[] foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
 	}
 

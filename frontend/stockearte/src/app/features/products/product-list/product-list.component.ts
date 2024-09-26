@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Producto } from '../../../shared/types/Producto';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ModalAction } from '../../../shared/types/ModalAction';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -12,10 +14,12 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'foto', 'edit', 'erase'];
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
+  isAdmin: boolean = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private productsService: ProductsService,
@@ -25,12 +29,16 @@ export class ProductListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.AuthService.isAdmin() ? this.loadAllProducts() : this.loadProductsByUsername();
+    this.isAdmin = this.AuthService.isAdmin();
+    this.isAdmin ? this.loadAllProducts() : this.loadProductsByUsername();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   loadAllProducts(): void {
-    // Persistir nombre de usuario y ROL
-    this.productsService.getAllProductos().subscribe({
+    const sub = this.productsService.getAllProductos().subscribe({
       next: (products) => {
         this.dataSource = products.productos;
       },
@@ -42,11 +50,11 @@ export class ProductListComponent {
         this.cdr.detectChanges();
       }
     });
+    this.subscriptions.push(sub);
   }
 
   loadProductsByUsername(): void {
-    // Persistir nombre de usuario y ROL
-    this.productsService.getProductos(this.AuthService.getUsername()).subscribe({
+    const sub = this.productsService.getProductos(this.AuthService.getUsername()).subscribe({
       next: (products) => {
         this.dataSource = products.productos;
       },
@@ -58,47 +66,49 @@ export class ProductListComponent {
         this.cdr.detectChanges();
       }
     });
+    this.subscriptions.push(sub);
   }
 
   editProduct(product: Producto): void {
-    console.log(product)
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
-      data: { product: product }
+      data: { product: product, action: ModalAction.EDIT }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log("RESULT:", result)
+    const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.updateProduct(result);
       }
     });
+    this.subscriptions.push(sub);
   }
 
   createProduct(): void {
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
-      data: { product: {} as Producto }
+      data: { product: {} as Producto, action: ModalAction.CREATE }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.productsService.createProduct(result).subscribe({
-          next: (newProduct) => {
-            this.dataSource.push(newProduct);  
-            this.notyf.success('Producto creado con éxito');
+        const createSub = this.productsService.createProduct(result).subscribe({
+          next: (response) => {
+            response.message.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
+            this.ngOnInit();
           },
           error: (err) => {
             this.notyf.error('Error al crear producto');
             console.error(err);
           }
         });
+        this.subscriptions.push(createSub);
       }
     });
+    this.subscriptions.push(sub);
   }
 
   updateProduct(product: Producto): void {
-    this.productsService.modifyProduct(product).subscribe({
+    const sub = this.productsService.modifyProduct(product).subscribe({
       next: (updatedProduct) => {
         updatedProduct.message.includes('Error') ? this.notyf.error(updatedProduct) : this.notyf.success(updatedProduct);
       },
@@ -110,11 +120,12 @@ export class ProductListComponent {
         this.ngOnInit();
       }
     });
+    this.subscriptions.push(sub);
   }
 
   deleteProduct(id: string): void {
     if (confirm('Eliminar no funcionará esta entrega')) {
-      this.productsService.deleteProduct(id).subscribe({
+      const sub = this.productsService.deleteProduct(id).subscribe({
         next: () => {
           // this.dataSource = this.dataSource.filter(p => p.id !== id);
           // this.notyf.success('Producto eliminado con éxito');
@@ -124,6 +135,7 @@ export class ProductListComponent {
           console.error(err);
         }
       });
+      this.subscriptions.push(sub);
     }
   }
 }

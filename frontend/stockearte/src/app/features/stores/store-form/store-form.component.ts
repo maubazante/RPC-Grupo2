@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Tienda } from '../../../shared/types/Tienda';
 import { Usuario } from '../../../shared/types/Usuario';
 import { UsersService } from '../../../core/services/users.service';
+import { ModalAction } from '../../../shared/types/ModalAction';
 
 @Component({
   selector: 'app-store-form',
@@ -13,14 +14,17 @@ import { UsersService } from '../../../core/services/users.service';
 })
 export class StoreFormComponent {
   storeForm: FormGroup;
-  usuarios: Usuario[];  
+  usuarios: Usuario[];
+  isEdit: boolean;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StoreFormComponent>,
     private userService: UsersService,
-    @Inject(MAT_DIALOG_DATA) public data: { tienda: Tienda, usuarios: Usuario[] }
+    @Inject(MAT_DIALOG_DATA) public data: { tienda: Tienda, usuarios: Usuario[], action: string }
   ) {
-    this.usuarios = data.usuarios || [];  
+    this.usuarios = data.usuarios || [];
+    this.isEdit = data.action === ModalAction.EDIT;
     this.storeForm = this.fb.group({
       id: [this.data.tienda.id],
       codigo: [this.data.tienda.codigo],

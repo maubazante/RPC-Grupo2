@@ -60,6 +60,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	    // Verifica si el usuario tiene una tienda asignada
 	    if (usuario.getTienda() != null) {
 	        protoUsuarioBuilder.setTiendaId(usuario.getTienda().getId());
+	        protoUsuarioBuilder.setTiendaCodigo(usuario.getTienda().getCodigo());
 	    }
 
 	    return protoUsuarioBuilder.build();
