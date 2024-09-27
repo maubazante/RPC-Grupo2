@@ -19,3 +19,13 @@ Antes de comenzar, asegurate de tener instalado:
 - **npm** (que se instala automáticamente con Node.js)
 - **Angular CLI** (si no lo tenés, instalalo ejecutando `npm install -g @angular/cli`)
 
+## Pantalla de registro
+![image](https://github.com/user-attachments/assets/a430f0a2-5c72-4822-82b6-38508b515e41)
+
+## Vista de productos (Casa central)
+![image](https://github.com/user-attachments/assets/150e0f9b-dc47-4d82-82bc-089098d1040c)
+
+## Edición de usuario
+![image](https://github.com/user-attachments/assets/243116ab-6b26-41aa-991f-8e98164010fc)
+
+
