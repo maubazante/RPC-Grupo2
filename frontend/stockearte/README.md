@@ -1,27 +1,21 @@
-# Stockearte
+# Stockearte - Frontend (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.5.
+## Descripción
 
-## Development server
+Este es el proyecto del frontend del sistema **Stockearte**, una plataforma de gestión de stock para cadenas comercializadoras de indumentaria. El frontend está desarrollado en **Angular** y se comunica con un backend mediante **gRPC** para manejar entidades como usuarios, productos y tiendas.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Tecnologías Utilizadas
 
-## Code scaffolding
+- **Angular**: Framework para el desarrollo del frontend.
+- **Node.js**: Utilizado para levantar el servidor local durante el desarrollo.
+- **gRPC**: Comunicación entre frontend y backend.
+- **HTML/CSS**: Para la estructura y el diseño de la interfaz.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Requisitos Previos
 
-## Build
+Antes de comenzar, asegurate de tener instalado:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Node.js** (v18 o superior)
+- **npm** (que se instala automáticamente con Node.js)
+- **Angular CLI** (si no lo tenés, instalalo ejecutando `npm install -g @angular/cli`)
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
