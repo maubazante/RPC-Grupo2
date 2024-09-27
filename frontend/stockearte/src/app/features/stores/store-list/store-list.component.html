@@ -1,7 +1,16 @@
 <div class="table-container">
   <div class="content-container">
-    <button mat-button *ngIf="isAdmin" (click)="createTienda()"><mat-icon>add</mat-icon>Agregar tienda</button>
-
+    <div class="add-search">
+      <button mat-button *ngIf="isAdmin" (click)="createTienda()"><mat-icon>add</mat-icon>Agregar tienda</button>
+    <mat-form-field class="search-field" appearance="outline" [style.width.px]=500>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Buscar tienda" (input)="onSearchChange($event)" />
+      <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    </div>
+    
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <!-- ID Column -->
       <ng-container matColumnDef="id">

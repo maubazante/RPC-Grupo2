@@ -6,7 +6,7 @@ import { UsersService } from '../../../core/services/users.service';
 import { Notyf } from 'notyf';
 import { ModalAction } from '../../../shared/types/ModalAction';
 import { AuthService } from '../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -20,6 +20,8 @@ export class UserListComponent implements OnDestroy {
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
   private subscriptions: Subscription[] = [];
+  searchTerm$ = new Subject<string>();
+  searchTerm: string = '';
 
   constructor(
     private usersService: UsersService,
@@ -31,6 +33,16 @@ export class UserListComponent implements OnDestroy {
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
     this.loadUsers();
+
+    this.subscriptions.push(
+      this.searchTerm$.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(searchTerm => {
+        this.searchTerm = searchTerm;
+        this.filterUsers(searchTerm);
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -121,6 +133,25 @@ export class UserListComponent implements OnDestroy {
         }
       });
       this.subscriptions.push(sub);
+    }
+  }
+
+  filterUsers(searchTerm: string): void {
+    this.dataSource = this.dataSource.filter(usuario =>
+      usuario.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.searchTerm$.next('');
+    this.loadUsers();
+  }
+
+  onSearchChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.value) {
+      this.searchTerm$.next(inputElement.value);
     }
   }
 }

@@ -6,7 +6,8 @@ import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ModalAction } from '../../../shared/types/ModalAction';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -19,18 +20,29 @@ export class ProductListComponent implements OnInit, OnDestroy {
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
+  searchTerm$ = new Subject<string>();
+
   private subscriptions: Subscription[] = [];
+  searchTerm!: string;
 
   constructor(
     private productsService: ProductsService,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private AuthService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isAdmin = this.AuthService.isAdmin();
     this.isAdmin ? this.loadAllProducts() : this.loadProductsByUsername();
+    
+    this.searchTerm$.pipe(
+      debounceTime(300),
+      distinctUntilChanged() 
+    ).subscribe(searchTerm => {
+      this.searchTerm = searchTerm;
+      this.filterProducts(searchTerm);
+    });
   }
 
   ngOnDestroy(): void {
@@ -45,7 +57,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.notyf.error('Error al cargar productos');
         console.error(err);
-      }, 
+      },
       complete: () => {
         this.cdr.detectChanges();
       }
@@ -61,7 +73,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.notyf.error('Error al cargar productos');
         console.error(err);
-      }, 
+      },
       complete: () => {
         this.cdr.detectChanges();
       }
@@ -138,4 +150,27 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.subscriptions.push(sub);
     }
   }
+
+  filterProducts(searchTerm: string): void {
+    this.dataSource = this.dataSource.filter(product =>
+      product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    // this.productsService.searchProducts(searchTerm).subscribe(...);
+  }
+
+  clearSearch(): void {
+    this.searchTerm = ''; 
+    this.searchTerm$.next(''); 
+    this.loadAllProducts(); 
+  }
+
+  onSearchChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.value) {
+      this.searchTerm$.next(inputElement.value);
+    }
+  }
+  
+  
+
 }

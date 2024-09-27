@@ -5,7 +5,7 @@ import { StoreFormComponent } from '../store-form/store-form.component';
 import { Notyf } from 'notyf';
 import { StoresService } from '../../../core/services/stores.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { ModalAction } from '../../../shared/types/ModalAction';
 
 @Component({
@@ -16,13 +16,16 @@ import { ModalAction } from '../../../shared/types/ModalAction';
 })
 export class StoreListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'codigo', 'direccion', 'ciudad', 'provincia', 'habilitada', 'edit', 'erase'];
-  dataSource: Tienda[] = []; 
+  dataSource: Tienda[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
-  private subscriptions: Subscription[] = []; 
+  private subscriptions: Subscription[] = [];
+  searchTerm$ = new Subject<string>();
+  searchTerm: string = '';
+
 
   constructor(
-    private tiendaService: StoresService, 
+    private tiendaService: StoresService,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private authService: AuthService
@@ -30,7 +33,17 @@ export class StoreListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
-    this.loadTiendas(); 
+    this.loadTiendas();
+
+    this.subscriptions.push(
+      this.searchTerm$.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(searchTerm => {
+        this.searchTerm = searchTerm;
+        this.filterStores(searchTerm);
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -61,10 +74,10 @@ export class StoreListComponent implements OnInit, OnDestroy {
 
     const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.updateTienda(result); 
+        this.updateTienda(result);
       }
     });
-    this.subscriptions.push(sub); 
+    this.subscriptions.push(sub);
   }
 
   createTienda(): void {
@@ -85,10 +98,10 @@ export class StoreListComponent implements OnInit, OnDestroy {
             console.error(err);
           }
         });
-        this.subscriptions.push(createSub); 
+        this.subscriptions.push(createSub);
       }
     });
-    this.subscriptions.push(sub); 
+    this.subscriptions.push(sub);
   }
 
   updateTienda(tienda: Tienda): void {
@@ -104,7 +117,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
         this.loadTiendas();
       }
     });
-    this.subscriptions.push(sub); 
+    this.subscriptions.push(sub);
   }
 
   deleteTienda(id: string): void {
@@ -118,7 +131,26 @@ export class StoreListComponent implements OnInit, OnDestroy {
           console.error(err);
         }
       });
-      this.subscriptions.push(sub); 
+      this.subscriptions.push(sub);
+    }
+  }
+
+  filterStores(searchTerm: string): void {
+    this.dataSource = this.dataSource.filter(tienda =>
+      tienda.codigo.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.searchTerm$.next('');
+    this.loadTiendas();
+  }
+
+  onSearchChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.value) {
+      this.searchTerm$.next(inputElement.value);
     }
   }
 }
