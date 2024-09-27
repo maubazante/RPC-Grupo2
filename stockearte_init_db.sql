@@ -105,7 +105,7 @@ SET @tienda_id = LAST_INSERT_ID();
 
 -- Insertar un usuario admin asociado a la tienda central
 INSERT INTO `stockearte`.`usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `apellido`, `fk_tienda_id`)
-VALUES ('admin', 'admintienda', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
+VALUES ('admin', 'admin', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
 
 -- -----------------------------------------------------
 -- Insertar tiendas
