@@ -137,7 +137,8 @@ app.post('/createUsuario', (req, res) => {
       tiendaId: usuarioData.tiendaId,
       habilitado: usuarioData.habilitado,
       id: usuarioData.id,
-      idUserAdmin: usuarioData.idUserAdmin
+      idUserAdmin: usuarioData.idUserAdmin,
+      tiendaCodigo: usuarioData.tiendaCodigo
     }
   };
 
@@ -286,7 +287,7 @@ app.delete('/deleteProducto', (req, res) => {
 
 app.put('/modifyProducto', (req, res) => {
   const productoData = req.body;
-
+  console.log(productoData.foto);
   const request = {
     producto: {
       nombre: productoData.nombre,

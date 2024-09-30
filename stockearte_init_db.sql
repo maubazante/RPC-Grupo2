@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
   `nombre` VARCHAR(100) NOT NULL,
   `codigo` VARCHAR(10) NULL,
   `talle` VARCHAR(5) NULL,
-  `foto` BLOB NULL,
+  `foto` VARCHAR(300) NULL,
   `color` VARCHAR(50) NULL,
   `habilitado` BOOLEAN NULL,
   PRIMARY KEY (`id`),
@@ -105,7 +105,7 @@ SET @tienda_id = LAST_INSERT_ID();
 
 -- Insertar un usuario admin asociado a la tienda central
 INSERT INTO `stockearte`.`usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `apellido`, `fk_tienda_id`)
-VALUES ('admin', 'admintienda', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
+VALUES ('admin', 'admin', 'ADMIN', TRUE, 'Admin', 'Tienda', @tienda_id);
 
 -- -----------------------------------------------------
 -- Insertar tiendas
@@ -131,15 +131,15 @@ VALUES
 -- -----------------------------------------------------
 INSERT INTO `productos` (`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`)
 VALUES 
-('Camiseta', 'P001', 'M', NULL, 'Blanco', TRUE),
-('Pantalón', 'P002', 'L', NULL, 'Negro', TRUE),
-('Zapatillas', 'P003', '42', NULL, 'Rojo', TRUE),
-('Chaqueta', 'P004', 'XL', NULL, 'Azul', TRUE),
-('Bufanda', 'P005', 'Único', NULL, 'Verde', TRUE),
-('Gorro de Lana', 'P006', 'Único', NULL, 'Negro', TRUE),
-('Chaleco', 'P007', 'L', NULL, 'Marrón', TRUE),
-('Guantes', 'P008', 'M', NULL, 'Rojo', TRUE),
-('Cinturón', 'P009', 'Único', NULL, 'Negro', TRUE),
+('Camiseta', 'P001', 'M', "https://www.shutterstock.com/image-vector/3d-realistic-soccer-jersey-argentina-600nw-2446075731.jpg", 'Blanco', TRUE),
+('Pantalón', 'P002', 'L', "https://acdn.mitiendanube.com/stores/002/023/047/products/marino-pantalon-stock-con-bolsillos11-c2e595f8e8f57a760616835590772521-1024-1024.png", 'Negro', TRUE),
+('Zapatillas', 'P003', '42', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw5ea76a27/products/NI_BQ3207-002/NI_BQ3207-002-6.JPG", 'Rojo', TRUE),
+('Chaqueta', 'P004', 'XL', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw8c3e9aaf/products/KA31153FWA07/KA31153FWA07-1.JPG", 'Azul', TRUE),
+('Bufanda', 'P005', 'Único', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ20UdFSOcKUCSAOj-DUpmT0nNNsIxrGD-_yQ&s", 'Verde', TRUE),
+('Gorro de Lana', 'P006', 'Único', "https://http2.mlstatic.com/D_NQ_NP_839450-MLA70350283266_072023-O.webp", 'Negro', TRUE),
+('Chaleco', 'P007', 'L', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TjQkwgsGfhwqad7pG68w4LkzwDRgHmm5AQ&s", 'Naranja', TRUE),
+('Guantes', 'P008', 'M', "https://seguridadglobal.com.ar/wp-content/uploads/2023/05/guantes-vaqueta-pulgar-volcado.jpg", 'Oro', TRUE),
+('Cinturón', 'P009', 'Único', "https://m.media-amazon.com/images/I/81qOglWUQAL._AC_SL1500_.jpg", 'Negro', TRUE),
 ('Pantalón Corto', 'P010', 'L', NULL, 'Gris', TRUE),
 ('Buzo', 'P011', 'L', NULL, 'Verde', TRUE),
 ('Sandalias', 'P012', '41', NULL, 'Marrón', TRUE),

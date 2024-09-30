@@ -9,6 +9,7 @@ export interface Usuario {
     habilitado: boolean;
     rol: Rol;
     tiendaId: string | ""; // Puede ser null si no tiene tienda asignada
+    tiendaCodigo: string | ""; // Puede ser null si no tiene tienda asignada
 }
 
 export interface UsuariosArray { 
