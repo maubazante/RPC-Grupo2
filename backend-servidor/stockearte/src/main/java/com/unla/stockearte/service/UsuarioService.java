@@ -49,21 +49,21 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
 		com.usuario.grpc.Usuario.Builder protoUsuarioBuilder = com.usuario.grpc.Usuario.newBuilder()
-	            .setId(usuario.getId())
-	            .setNombre(usuario.getNombre())
-	            .setApellido(usuario.getApellido())
-	            .setUsername(usuario.getUsername())
-	            .setPassword(usuario.getPassword())
-	            .setRol(usuario.getRol().toString())
-	            .setHabilitado(usuario.isHabilitado());
+				.setId(usuario.getId())
+				.setNombre(usuario.getNombre())
+				.setApellido(usuario.getApellido())
+				.setUsername(usuario.getUsername())
+				.setPassword(usuario.getPassword())
+				.setRol(usuario.getRol().toString())
+				.setHabilitado(usuario.isHabilitado());
 
-	    // Verifica si el usuario tiene una tienda asignada
-	    if (usuario.getTienda() != null) {
-	        protoUsuarioBuilder.setTiendaId(usuario.getTienda().getId());
-	        protoUsuarioBuilder.setTiendaCodigo(usuario.getTienda().getCodigo());
-	    }
+		// Verifica si el usuario tiene una tienda asignada
+		if (usuario.getTienda() != null) {
+			protoUsuarioBuilder.setTiendaId(usuario.getTienda().getId());
+			protoUsuarioBuilder.setTiendaCodigo(usuario.getTienda().getCodigo());
+		}
 
-	    return protoUsuarioBuilder.build();
+		return protoUsuarioBuilder.build();
 	}
 
 	// ==========================
@@ -148,9 +148,11 @@ public class UsuarioService extends UsuarioServiceImplBase {
 						.setMessage("Usuario con id " + request.getUsuario().getId() + " modificado con exito").build();
 			}
 
-		}else {
+		} else {
 			response = ModifyUsuarioResponse.newBuilder()
-					.setMessage("Error al modificar la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para modificar usuarios.").build();
+					.setMessage(
+							"Error al modificar la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para modificar usuarios.")
+					.build();
 		}
 
 		responseObserver.onNext(response);
@@ -209,27 +211,35 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	@Transactional(readOnly = true)
 	@Override
 	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
-		Optional<List<Usuario>> usuarios = Optional.ofNullable(usuarioRepository.findAll());
+		// Verifica si se deben traer solo los usuarios habilitados, valor por defecto
+		// es
+		// 'false'
+		boolean soloHabilitados = request.hasHabilitadosUnicamente() ? request.getHabilitadosUnicamente() : false;
+
+		// Busca los usuarios según si se filtran habilitados o no
+		List<Usuario> usuarios = soloHabilitados
+				? usuarioRepository.findByHabilitado(true)
+				: usuarioRepository.findAll(); // Se traen todos los usuarios
+
+		// Construye la respuesta
 		GetUsuariosResponse.Builder responseBuilder = GetUsuariosResponse.newBuilder();
 
-		if (usuarios.isPresent()) {
-			for (Usuario usuario : usuarios.get()) {
-				responseBuilder.addUsuarios(convertToProtoUsuario(usuario));
-			}
+		// Agrega los usuarios a la respuesta
+		for (Usuario usuario : usuarios) {
+			responseBuilder.addUsuarios(convertToProtoUsuario(usuario));
 		}
 
 		responseObserver.onNext(responseBuilder.build());
 		responseObserver.onCompleted();
 	}
-	
-	
-	
+
 	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public void loginUsuario(UserLoginRequest request, StreamObserver<UserLoginResponse> responseObserver) {
-		Optional<Usuario> user = getUsuarioRepository().findByUsernameAndPassword(request.getUserLogin().getUsername(), request.getUserLogin().getPassword());
+		Optional<Usuario> user = getUsuarioRepository().findByUsernameAndPassword(request.getUserLogin().getUsername(),
+				request.getUserLogin().getPassword());
 		UserLoginResponse response = null;
-		if(user.isPresent()) {
+		if (user.isPresent()) {
 			response = UserLoginResponse.newBuilder()
 					.setPassword(user.get().getPassword())
 					.setUsername(user.get().getUsername())
@@ -241,7 +251,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 					.setErrorMessage("El usuario ingresado no existe en la base de datos.")
 					.build();
 		}
-		
+
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}

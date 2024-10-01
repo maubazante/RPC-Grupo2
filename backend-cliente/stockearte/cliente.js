@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');  
+const cors = require('cors');
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
@@ -12,7 +12,7 @@ app.use(cors({
   origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true  
+  credentials: true
 }));
 
 // Iniciar el servidor en el puerto 3000
@@ -77,8 +77,8 @@ app.put('/modifyTienda', (req, res) => {
     }
   };
 
-  if(tiendaData.usuarioId) request.tienda.usuarioId = tiendaData.usuarioId;
-  if(tiendaData.idUserAdmin) request.tienda.idUserAdmin = tiendaData.idUserAdmin
+  if (tiendaData.usuarioId) request.tienda.usuarioId = tiendaData.usuarioId;
+  if (tiendaData.idUserAdmin) request.tienda.idUserAdmin = tiendaData.idUserAdmin
 
   clienteTienda.modifyTienda(request, (error, response) => {
     if (error) {
@@ -212,13 +212,18 @@ app.post('/findUsuarios', (req, res) => {
 
 // Endpoint para obtener todos los usuarios
 app.get('/getUsuarios', (req, res) => {
-  const request = {}; // No necesitas enviar datos en la solicitud
+  // Si habilitadosUnicamente no se proporciona, se asume 'false' (devolver todos los usuarios)
+  const habilitadosUnicamente = req.query.habilitadosUnicamente === 'true' || req.query.habilitadosUnicamente === undefined;
+
+  // Crear la solicitud con el campo habilitadosUnicamente
+  const request = new GetUsuariosRequest();
+  request.setHabilitadosUnicamente(habilitadosUnicamente);
 
   clienteUsuario.getUsuarios(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
-      res.json(response);
+      res.json(response.toObject());
     }
   });
 });

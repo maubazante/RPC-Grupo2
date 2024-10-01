@@ -65,11 +65,13 @@ message FindUsuariosResponse {
 }
 
 // Request para obtener todos los usuarios
-message GetUsuariosRequest {}
+message GetUsuariosRequest {
+  bool habilitados_unicamente = 1; // Indica si se deben traer solo usuarios habilitados
+}
 
 // Response para obtener todos los usuarios
 message GetUsuariosResponse {
-    repeated Usuario usuarios = 1; // Lista de usuarios
+  repeated Usuario usuarios = 1; // Lista de usuarios
 }
 
 // Request para logear un usuario
