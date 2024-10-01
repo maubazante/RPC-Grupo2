@@ -1,5 +1,6 @@
 package com.unla.stockearte.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +23,12 @@ import com.tienda.grpc.ModifyTiendaResponse;
 import com.tienda.grpc.GetTiendasRequest;
 import com.tienda.grpc.GetTiendasResponse;
 import com.tienda.grpc.TiendaServiceGrpc.TiendaServiceImplBase;
+import com.unla.stockearte.model.ItemOrden;
+import com.unla.stockearte.model.OrdenCompra;
 import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
+import com.unla.stockearte.repository.OrdenCompraRepository;
 import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
 
@@ -45,6 +49,12 @@ public class TiendaService extends TiendaServiceImplBase {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	 @Autowired
+	 private OrdenCompraRepository ordenCompraRepository;
+
+	 @Autowired
+	 private OrdenCompraProducer ordenCompraProducer;
 
 	// ==========================
 	// CONVERSION
@@ -246,6 +256,40 @@ public class TiendaService extends TiendaServiceImplBase {
 		responseObserver.onNext(responseBuilder.build());
 		responseObserver.onCompleted();
 	}
+	
+	@Transactional
+    public void crearOrdenCompra(Tienda tienda, List<ItemOrden> items) {
+        // Crear la orden de compra
+        OrdenCompra ordenCompra = new OrdenCompra();
+        ordenCompra.setTienda(tienda);
+        ordenCompra.setItems(items);
+        ordenCompra.setFechaSolicitud(LocalDate.now());
+        ordenCompra.setEstado("SOLICITADA");
+
+        // Guardar en la base de datos
+        ordenCompraRepository.save(ordenCompra);
+
+        // Construir el mensaje para Kafka
+        String mensaje = construirMensajeKafka(tienda.getCodigo(), ordenCompra);
+
+        // Enviar el mensaje a Kafka
+        ordenCompraProducer.enviarOrden(mensaje);
+    }
+
+    private String construirMensajeKafka(String codigoTienda, OrdenCompra ordenCompra) {
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("Codigo Tienda: ").append(codigoTienda).append(", ");
+        mensaje.append("ID Orden: ").append(ordenCompra.getId()).append(", ");
+        mensaje.append("Items: ");
+        for (ItemOrden item : ordenCompra.getItems()) {
+            mensaje.append("[Código: ").append(item.getCodigoArticulo())
+                   .append(", Color: ").append(item.getColor())
+                   .append(", Talle: ").append(item.getTalle())
+                   .append(", Cantidad: ").append(item.getCantidad()).append("], ");
+        }
+        mensaje.append("Fecha de Solicitud: ").append(ordenCompra.getFechaSolicitud());
+        return mensaje.toString();
+    }
 
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
