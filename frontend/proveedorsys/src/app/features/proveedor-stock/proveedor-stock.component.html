@@ -1,0 +1,55 @@
+<mat-card>
+    <mat-toolbar color="primary">
+      <span>Gestión de Stock del Proveedor</span>
+    </mat-toolbar>
+    
+    <form [formGroup]="stockForm">
+      <mat-table [dataSource]="productosFormArray.controls" class="mat-elevation-z8" formArrayName="productos">
+      
+        <!-- Columna de Código -->
+        <ng-container matColumnDef="codigo">
+          <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i"> {{element.get('codigo').value}} </mat-cell>
+        </ng-container>
+  
+        <!-- Columna de Descripción -->
+        <ng-container matColumnDef="descripcion">
+          <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i"> {{element.get('descripcion').value}} </mat-cell>
+        </ng-container>
+  
+        <!-- Columna de Color -->
+        <ng-container matColumnDef="color">
+          <mat-header-cell *matHeaderCellDef> Color </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i"> {{element.get('color').value}} </mat-cell>
+        </ng-container>
+  
+        <!-- Columna de Talle -->
+        <ng-container matColumnDef="talle">
+          <mat-header-cell *matHeaderCellDef> Talle </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i"> {{element.get('talle').value}} </mat-cell>
+        </ng-container>
+  
+        <!-- Columna de Stock (Editable) -->
+        <ng-container matColumnDef="stock">
+          <mat-header-cell *matHeaderCellDef> Stock </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+            <mat-form-field>
+              <input matInput type="number" formControlName="stock" placeholder="Cantidad">
+            </mat-form-field>
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="acciones">
+          <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+            <button mat-raised-button color="primary" (click)="actualizarStock(i)">Actualizar</button>
+          </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </form>
+  </mat-card>
+  
