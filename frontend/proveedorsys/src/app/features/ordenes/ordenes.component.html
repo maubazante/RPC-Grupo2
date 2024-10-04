@@ -1,0 +1,38 @@
+<mat-card>
+    <mat-toolbar color="primary">
+      <span>Gestión de Órdenes de Compra</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="nuevaOrden()">Nueva Orden</button>
+    </mat-toolbar>
+    
+    <mat-table [dataSource]="ordenes" class="mat-elevation-z8">
+      <ng-container matColumnDef="codigo">
+        <mat-header-cell *matHeaderCellDef> Código de Artículo </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.codigo}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="color">
+        <mat-header-cell *matHeaderCellDef> Color </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.color}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="talle">
+        <mat-header-cell *matHeaderCellDef> Talle </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.talle}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="cantidad">
+        <mat-header-cell *matHeaderCellDef> Cantidad Solicitada </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.cantidad}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="estado">
+        <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.estado}} </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card>
+  
