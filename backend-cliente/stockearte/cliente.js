@@ -3,6 +3,8 @@ const cors = require('cors');
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
+const sendMessage = require('./kafka/kafkaProducer'); // Importar la función de envío
+
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
@@ -346,3 +348,19 @@ app.post('/getProductos', (req, res) => {
     }
   });
 });
+
+// Mensajeria Kafka
+app.post('/send', async (req, res) => {
+    const { message } = req.body; // Obtener el mensaje del cuerpo de la petición
+    if (!message || message.trim() === '') {
+        return res.status(400).send('El mensaje no puede estar vacío'); // Retorna un error si el mensaje está vacío
+    }
+    try {
+        await sendMessage(message); // Enviar el mensaje a Kafka
+        res.status(200).send('Message sent to Kafka successfully');
+    } catch (error) {
+        console.error('Error sending message to Kafka:', error);
+        res.status(500).send('Failed to send message to Kafka');
+    }
+});
+
