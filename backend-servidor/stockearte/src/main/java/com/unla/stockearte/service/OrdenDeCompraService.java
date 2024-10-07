@@ -1,14 +1,17 @@
 package com.unla.stockearte.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unla.stockearte.model.OrdenDeCompra;
-import com.unla.stockearte.repository.OrdenDeCompraRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import com.unla.stockearte.enums.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unla.stockearte.enums.EstadoOrden;
+import com.unla.stockearte.model.OrdenDeCompra;
+import com.unla.stockearte.repository.OrdenDeCompraRepository;
 
 @Service
 public class OrdenDeCompraService {
@@ -38,5 +41,20 @@ public class OrdenDeCompraService {
         }
 
         return nuevaOrden;
+    }
+    
+    public List<OrdenDeCompra> getList() {
+    	List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
+    	return list;
+    }
+    
+    public OrdenDeCompra getById(Long id) {
+    	OrdenDeCompra order = ordenDeCompraRepository.getReferenceById(id);
+    	return order;
+    }
+    
+    public Boolean deleteById(Long id) {
+    	ordenDeCompraRepository.deleteById(id);
+    	return Boolean.TRUE;
     }
 }
