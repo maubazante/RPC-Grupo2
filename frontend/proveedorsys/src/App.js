@@ -4,9 +4,8 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme'; // Importar el tema actualizado
 import Navbar from './components/Navbar';
 import OrdenesCompra from './pages/OrdenesCompra';
-import Tiendas from './pages/Tiendas';
-import Novedades from './pages/Novedades';
 import Inicio from './pages/Inicio';
+import Productos from './pages/Productos';
 
 
 const App = () => {
@@ -17,9 +16,8 @@ const App = () => {
         <Navbar />
         <div style={{ padding: '20px', backgroundColor: theme.palette.background.default, color: theme.palette.text.primary }}>
           <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/tiendas" element={<Tiendas />} />
-            <Route path="/novedades" element={<Novedades />} />
+            <Route path="/inicio" element={<Inicio />} />
+            <Route path='/productos' element={<Productos />}/>
             <Route path="/ordenes-compra" element={<OrdenesCompra />} />
           </Routes>
         </div>

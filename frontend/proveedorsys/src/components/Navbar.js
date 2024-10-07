@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import StoreIcon from '@mui/icons-material/Store';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -17,8 +17,7 @@ const Navbar = () => {
   };
 
   const menuItems = [
-    { text: 'Tiendas', icon: <StoreIcon />, path: '/tiendas' },
-    { text: 'Novedades', icon: <NewReleasesIcon />, path: '/novedades' },
+    { text: 'Productos', icon: <InventoryIcon />, path: '/productos' },
     { text: 'Órdenes de Compra', icon: <ShoppingCartIcon />, path: '/ordenes-compra' },
   ];
 
@@ -55,7 +54,7 @@ const Navbar = () => {
           </List>
           <Divider />
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="/inicio">
               <ListItemText primary="Inicio" />
             </ListItem>
           </List>

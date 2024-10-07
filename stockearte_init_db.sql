@@ -91,6 +91,35 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
+-- Crear la tabla de Orden de Compra
+CREATE TABLE orden_de_compra (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
+  observaciones VARCHAR(500),
+  orden_de_despacho VARCHAR(20),
+  fecha_solicitud DATETIME NOT NULL,
+  fecha_recepcion DATETIME,
+  tiendas_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_tiendas FOREIGN KEY (tiendas_id) REFERENCES tiendas(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+-- Crear la tabla de Item de Orden
+CREATE TABLE item_orden (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_articulo VARCHAR(50) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  talle VARCHAR(10) NOT NULL,
+  cantidad_solicitada INT NOT NULL,
+  orden_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_orden FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+-- Índices adicionales para optimización de búsqueda
+CREATE INDEX idx_codigo_articulo ON item_orden (codigo_articulo);
+CREATE INDEX idx_estado ON orden_de_compra (estado);
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -5,8 +5,8 @@ import OrderModal from './OrderModal';
 const OrdenesCompra = () => {
   // Placeholder para las órdenes de compra
   const [orders, setOrders] = useState([
-    { id: 1, code: 'OC-001', estado: 'SOLICITADA', fecha: '2024-09-01' },
-    { id: 2, code: 'OC-002', estado: 'RECIBIDA', fecha: '2024-09-12' },
+    { id: 1, code: 'OC-001', idStore: 'T001', estado: 'SOLICITADA', fecha: '2024-09-01' },
+    { id: 2, code: 'OC-002', idStore: 'T002', estado: 'RECIBIDA', fecha: '2024-09-12' },
   ]);
   const [selectedOrder, setSelectedOrder] = useState(null); 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -50,6 +50,7 @@ const OrdenesCompra = () => {
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Código</TableCell>
+              <TableCell>ID de tienda</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Fecha</TableCell>
               <TableCell>Acciones</TableCell>
@@ -60,6 +61,7 @@ const OrdenesCompra = () => {
               <TableRow key={order.id}>
                 <TableCell>{order.id}</TableCell>
                 <TableCell>{order.code}</TableCell>
+                <TableCell>{order.idStore}</TableCell>
                 <TableCell>{order.estado}</TableCell>
                 <TableCell>{order.fecha}</TableCell>
                 <TableCell>

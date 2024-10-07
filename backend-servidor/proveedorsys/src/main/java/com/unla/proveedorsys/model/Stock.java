@@ -25,8 +25,6 @@ public class Stock implements Serializable {
     private Integer cantidad;
 
 
-    
-
     public Stock() {}
 
     // Getters y Setters
