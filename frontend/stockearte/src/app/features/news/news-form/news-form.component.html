@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Seleccionar Combinaciones de Talle y Color</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="newsForm">
+    <div formArrayName="tallesColores">
+      <div *ngFor="let talleColorGroup of tallesColoresArray.controls; let i = index" [formGroupName]="i" class="talle-color-row">
+        <span>{{ talleColorGroup.get('talle')?.value }}</span> - 
+        <span>{{ talleColorGroup.get('color')?.value }}</span>
+        <mat-checkbox formControlName="selected"></mat-checkbox>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Guardar</button>
+</mat-dialog-actions>

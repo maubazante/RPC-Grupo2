@@ -1,0 +1,58 @@
+/* .table-container {
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 112px);
+    background-color: transparent;
+}
+
+.content-container {
+    padding: 2px;
+    width: 80%;
+    max-width: 1200px;
+}
+
+table {
+    width: 100%;
+    color: #fff;
+    padding: 20px;
+}
+
+
+.mat-cell {
+    font-size: 16px;
+}
+
+.imagen {
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.add-search {
+    display: flex;
+    justify-content: space-between;
+} */
+
+/* Estilo para la tabla de combinaciones */
+.talles-colores-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .talles-colores-table th,
+  .talles-colores-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .talles-colores-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .mat-checkbox {
+    margin: 0 auto;
+  }
+  
