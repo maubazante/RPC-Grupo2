@@ -164,10 +164,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.loadAllProducts(); 
   }
 
-  createOrdenCompra(): void {
-    
-  }
-
   onSearchChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement && inputElement.value) {

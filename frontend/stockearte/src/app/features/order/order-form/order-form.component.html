@@ -1,0 +1,91 @@
+<h2 mat-dialog-title>{{isEdit ? 'Editar' : 'Crear'}} Orden de Compra</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="orderForm">
+    <!-- Estado -->
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="estado">
+        <mat-option value="SOLICITADA">Solicitada</mat-option>
+        <mat-option value="RECHAZADA">Rechazada</mat-option>
+        <mat-option value="ACEPTADA">Aceptada</mat-option>
+        <mat-option value="RECIBIDA">Recibida</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Observaciones -->
+    <mat-form-field appearance="outline">
+      <mat-label>Observaciones</mat-label>
+      <textarea matInput formControlName="observaciones"></textarea>
+    </mat-form-field>
+
+    <!-- Orden de Despacho -->
+    <mat-form-field appearance="outline">
+      <mat-label>Orden de Despacho</mat-label>
+      <input matInput formControlName="ordenDeDespacho">
+    </mat-form-field>
+
+    <!-- Fecha de Solicitud -->
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha de Solicitud</mat-label>
+      <input matInput formControlName="fechaSolicitud" readonly>
+    </mat-form-field>
+
+    <!-- Fecha de Recepción -->
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha de Recepción</mat-label>
+      <input matInput formControlName="fechaRecepcion" readonly>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+
+    <!-- Lista de Items -->
+    <h6>Items</h6>
+    <div formArrayName="items">
+      <div *ngFor="let item of items().controls; let i = index" [formGroupName]="i" class="item-container">
+        <!-- Selección de Producto -->
+        <mat-form-field appearance="outline">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="codigoArticulo">
+            <mat-option *ngFor="let producto of productos" [value]="producto.id">
+              {{ producto.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Color -->
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <input matInput formControlName="color">
+        </mat-form-field>
+
+        <!-- Talle -->
+        <mat-form-field appearance="outline">
+          <mat-label>Talle</mat-label>
+          <input matInput formControlName="talle">
+        </mat-form-field>
+
+        <!-- Cantidad Solicitada -->
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad Solicitada</mat-label>
+          <input matInput formControlName="cantidadSolicitada" type="number">
+        </mat-form-field>
+
+        <!-- Botón para Eliminar Item -->
+        <button mat-icon-button color="warn" (click)="removeItem(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Botón para Agregar Item -->
+    <button mat-button (click)="addItem()">
+      <mat-icon>add</mat-icon> Agregar Item
+    </button>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="orderForm.invalid">Guardar</button>
+</mat-dialog-actions>
