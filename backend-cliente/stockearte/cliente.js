@@ -17,7 +17,7 @@ app.use(cors({
 }));
 
 // Iniciar el servidor en el puerto 3000
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
 });
