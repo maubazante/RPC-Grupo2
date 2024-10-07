@@ -45,10 +45,10 @@ const Productos = () => {
     });
   };
 
-  // Guardar producto (crear o actualizar)
   const handleSave = () => {
+    console.log("Datos del formulario:", currentProduct);
+
     if (currentProduct.id) {
-      // Actualizar producto existente
       axios.put(`http://localhost:8081/api/productos/${currentProduct.id}`, currentProduct)
         .then(response => {
           setProductos(productos.map(p => (p.id === response.data.id ? response.data : p)));
@@ -56,7 +56,6 @@ const Productos = () => {
         })
         .catch(() => setError('Error al actualizar el producto'));
     } else {
-      // Crear nuevo producto
       axios.post('http://localhost:8081/api/productos', currentProduct)
         .then(response => {
           setProductos([...productos, response.data]);

@@ -116,6 +116,16 @@ CREATE TABLE item_orden (
   CONSTRAINT fk_orden FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+CREATE TABLE novedades (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_producto VARCHAR(10) NOT NULL,
+  talle VARCHAR(5) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  url_foto VARCHAR(300),
+  habilitado BOOLEAN NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- Índices adicionales para optimización de búsqueda
 CREATE INDEX idx_codigo_articulo ON item_orden (codigo_articulo);
 CREATE INDEX idx_estado ON orden_de_compra (estado);
