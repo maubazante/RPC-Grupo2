@@ -34,9 +34,10 @@ public class ProductoController {
         return producto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cambiar para que use el método createProducto
     @PostMapping
     public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
-        return ResponseEntity.ok(productoService.saveOrUpdateProducto(producto));
+        return ResponseEntity.ok(productoService.createProducto(producto));
     }
 
     @PutMapping("/{id}")
@@ -44,8 +45,8 @@ public class ProductoController {
         if (!productoService.getProductoById(id).isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        producto.setId(id);  
-        return ResponseEntity.ok(productoService.saveOrUpdateProducto(producto));
+        producto.setId(id);
+        return ResponseEntity.ok(productoService.updateProducto(producto));
     }
 
     @DeleteMapping("/{id}")

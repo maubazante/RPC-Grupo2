@@ -1,30 +1,37 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Novedad } from "../../shared/types/Novedad";
+import { environment } from "../../../environments/environment";
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class NewsService {
-    getAllNews() {
-      throw new Error('Method not implemented.');
-    }
-    createNews(selectedData: any) {
-      throw new Error('Method not implemented.');
-    }
-    modifyNews(news: any) {
-      throw new Error('Method not implemented.');
-    }
-    deleteNews(id: string) {
-      throw new Error('Method not implemented.');
-    }
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-        }),
-    };
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
+
+  getAllNews(): Observable<Novedad[]> {
+    return this.http.get<Novedad[]>(`${environment.controllerURL}/api/novedades`);
+  }
+
+  deleteNews(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.controllerURL}/${id}`);
+  }
+
+  createNews(novedad: Novedad): Observable<Novedad> {
+    return this.http.post<Novedad>(`${environment.controllerURL}`, novedad);
+  }
+
+  modifyNews(news: any) {
+    throw new Error('Method not implemented.');
+  }
 
 }

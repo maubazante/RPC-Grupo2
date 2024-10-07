@@ -38,19 +38,19 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   loadAllNews(): void {
-    // const sub = this.newsService.getAllNews().subscribe({
-    //   next: (newsList) => {
-    //     this.dataSource = newsList;
-    //   },
-    //   error: (err) => {
-    //     this.notyf.error('Error al cargar las noticias');
-    //     console.error(err);
-    //   },
-    //   complete: () => {
-    //     this.cdr.detectChanges();
-    //   }
-    // });
-    // this.subscriptions.push(sub);
+    const sub = this.newsService.getAllNews().subscribe({
+      next: (newsList) => {
+        this.dataSource = newsList;
+      },
+      error: (err) => {
+        this.notyf.error('Error al cargar las noticias');
+        console.error(err);
+      },
+      complete: () => {
+        this.cdr.detectChanges();
+      }
+    });
+    this.subscriptions.push(sub);
   }
 
   selectTallesColores(newsItem: any): void {
@@ -110,18 +110,18 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   deleteNews(id: string): void {
-    // if (confirm('¿Seguro que deseas eliminar esta noticia?')) {
-    //   const sub = this.newsService.deleteNews(id).subscribe({
-    //     next: () => {
-    //       this.notyf.success('Noticia eliminada con éxito');
-    //       this.loadAllNews();
-    //     },
-    //     error: (err) => {
-    //       this.notyf.error('Error al eliminar la noticia');
-    //       console.error(err);
-    //     }
-    //   });
-    //   this.subscriptions.push(sub);
-    // }
+    if (confirm('¿Seguro que deseas eliminar esta noticia?')) {
+      const sub = this.newsService.deleteNews(id).subscribe({
+        next: () => {
+          this.notyf.success('Noticia eliminada con éxito');
+          this.loadAllNews();
+        },
+        error: (err) => {
+          this.notyf.error('Error al eliminar la noticia');
+          console.error(err);
+        }
+      });
+      this.subscriptions.push(sub);
+    }
   }
 }
