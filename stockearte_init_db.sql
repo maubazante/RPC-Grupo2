@@ -120,6 +120,7 @@ CREATE TABLE novedades (
   id BIGINT NOT NULL AUTO_INCREMENT,
   codigo_producto VARCHAR(10) NOT NULL,
   talle VARCHAR(5) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
   color VARCHAR(30) NOT NULL,
   url_foto VARCHAR(300),
   habilitado BOOLEAN NOT NULL,
