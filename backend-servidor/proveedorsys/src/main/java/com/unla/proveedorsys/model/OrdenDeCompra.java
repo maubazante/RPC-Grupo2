@@ -1,18 +1,33 @@
 package com.unla.proveedorsys.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.unla.proveedorsys.enums.EstadoOrden;
-import com.unla.stockearte.model.Tienda;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 
 @Entity
-@Table(name = "ordenes_de_compra")
+@Table(name = "orden_de_compra")
 public class OrdenDeCompra  {
 
+    private static final long serialVersionUID = 1L;
+	
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private Long id;
 
     @Column(name = "estado", nullable = false)
@@ -39,9 +54,9 @@ public class OrdenDeCompra  {
     private Tienda tienda;
 
     // Constructores, getters y setters
-
     public OrdenDeCompra() {}
 
+ 
     public OrdenDeCompra(EstadoOrden estado, String observaciones, String ordenDeDespacho, LocalDateTime fechaSolicitud, List<ItemOrden> items, Tienda tienda) {
         this.estado = estado;
         this.observaciones = observaciones;
