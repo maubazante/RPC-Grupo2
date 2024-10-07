@@ -1,18 +1,24 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { OrdenDeCompra } from "../../shared/types/OrdenDeCompra";
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class OrderService {
-
-    createOrder(productData: OrdenDeCompra): Observable<any> {
-        return this.http.post(`${environment.controllerURL}/api/ordenDeCompra`, productData);
-      }
     
+    getAllOrders() {
+        throw new Error('Method not implemented.');
+    }
+    createOrder(result: any) {
+        throw new Error('Method not implemented.');
+    }
+    modifyOrder(order: any) {
+        throw new Error('Method not implemented.');
+    }
+    deleteOrder(id: string) {
+        throw new Error('Method not implemented.');
+    }
 
     constructor(private http: HttpClient) { }
 
@@ -21,5 +27,6 @@ export class OrderService {
             'Content-Type': 'application/json',
         }),
     };
+
 
 }

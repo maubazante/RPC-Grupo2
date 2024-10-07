@@ -12,7 +12,7 @@ mat-form-field {
 }
 
 .item-container {
-    display: flex;
+display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
@@ -21,8 +21,3 @@ mat-form-field {
 h6 {
     padding-top: 15px;
 }
-
-.custom-dialog-container {
-    width: 1110px !important;
-  }
-  

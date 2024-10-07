@@ -8,7 +8,6 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { OrderService } from '../../../core/services/order.service';
 import { ProductsService } from '../../../core/services/products.service';
-import { Producto, ProductoArray } from '../../../shared/types/Producto';
 
 @Component({
   selector: 'app-order-list',
@@ -79,41 +78,27 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   createOrder(): void {
-    let productosInject: Producto[]; 
-    this.productsService.getProductos(this.authService.getUsername()).subscribe({
-      next: (value: ProductoArray) => {
-        productosInject = value.productos
-      },
-      error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
-        const dialogRef = this.dialog.open(OrderFormComponent, {
-          panelClass: 'custom-dialog-container',
-          width: '900px',
-          data: { order: {}, productos: productosInject, action: ModalAction.CREATE }
-        });
+    const dialogRef = this.dialog.open(OrderFormComponent, {
+      width: '700px',
+      data: { order: {}, productos: this.dataSource, action: ModalAction.CREATE }
+    });
 
-        const sub = dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            const createSub = this.orderService.createOrder(result).subscribe({
-              next: () => {
-                this.notyf.success('Orden de compra creada con éxito');
-                this.loadAllOrders();
-              },
-              error: (err: any) => {
-                this.notyf.error('Error al crear la orden');
-                console.error(err);
-              }
-            });
-            this.subscriptions.push(createSub);
-          }
-        });
-        this.subscriptions.push(sub);
-      }
-    })
-
-    
+    // const sub = dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     const createSub = this.orderService.createOrder(result).subscribe({
+    //       next: (response) => {
+    //         this.notyf.success('Orden de compra creada con éxito');
+    //         this.loadAllOrders();
+    //       },
+    //       error: (err) => {
+    //         this.notyf.error('Error al crear la orden');
+    //         console.error(err);
+    //       }
+    //     });
+    //     this.subscriptions.push(createSub);
+    //   }
+    // });
+    // this.subscriptions.push(sub);
   }
 
   updateOrder(order: any): void {
