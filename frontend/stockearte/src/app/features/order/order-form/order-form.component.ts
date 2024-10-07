@@ -1,74 +1,60 @@
-import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Producto } from '../../../shared/types/Producto';
-import { ModalAction } from '../../../shared/types/ModalAction';
-import { OrderService } from '../../../core/services/order.service';
+
+interface Producto {
+  id: string;
+  nombre: string;
+}
+
+interface OrderFormData {
+  order: any;
+  productos: Producto[];
+  action: string;
+}
 
 @Component({
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.css']
 })
-export class OrderFormComponent {
+export class OrderFormComponent implements OnInit {
   orderForm: FormGroup;
-  productos: Producto[];  // Lista de productos para el select
-  isEdit: boolean;
+  productos: Producto[];
+  isEdit: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private orderService: OrderService,
-    public dialogRef: MatDialogRef<OrderFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { order: any, productos: Producto[], action: string }
+    private dialogRef: MatDialogRef<OrderFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: OrderFormData
   ) {
-    this.productos = data.productos || [];
-    this.isEdit = data.action === ModalAction.EDIT;
+    this.productos = data.productos;
+    this.isEdit = data.action === 'edit';
     this.orderForm = this.fb.group({
-      id: [data.order.id || null],
-      estado: [data.order.estado || 'SOLICITADA', Validators.required],
-      observaciones: [data.order.observaciones],
-      ordenDeDespacho: [data.order.ordenDeDespacho],
-      fechaSolicitud: [data.order.fechaSolicitud || new Date().toISOString()],
-      fechaRecepcion: [data.order.fechaRecepcion],
-      items: this.fb.array(data.order.items ? data.order.items.map((item: any) => this.createItem(item)) : [this.createItem()])
+      estado: [{ value: this.data.order.estado || 'SOLICITADA', disabled: !this.isEdit }, Validators.required],
+      observaciones: [{ value: this.data.order.observaciones || '', disabled: !this.isEdit }],
+      ordenDeDespacho: [{ value: this.data.order.ordenDeDespacho || '', disabled: !this.isEdit }],
+      fechaSolicitud: [{ value: this.data.order.fechaSolicitud || new Date(), disabled: !this.isEdit }, Validators.required],
+      fechaRecepcion: [{ value: this.data.order.fechaRecepcion || '', disabled: !this.isEdit }],
+      codigoArticulo: [this.data.order.codigoArticulo || '', Validators.required],
+      color: [this.data.order.color || '', Validators.required],
+      talle: [this.data.order.talle || '', Validators.required],
+      cantidadSolicitada: [this.data.order.cantidadSolicitada || 1, [Validators.required, Validators.min(1)]],
     });
   }
 
-  // Getter para acceder a los items dentro del formArray
-  items(): FormArray {
-    return this.orderForm.get('items') as FormArray;
+  ngOnInit(): void {
+    
   }
 
-  // Crear un FormGroup para cada item
-  createItem(item: any = {}): FormGroup {
-    return this.fb.group({
-      codigoArticulo: [item.codigoArticulo || '', Validators.required],
-      color: [item.color || '', Validators.required],
-      talle: [item.talle || '', Validators.required],
-      cantidadSolicitada: [item.cantidadSolicitada || 1, [Validators.required, Validators.min(1)]]
-    });
-  }
-
-  // Agregar un nuevo item
-  addItem(): void {
-    this.items().push(this.createItem());
-  }
-
-  // Eliminar un item específico
-  removeItem(index: number): void {
-    if (this.items().length > 1) {
-      this.items().removeAt(index);
+  onSave(): void {
+    if (this.orderForm.valid) {
+      // Retornar el formulario al componente principal
+      this.dialogRef.close(this.orderForm.value);
     }
   }
 
   onClose(): void {
     this.dialogRef.close();
-  }
-
-  onSave(): void {
-    if (this.orderForm.valid) {
-      const orderData = this.orderForm.value;
-      this.dialogRef.close(orderData);
-    }
   }
 }
