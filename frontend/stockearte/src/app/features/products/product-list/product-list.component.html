@@ -2,6 +2,7 @@
   <div class="content-container">
     <div class="add-search">
       <button mat-button *ngIf="isAdmin" (click)="createProduct()"><mat-icon>add</mat-icon>Agregar producto</button>
+      <button mat-button (click)="createOrdenCompra()"><mat-icon>add</mat-icon>Crear orden de compra</button>
     <mat-form-field class="search-field" appearance="outline" [style.width.px]=500>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput placeholder="Buscar" (input)="onSearchChange($event)"  />
