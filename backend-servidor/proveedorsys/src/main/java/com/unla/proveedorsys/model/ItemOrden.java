@@ -3,9 +3,12 @@ package com.unla.proveedorsys.model;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 @Entity
-@Table(name = "items_orden")
+@Table(name = "item_orden")
 public class ItemOrden implements Serializable {
+	
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
