@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.enums.EstadoOrden;
 import com.unla.stockearte.model.OrdenDeCompra;
 import com.unla.stockearte.repository.OrdenDeCompraRepository;
@@ -24,10 +25,17 @@ public class OrdenDeCompraService {
 
     private static final String TOPIC_ORDENES = "/orden-de-compra";
 
-    public OrdenDeCompra crearOrdenCompra(OrdenDeCompra ordenDeCompra) {
+    public OrdenDeCompra crearOrdenCompra(OrdenCompraRequest ordenDeCompraReq) {
+    	
+    	OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
+    	
         ordenDeCompra.setEstado(EstadoOrden.SOLICITADA);
         ordenDeCompra.setFechaSolicitud(LocalDateTime.now());
-
+        ordenDeCompra.setCantidadSolicitada(ordenDeCompraReq.getCantidadSolicitada());
+        ordenDeCompra.setCodigoArticulo(ordenDeCompraReq.getCodigoArticulo());
+        ordenDeCompra.setColor(ordenDeCompraReq.getColor());
+        ordenDeCompra.setTalle(ordenDeCompraReq.getTalle());
+        
         // Guardar la orden en la base de datos
         OrdenDeCompra nuevaOrden = ordenDeCompraRepository.save(ordenDeCompra);
 

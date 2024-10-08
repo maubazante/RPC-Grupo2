@@ -45,8 +45,17 @@ public class OrdenDeCompra {
 	@Column(name = "fecha_recepcion")
 	private LocalDateTime fechaRecepcion;
 
-	@OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ItemOrden> items;
+	@Column(name = "codigo_articulo", length = 50)
+	private String codigoArticulo;
+	
+	@Column(name = "color", length = 50)
+	private String color;
+	
+	@Column(name = "talle", length = 50)
+	private String talle;
+	
+	@Column(name = "cantidad_solicitada", length = 500)
+	private Integer cantidadSolicitada;
 
 	@ManyToOne
 	@JoinColumn(name = "tiendas_id", nullable = false)
@@ -57,7 +66,8 @@ public class OrdenDeCompra {
 	}
 
 	public OrdenDeCompra(Long id, EstadoOrden estado, String observaciones, Long id_orden_despacho,
-			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, List<ItemOrden> items, Tienda tienda) {
+			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, String codigoArticulo, String color,
+			String talle, Integer cantidadSolicitada, Tienda tienda) {
 		super();
 		this.id = id;
 		this.estado = estado;
@@ -65,7 +75,31 @@ public class OrdenDeCompra {
 		this.id_orden_despacho = id_orden_despacho;
 		this.fechaSolicitud = fechaSolicitud;
 		this.fechaRecepcion = fechaRecepcion;
-		this.items = items;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public OrdenDeCompra(String codigoArticulo, String color, String talle, Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public OrdenDeCompra(Long id, EstadoOrden estado, String codigoArticulo, String color, String talle,
+			Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.id = id;
+		this.estado = estado;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
 		this.tienda = tienda;
 	}
 
@@ -117,12 +151,36 @@ public class OrdenDeCompra {
 		this.fechaRecepcion = fechaRecepcion;
 	}
 
-	public List<ItemOrden> getItems() {
-		return items;
+	public String getCodigoArticulo() {
+		return codigoArticulo;
 	}
 
-	public void setItems(List<ItemOrden> items) {
-		this.items = items;
+	public void setCodigoArticulo(String codigoArticulo) {
+		this.codigoArticulo = codigoArticulo;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getTalle() {
+		return talle;
+	}
+
+	public void setTalle(String talle) {
+		this.talle = talle;
+	}
+
+	public Integer getCantidadSolicitada() {
+		return cantidadSolicitada;
+	}
+
+	public void setCantidadSolicitada(Integer cantidadSolicitada) {
+		this.cantidadSolicitada = cantidadSolicitada;
 	}
 
 	public Tienda getTienda() {
@@ -132,4 +190,10 @@ public class OrdenDeCompra {
 	public void setTienda(Tienda tienda) {
 		this.tienda = tienda;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 }
