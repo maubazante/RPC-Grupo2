@@ -1,6 +1,7 @@
 package com.unla.proveedorsys.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unla.proveedorsys.enums.EstadoOrden;
 import com.unla.proveedorsys.model.ItemOrden;
@@ -14,6 +15,7 @@ import com.unla.proveedorsys.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -44,11 +46,12 @@ public class OrdenDeCompraService {
 	 * @param orden La orden de compra que se va a enviar.
 	 */
 	public void enviarOrdenDeCompra(OrdenDeCompra orden) {
-		orden.setFechaSolicitud(LocalDateTime.now());
+		orden.setFechaSolicitud(LocalDate.now());
 		orden.setEstado(EstadoOrden.SOLICITADA);
 
 		// Convertir la orden a JSON
 		ObjectMapper mapper = new ObjectMapper();
+		
 		try {
 			String mensaje = mapper.writeValueAsString(orden);
 			kafkaProducerService.sendMessage(TOPIC_ORDENES, String.valueOf(orden.getId()), mensaje);

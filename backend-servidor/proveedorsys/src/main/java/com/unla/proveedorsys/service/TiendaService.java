@@ -20,7 +20,7 @@ public class TiendaService {
      * @param fechaRecepcion Fecha en la que se recibe la orden.
      */
     public void marcarOrdenComoRecibida(OrdenDeCompra orden, String fechaRecepcion) {
-        orden.setFechaRecepcion(java.time.LocalDateTime.parse(fechaRecepcion));
+        orden.setFechaRecepcion(java.time.LocalDate.parse(fechaRecepcion));
         orden.setEstado(EstadoOrden.RECIBIDA);
 
         // Enviar mensaje de recepción a Kafka
