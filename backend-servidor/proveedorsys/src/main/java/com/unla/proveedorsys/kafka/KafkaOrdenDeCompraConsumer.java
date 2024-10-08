@@ -18,7 +18,7 @@ public class KafkaOrdenDeCompraConsumer {
 	@Autowired
 	OrdenDeCompraService ordenDeCompraService;
 
-	@KafkaListener(topics = "/orden-de-compra", groupId = "stockearte-group")
+	@KafkaListener(topics = "orden-de-compra", groupId = "stockearte-orden-group", autoStartup = "true")
 	public void listen(String mensajeJson) {
 		ObjectMapper objectMapper = new ObjectMapper();
 
