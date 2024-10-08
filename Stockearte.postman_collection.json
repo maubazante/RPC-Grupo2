@@ -430,12 +430,15 @@
 				},
 				{
 					"name": "Traer Productos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"andresUsername\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -443,13 +446,23 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/getProductos",
+							"raw": "{{baseUrl}}:{{port}}/getProductos?username=andresUsername&habilitados=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"getProductos"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								},
+								{
+									"key": "habilitados",
+									"value": "true"
+								}
 							]
 						}
 					},

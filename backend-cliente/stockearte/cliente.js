@@ -218,7 +218,7 @@ app.get('/getUsuarios', (req, res) => {
     ? true
     : (req.query.habilitados === 'false' ? false : null);
 
-  console.log("habilitados: ", habilitados);
+  console.log("/getUsuarios?habilitados=", habilitados);
 
   // Crear un objeto request
   const request = {
@@ -343,14 +343,25 @@ app.post('/findProductos', (req, res) => {
   });
 });
 
-// Endpoint para traer productos
-app.post('/getProductos', (req, res) => {
-  const { username } = req.body;
+// Endpoint para obtener productos
+app.get('/getProductos', (req, res) => {
+  // Obtener el username del query
+  const username = req.query.username || '';
 
+  // Si habilitados no se proporciona, asignamos null
+  const habilitados = req.query.habilitados === 'true'
+    ? true
+    : (req.query.habilitados === 'false' ? false : null);
+
+  console.log("/getProductos?username=", username, "&habilitados=", habilitados);
+
+  // Crear un objeto request
   const request = {
-    username: username || ''
+    username: username,
+    habilitados: habilitados
   };
 
+  // Llamar al método getProductos del cliente
   clienteProducto.getProductos(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
