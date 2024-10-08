@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StoresService } from '../../../core/services/stores.service';
 import { Tienda } from '../../../shared/types/Tienda';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-news-form',
@@ -16,11 +17,20 @@ export class NewsFormComponent {
   constructor(
     private fb: FormBuilder,
     private storesService: StoresService,
+    private authService: AuthService,
     private dialogRef: MatDialogRef<NewsFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.form = this.fb.group({
-      cantidad: [this.data.cantidad, [Validators.required, Validators.min(0), Validators.max(this.data.cantidad)]],
+      id: [data.id],
+      nombre: [data.nombre, Validators.required],
+      codigo: [data.codigo],
+      foto: [data.foto, Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)],
+      color: [data.color],
+      talle: [data.talle],
+      habilitado: [data.habilitado, Validators.required],
+      idUserAdmin: [this.authService.getUserId()],
+      cantidad: [data.cantidad, [Validators.required, Validators.min(0), Validators.max(this.data.cantidad)]],
       tiendaId: [null, Validators.required]  // Campo para la selección de tienda
     });
   }
@@ -36,6 +46,7 @@ export class NewsFormComponent {
   onSave(): void {
     if (this.form.valid) {
       console.log(this.form.value);
+      this.form.controls['tiendaId'].setValue([Number(this.form.controls['tiendaId'].value)])
       this.dialogRef.close(this.form.value);
     }
   }

@@ -24,7 +24,7 @@ public class NovedadController {
         return ResponseEntity.ok(novedadService.getAllNovedades());
     }
     
-    @PostMapping("/alta-producto")
+    @PutMapping
     public ResponseEntity<String> darDeAltaProducto(@RequestBody AltaProductoRequest request) {
         boolean success = novedadService.darDeAltaProducto(request);
         return success ? ResponseEntity.ok("Producto dado de alta correctamente") : ResponseEntity.badRequest().body("Error al dar de alta el producto");
