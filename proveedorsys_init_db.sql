@@ -86,3 +86,16 @@ CREATE TABLE novedades_producto (
     url_foto VARCHAR(255),
     fecha_publicacion DATETIME NOT NULL
 );
+
+-- -----------------------------------------------------
+-- Insertar producto
+-- -----------------------------------------------------
+INSERT INTO `proveedorsys`.`producto`
+(`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`, `cantidad`)
+VALUES
+('Camiseta Deportiva', 'PROD001', 'M', 'camiseta1.jpg', 'Rojo', true, 50),
+('Pantalón Jeans', 'PROD002', 'L', 'pantalon1.jpg', 'Azul', true, 30),
+('Zapatillas Running', 'PROD003', '42', 'zapatillas1.jpg', 'Negro', true, 20),
+('Gorra Casual', 'PROD004', 'Único', 'gorra1.jpg', 'Blanco', true, 100),
+('Campera Invierno', 'PROD005', 'XL', 'campera1.jpg', 'Verde', true, 15),
+('Falda Plisada', 'PROD006', 'S', 'falda1.jpg', 'Rosa', true, 25);
