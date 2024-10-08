@@ -56,18 +56,17 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
 -- -----------------------------------------------------
 -- Table `stockearte`.`productos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NOT NULL,
-  `codigo` VARCHAR(10) NULL,
-  `talle` VARCHAR(5) NULL,
-  `foto` VARCHAR(300) NULL,
-  `color` VARCHAR(50) NULL,
-  `habilitado` BOOLEAN NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
+CREATE TABLE productos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  codigo VARCHAR(10) NOT NULL UNIQUE,
+  talle VARCHAR(5) NOT NULL,
+  foto VARCHAR(300) NOT NULL,
+  color VARCHAR(50) NOT NULL,
+  cantidad INT NOT NULL, -- Cambiar "stock" a "cantidad"
+  habilitado BOOLEAN NOT NULL DEFAULT true,
+  PRIMARY KEY (id)
 ) ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `stockearte`.`stock`
@@ -90,6 +89,40 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
+
+
+
+-- Crear la tabla de Orden de Compra
+CREATE TABLE orden_de_compra (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
+  observaciones VARCHAR(500),
+  id_orden_despacho BIGINT,
+  fecha_solicitud DATE NOT NULL,
+  fecha_recepcion DATE,
+  codigo_articulo VARCHAR(50),
+  color VARCHAR(50),
+  talle VARCHAR(50),
+  cantidad_solicitada int not null,
+  tiendas_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_tiendas FOREIGN KEY (tiendas_id) REFERENCES tiendas(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
+CREATE TABLE novedades (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_producto VARCHAR(10) NOT NULL,
+  talle VARCHAR(5) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  url_foto VARCHAR(300),
+  habilitado BOOLEAN NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Índices adicionales para optimización de búsqueda
+CREATE INDEX idx_estado ON orden_de_compra (estado);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -125,45 +158,3 @@ VALUES
 ('mariasanchez', 'password2', 'STOREMANAGER', TRUE, 'Maria', 'Sanchez', (SELECT id FROM `tiendas` WHERE codigo = 'T002')),
 ('luisgomez', 'password3', 'STOREMANAGER', TRUE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
 ('analuque', 'password4', 'STOREMANAGER', TRUE, 'Ana', 'Luque', (SELECT id FROM `tiendas` WHERE codigo = 'T004'));
-
--- -----------------------------------------------------
--- Insertar productos
--- -----------------------------------------------------
-INSERT INTO `productos` (`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`)
-VALUES 
-('Camiseta', 'P001', 'M', "https://www.shutterstock.com/image-vector/3d-realistic-soccer-jersey-argentina-600nw-2446075731.jpg", 'Blanco', TRUE),
-('Pantalón', 'P002', 'L', "https://acdn.mitiendanube.com/stores/002/023/047/products/marino-pantalon-stock-con-bolsillos11-c2e595f8e8f57a760616835590772521-1024-1024.png", 'Negro', TRUE),
-('Zapatillas', 'P003', '42', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw5ea76a27/products/NI_BQ3207-002/NI_BQ3207-002-6.JPG", 'Rojo', TRUE),
-('Chaqueta', 'P004', 'XL', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw8c3e9aaf/products/KA31153FWA07/KA31153FWA07-1.JPG", 'Azul', TRUE),
-('Bufanda', 'P005', 'Único', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ20UdFSOcKUCSAOj-DUpmT0nNNsIxrGD-_yQ&s", 'Verde', TRUE),
-('Gorro de Lana', 'P006', 'Único', "https://http2.mlstatic.com/D_NQ_NP_839450-MLA70350283266_072023-O.webp", 'Negro', TRUE),
-('Chaleco', 'P007', 'L', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TjQkwgsGfhwqad7pG68w4LkzwDRgHmm5AQ&s", 'Naranja', TRUE),
-('Guantes', 'P008', 'M', "https://seguridadglobal.com.ar/wp-content/uploads/2023/05/guantes-vaqueta-pulgar-volcado.jpg", 'Oro', TRUE),
-('Cinturón', 'P009', 'Único', "https://m.media-amazon.com/images/I/81qOglWUQAL._AC_SL1500_.jpg", 'Negro', TRUE),
-('Pantalón Corto', 'P010', 'L', NULL, 'Gris', TRUE),
-('Buzo', 'P011', 'L', NULL, 'Verde', TRUE),
-('Sandalias', 'P012', '41', NULL, 'Marrón', TRUE),
-('Cartera', 'P013', 'Único', NULL, 'Rojo', TRUE),
-('Chaqueta Ligera', 'P014', 'M', NULL, 'Azul', TRUE),
-('Pijama', 'P015', 'L', NULL, 'Rosa', TRUE);
-
--- -----------------------------------------------------
--- Insertar stock
--- -----------------------------------------------------
-INSERT INTO `stock` (`fk_tienda_id`, `fk_producto_id`, `stock`)
-VALUES 
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P001'), 100),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P002'), 50),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P003'), 75),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P004'), 30),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P005'), 80),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P006'), 60),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P007'), 45),
-((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P008'), 100),
-((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P009'), 90),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P010'), 70),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P011'), 50),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P012'), 40),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P013'), 80),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P014'), 30),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P015'), 20);

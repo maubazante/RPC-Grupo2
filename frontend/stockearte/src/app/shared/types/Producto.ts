@@ -9,7 +9,7 @@ export interface Producto {
   color: string
   talle: string
   habilitado: boolean
-  stock: string
+  cantidad: number
   id: string
   foto: string
   idUserAdmin: string

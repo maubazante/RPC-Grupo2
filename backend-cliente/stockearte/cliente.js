@@ -4,6 +4,7 @@ const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
 
+
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
 
@@ -16,7 +17,7 @@ app.use(cors({
 }));
 
 // Iniciar el servidor en el puerto 3000
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
 });
@@ -261,6 +262,7 @@ app.post('/createProducto', (req, res) => {
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
       foto: productoData.foto,
+	  cantidad: productoData.cantidad,
       idUserAdmin: productoData.idUserAdmin
     }
   };
@@ -302,6 +304,7 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
+	  cantidad: productoData.cantidad,
       foto: productoData.foto,
       idUserAdmin: productoData.idUserAdmin
     }
@@ -351,3 +354,4 @@ app.post('/getProductos', (req, res) => {
     }
   });
 });
+

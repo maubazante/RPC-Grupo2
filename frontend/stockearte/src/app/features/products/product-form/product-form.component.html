@@ -38,6 +38,18 @@
       <input matInput formControlName="talle">
     </mat-form-field>
 
+    <!-- Cantidad (Selector Numérico) -->
+    <mat-form-field appearance="outline">
+      <mat-label>Cantidad</mat-label>
+      <input matInput formControlName="cantidad" type="number" min="0">
+      <mat-error *ngIf="productForm.get('cantidad')?.hasError('required')">
+        La cantidad es requerida
+      </mat-error>
+      <mat-error *ngIf="productForm.get('cantidad')?.hasError('min')">
+        La cantidad no puede ser negativa
+      </mat-error>
+    </mat-form-field>
+
     <!-- Habilitado -->
     <mat-form-field appearance="outline">
       <mat-label>Habilitado</mat-label>

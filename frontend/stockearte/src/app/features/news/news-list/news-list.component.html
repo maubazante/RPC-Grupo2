@@ -1,0 +1,39 @@
+<div class="table-container">
+  <div class="content-container">
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let news"> {{news.id}} </td>
+      </ng-container>
+
+      <!-- Nombre Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let news"> {{news.nombre}} </td>
+      </ng-container>
+
+      <!-- Código Column -->
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let news"> {{news.codigo}} </td>
+      </ng-container>
+
+      <!-- Selección de Talles y Colores Column -->
+      <ng-container matColumnDef="selectTallesColores">
+        <th mat-header-cell *matHeaderCellDef> Selección </th>
+        <td mat-cell *matCellDef="let news">
+          <button mat-button (click)="openSelectionDialog(news)">
+            <mat-icon>check_circle</mat-icon> Seleccionar Talles/Colores
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Data Rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

@@ -4,6 +4,7 @@
     "@grpc/proto-loader": "^0.7.13",
     "cors": "^2.8.5",
     "express": "^4.21.0",
+    "kafkajs": "^2.2.4",
     "stockearte": "file:"
   },
   "name": "stockearte",
