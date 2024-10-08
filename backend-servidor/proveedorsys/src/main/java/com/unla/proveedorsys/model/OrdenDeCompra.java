@@ -1,5 +1,6 @@
 package com.unla.proveedorsys.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.unla.proveedorsys.enums.EstadoOrden;
@@ -36,10 +37,10 @@ public class OrdenDeCompra {
 	private String observaciones;
 
 	@Column(name = "fecha_solicitud", nullable = false)
-	private LocalDateTime fechaSolicitud;
+	private LocalDate fechaSolicitud;
 
 	@Column(name = "fecha_recepcion")
-	private LocalDateTime fechaRecepcion;
+	private LocalDate fechaRecepcion;
 
 	@Column(name = "codigo_articulo", length = 50)
 	private String codigoArticulo;
@@ -59,23 +60,6 @@ public class OrdenDeCompra {
 
 	// Constructores, getters y setters
 	public OrdenDeCompra() {
-	}
-
-	public OrdenDeCompra(Long id, EstadoOrden estado, String observaciones, Long id_orden_despacho,
-			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, String codigoArticulo, String color,
-			String talle, Integer cantidadSolicitada, Tienda tienda) {
-		super();
-		this.id = id;
-		this.estado = estado;
-		this.observaciones = observaciones;
-		this.id_orden_despacho = id_orden_despacho;
-		this.fechaSolicitud = fechaSolicitud;
-		this.fechaRecepcion = fechaRecepcion;
-		this.codigoArticulo = codigoArticulo;
-		this.color = color;
-		this.talle = talle;
-		this.cantidadSolicitada = cantidadSolicitada;
-		this.tienda = tienda;
 	}
 
 	public OrdenDeCompra(String codigoArticulo, String color, String talle, Integer cantidadSolicitada, Tienda tienda) {
@@ -131,21 +115,7 @@ public class OrdenDeCompra {
 		this.id_orden_despacho = id_orden_despacho;
 	}
 
-	public LocalDateTime getFechaSolicitud() {
-		return fechaSolicitud;
-	}
-
-	public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
-		this.fechaSolicitud = fechaSolicitud;
-	}
-
-	public LocalDateTime getFechaRecepcion() {
-		return fechaRecepcion;
-	}
-
-	public void setFechaRecepcion(LocalDateTime fechaRecepcion) {
-		this.fechaRecepcion = fechaRecepcion;
-	}
+	
 
 	public String getCodigoArticulo() {
 		return codigoArticulo;
@@ -189,6 +159,39 @@ public class OrdenDeCompra {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public OrdenDeCompra(Long id, EstadoOrden estado, Long id_orden_despacho, String observaciones,
+			LocalDate fechaSolicitud, LocalDate fechaRecepcion, String codigoArticulo, String color, String talle,
+			Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.id = id;
+		this.estado = estado;
+		this.id_orden_despacho = id_orden_despacho;
+		this.observaciones = observaciones;
+		this.fechaSolicitud = fechaSolicitud;
+		this.fechaRecepcion = fechaRecepcion;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public LocalDate getFechaSolicitud() {
+		return fechaSolicitud;
+	}
+
+	public void setFechaSolicitud(LocalDate fechaSolicitud) {
+		this.fechaSolicitud = fechaSolicitud;
+	}
+
+	public LocalDate getFechaRecepcion() {
+		return fechaRecepcion;
+	}
+
+	public void setFechaRecepcion(LocalDate fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
 	}
 
 }
