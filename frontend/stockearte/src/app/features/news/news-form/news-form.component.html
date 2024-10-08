@@ -1,18 +1,27 @@
-<h2 mat-dialog-title>Seleccionar Combinaciones de Talle y Color</h2>
-
+<h2 mat-dialog-title>Seleccionar Talles y Colores</h2>
 <mat-dialog-content>
-  <form [formGroup]="newsForm">
-    <div formArrayName="tallesColores">
-      <div *ngFor="let talleColorGroup of tallesColoresArray.controls; let i = index" [formGroupName]="i" class="talle-color-row">
-        <span>{{ talleColorGroup.get('talle')?.value }}</span> - 
-        <span>{{ talleColorGroup.get('color')?.value }}</span>
-        <mat-checkbox formControlName="selected"></mat-checkbox>
+  <form [formGroup]="selectionForm">
+    <div formArrayName="selections">
+      <div *ngFor="let selection of selections.controls; let i = index" [formGroupName]="i">
+        <div class="selection-row">
+          <span><strong>Talle:</strong> {{ selection.get('talle')?.value }}</span>
+          <span><strong>Color:</strong> {{ selection.get('color')?.value }}</span>
+          <mat-form-field>
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" formControlName="cantidad" min="0">
+            <mat-error *ngIf="selection.get('cantidad')?.hasError('required')">
+              La cantidad es requerida
+            </mat-error>
+            <mat-error *ngIf="selection.get('cantidad')?.hasError('min')">
+              La cantidad no puede ser negativa
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
     </div>
   </form>
 </mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onClose()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="onSave()">Guardar</button>
+<mat-dialog-actions>
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="saveSelections()" [disabled]="selectionForm.invalid">Guardar</button>
 </mat-dialog-actions>

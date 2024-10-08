@@ -257,6 +257,7 @@ app.post('/createProducto', (req, res) => {
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
       foto: productoData.foto,
+	  cantidad: productoData.cantidad,
       idUserAdmin: productoData.idUserAdmin
     }
   };
@@ -298,6 +299,7 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
+	  cantidad: productoData.cantidad,
       foto: productoData.foto,
       idUserAdmin: productoData.idUserAdmin
     }
