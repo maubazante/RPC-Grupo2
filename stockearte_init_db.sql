@@ -95,6 +95,7 @@ CREATE TABLE orden_de_compra (
   id BIGINT NOT NULL AUTO_INCREMENT,
   estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
   observaciones VARCHAR(500),
+  id_orden_despacho BIGINT,
   fecha_solicitud DATETIME NOT NULL,
   fecha_recepcion DATETIME,
   tiendas_id BIGINT NOT NULL,
