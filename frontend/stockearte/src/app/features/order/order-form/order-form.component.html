@@ -45,7 +45,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Producto</mat-label>
       <mat-select formControlName="codigoArticulo">
-        <mat-option *ngFor="let producto of productos" [value]="producto.id">
+        <mat-option *ngFor="let producto of productos" [value]="producto.codigo">
           {{ producto.nombre }}
         </mat-option>
       </mat-select>
