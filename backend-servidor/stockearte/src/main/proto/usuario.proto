@@ -85,7 +85,8 @@ message UserLoginResponse	{
 	string password = 2;
 	string rol = 3;
 	int64 userId = 4;
-	string errorMessage = 5;
+	int64 tiendaId = 5;
+	string errorMessage = 6;
 }
 
 // Servicios para manejar usuarios
