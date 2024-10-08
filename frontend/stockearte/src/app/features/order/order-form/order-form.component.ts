@@ -34,7 +34,8 @@ export class OrderFormComponent {
       codigoArticulo: [this.data.order.codigoArticulo || '', Validators.required],
       color: [this.data.order.color || '', Validators.required],
       talle: [this.data.order.talle || '', Validators.required],
-      cantidadSolicitada: [this.data.order.cantidadSolicitada || 1, [Validators.required, Validators.min(0)]]
+      cantidadSolicitada: [this.data.order.cantidadSolicitada || 1, [Validators.required, Validators.min(0)]],
+      tienda: [1]
     });
   }
 

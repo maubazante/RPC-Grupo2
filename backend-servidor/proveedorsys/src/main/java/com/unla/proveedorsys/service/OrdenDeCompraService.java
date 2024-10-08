@@ -83,27 +83,24 @@ public class OrdenDeCompraService {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String mensaje;
-
-		for (ItemOrden item : orden.getItems()) {
-			if (itemOrdenRepository.findByCodigoArticulo(item.getCodigoArticulo()) == null) {
+		
+			if (ordenDeCompraRepository.findByCodigoArticulo(orden.getCodigoArticulo()) == null) {
 				hayErrores = Boolean.TRUE;
-				observacionesErrores.append("Artículo ").append(item.getCodigoArticulo()).append(": no existe. ");
-				break;
+				observacionesErrores.append("Artículo ").append(orden.getCodigoArticulo()).append(": no existe. ");
 			}
 
-			if (item.getCantidadSolicitada() < 1) {
+			if (orden.getCantidadSolicitada() < 1) {
 				hayErrores = Boolean.TRUE;
-				observacionesErrores.append("Artículo ").append(item.getCodigoArticulo())
+				observacionesErrores.append("Artículo ").append(orden.getCodigoArticulo())
 						.append(": cantidad mal informada.");
-				break;
 			}
 
-			if (!stockRepository.tieneStockSuficiente(item.getCodigoArticulo(), item.getCantidadSolicitada())) {
+			if (!stockRepository.tieneStockSuficiente(orden.getCodigoArticulo(), orden.getCantidadSolicitada())) {
 				faltaStock = Boolean.TRUE;
-				observacionesFaltaStock.append("Articulo ").append(item.getCodigoArticulo())
+				observacionesFaltaStock.append("Articulo ").append(orden.getCodigoArticulo())
 						.append(": cantidad de stock insuficiente");
 			}
-		}
+		
 
 		if (hayErrores) {
 			orden.setEstado(EstadoOrden.RECHAZADA);
@@ -142,7 +139,6 @@ public class OrdenDeCompraService {
 				
 				//TODO: Agarrar el stock por cada producto y setear la cantidad de lo que se pidio
 				
-				
 				kafkaProducerService.sendMessage(TOPIC_DESPACHO, String.valueOf(orden.getId()), mensaje);
 				
 			} catch (JsonProcessingException e) {
@@ -151,8 +147,5 @@ public class OrdenDeCompraService {
 			
 		}
 		
-		
-		
-
 	}
 }

@@ -37,37 +37,32 @@ CREATE TABLE stock (
     FOREIGN KEY (producto_id) REFERENCES producto(id)
 );
 
--- Crear la tabla de Orden de Compra
 CREATE TABLE orden_de_compra (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tienda_id BIGINT NOT NULL,
-    estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
-    observaciones TEXT,
-    id_orden_despacho BIGINT,
-    fecha_solicitud DATETIME NOT NULL,
-    fecha_recepcion DATETIME,
-    FOREIGN KEY (tienda_id) REFERENCES tienda(id)
-);
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
+  observaciones VARCHAR(500),
+  id_orden_despacho BIGINT,
+  fecha_solicitud DATE NOT NULL,
+  fecha_recepcion DATE,
+  codigo_articulo VARCHAR(50),
+  color VARCHAR(50),
+  talle VARCHAR(50),
+  cantidad_solicitada int not null,
+  tienda_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_tienda FOREIGN KEY (tienda_id) REFERENCES tienda(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
 
 CREATE TABLE orden_de_despacho (
   id BIGINT NOT NULL AUTO_INCREMENT,
   id_orden_compra BIGINT,
   fecha_de_envio DATETIME,
   PRIMARY KEY (id),
-  CONSTRAINT fk_orden_compra FOREIGN KEY (id_orden_compra) REFERENCES orden_de_compra(id) ON DELETE CASCADE
+  FOREIGN KEY (id_orden_compra) REFERENCES orden_de_compra(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
--- Crear la tabla de Item de Orden de Compra
-CREATE TABLE item_orden (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    orden_id BIGINT NOT NULL,
-    codigo_articulo VARCHAR(50) NOT NULL,
-    color VARCHAR(30) NOT NULL,
-    talle VARCHAR(10) NOT NULL,
-    cantidad_solicitada INT NOT NULL,
-    FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id)
-);
-
+/*
 -- Crear la tabla de Despachos
 CREATE TABLE despacho (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -76,6 +71,7 @@ CREATE TABLE despacho (
     fecha_real_envio DATETIME,
     FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id)
 );
+*/
 
 -- Tabla para las novedades de productos nuevos
 CREATE TABLE novedades_producto (
@@ -87,15 +83,4 @@ CREATE TABLE novedades_producto (
     fecha_publicacion DATETIME NOT NULL
 );
 
--- -----------------------------------------------------
--- Insertar producto
--- -----------------------------------------------------
-INSERT INTO `proveedorsys`.`producto`
-(`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`, `cantidad`)
-VALUES
-('Camiseta Deportiva', 'PROD001', 'M', 'camiseta1.jpg', 'Rojo', true, 50),
-('Pantalón Jeans', 'PROD002', 'L', 'pantalon1.jpg', 'Azul', true, 30),
-('Zapatillas Running', 'PROD003', '42', 'zapatillas1.jpg', 'Negro', true, 20),
-('Gorra Casual', 'PROD004', 'Único', 'gorra1.jpg', 'Blanco', true, 100),
-('Campera Invierno', 'PROD005', 'XL', 'campera1.jpg', 'Verde', true, 15),
-('Falda Plisada', 'PROD006', 'S', 'falda1.jpg', 'Rosa', true, 25);
+/* TODO: INSERTS */

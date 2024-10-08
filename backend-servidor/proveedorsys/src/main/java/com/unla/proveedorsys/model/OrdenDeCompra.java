@@ -1,22 +1,18 @@
 package com.unla.proveedorsys.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.unla.proveedorsys.enums.EstadoOrden;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -45,8 +41,17 @@ public class OrdenDeCompra {
 	@Column(name = "fecha_recepcion")
 	private LocalDateTime fechaRecepcion;
 
-	@OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ItemOrden> items;
+	@Column(name = "codigo_articulo", length = 50)
+	private String codigoArticulo;
+	
+	@Column(name = "color", length = 50)
+	private String color;
+	
+	@Column(name = "talle", length = 50)
+	private String talle;
+	
+	@Column(name = "cantidad_solicitada", length = 500)
+	private Integer cantidadSolicitada;
 
 	@ManyToOne
 	@JoinColumn(name = "tienda_id", nullable = false)
@@ -56,16 +61,41 @@ public class OrdenDeCompra {
 	public OrdenDeCompra() {
 	}
 
-	public OrdenDeCompra(Long id, EstadoOrden estado, Long id_orden_despacho, String observaciones,
-			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, List<ItemOrden> items, Tienda tienda) {
+	public OrdenDeCompra(Long id, EstadoOrden estado, String observaciones, Long id_orden_despacho,
+			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, String codigoArticulo, String color,
+			String talle, Integer cantidadSolicitada, Tienda tienda) {
 		super();
 		this.id = id;
 		this.estado = estado;
-		this.id_orden_despacho = id_orden_despacho;
 		this.observaciones = observaciones;
+		this.id_orden_despacho = id_orden_despacho;
 		this.fechaSolicitud = fechaSolicitud;
 		this.fechaRecepcion = fechaRecepcion;
-		this.items = items;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public OrdenDeCompra(String codigoArticulo, String color, String talle, Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public OrdenDeCompra(Long id, EstadoOrden estado, String codigoArticulo, String color, String talle,
+			Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.id = id;
+		this.estado = estado;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
 		this.tienda = tienda;
 	}
 
@@ -93,6 +123,14 @@ public class OrdenDeCompra {
 		this.observaciones = observaciones;
 	}
 
+	public Long getId_orden_despacho() {
+		return id_orden_despacho;
+	}
+
+	public void setId_orden_despacho(Long id_orden_despacho) {
+		this.id_orden_despacho = id_orden_despacho;
+	}
+
 	public LocalDateTime getFechaSolicitud() {
 		return fechaSolicitud;
 	}
@@ -109,12 +147,36 @@ public class OrdenDeCompra {
 		this.fechaRecepcion = fechaRecepcion;
 	}
 
-	public List<ItemOrden> getItems() {
-		return items;
+	public String getCodigoArticulo() {
+		return codigoArticulo;
 	}
 
-	public void setItems(List<ItemOrden> items) {
-		this.items = items;
+	public void setCodigoArticulo(String codigoArticulo) {
+		this.codigoArticulo = codigoArticulo;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getTalle() {
+		return talle;
+	}
+
+	public void setTalle(String talle) {
+		this.talle = talle;
+	}
+
+	public Integer getCantidadSolicitada() {
+		return cantidadSolicitada;
+	}
+
+	public void setCantidadSolicitada(Integer cantidadSolicitada) {
+		this.cantidadSolicitada = cantidadSolicitada;
 	}
 
 	public Tienda getTienda() {
@@ -125,12 +187,8 @@ public class OrdenDeCompra {
 		this.tienda = tienda;
 	}
 
-	public Long getId_orden_despacho() {
-		return id_orden_despacho;
-	}
-
-	public void setId_orden_despacho(Long id_orden_despacho) {
-		this.id_orden_despacho = id_orden_despacho;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

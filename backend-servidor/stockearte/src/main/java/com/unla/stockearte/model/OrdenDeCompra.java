@@ -1,5 +1,6 @@
 package com.unla.stockearte.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,13 +41,22 @@ public class OrdenDeCompra {
 	private Long id_orden_despacho;
 
 	@Column(name = "fecha_solicitud", nullable = false)
-	private LocalDateTime fechaSolicitud;
+	private LocalDate fechaSolicitud;
 
 	@Column(name = "fecha_recepcion")
-	private LocalDateTime fechaRecepcion;
+	private LocalDate fechaRecepcion;
 
-	@OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ItemOrden> items;
+	@Column(name = "codigo_articulo", length = 50)
+	private String codigoArticulo;
+	
+	@Column(name = "color", length = 50)
+	private String color;
+	
+	@Column(name = "talle", length = 50)
+	private String talle;
+	
+	@Column(name = "cantidad_solicitada", length = 500)
+	private Integer cantidadSolicitada;
 
 	@ManyToOne
 	@JoinColumn(name = "tiendas_id", nullable = false)
@@ -56,16 +66,24 @@ public class OrdenDeCompra {
 	public OrdenDeCompra() {
 	}
 
-	public OrdenDeCompra(Long id, EstadoOrden estado, String observaciones, Long id_orden_despacho,
-			LocalDateTime fechaSolicitud, LocalDateTime fechaRecepcion, List<ItemOrden> items, Tienda tienda) {
+	public OrdenDeCompra(String codigoArticulo, String color, String talle, Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
+	}
+
+	public OrdenDeCompra(Long id, EstadoOrden estado, String codigoArticulo, String color, String talle,
+			Integer cantidadSolicitada, Tienda tienda) {
 		super();
 		this.id = id;
 		this.estado = estado;
-		this.observaciones = observaciones;
-		this.id_orden_despacho = id_orden_despacho;
-		this.fechaSolicitud = fechaSolicitud;
-		this.fechaRecepcion = fechaRecepcion;
-		this.items = items;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
 		this.tienda = tienda;
 	}
 
@@ -101,28 +119,53 @@ public class OrdenDeCompra {
 		this.id_orden_despacho = id_orden_despacho;
 	}
 
-	public LocalDateTime getFechaSolicitud() {
-		return fechaSolicitud;
-	}
-
-	public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
+	public OrdenDeCompra(Long id, EstadoOrden estado, String observaciones, Long id_orden_despacho,
+			LocalDate fechaSolicitud, LocalDate fechaRecepcion, String codigoArticulo, String color, String talle,
+			Integer cantidadSolicitada, Tienda tienda) {
+		super();
+		this.id = id;
+		this.estado = estado;
+		this.observaciones = observaciones;
+		this.id_orden_despacho = id_orden_despacho;
 		this.fechaSolicitud = fechaSolicitud;
-	}
-
-	public LocalDateTime getFechaRecepcion() {
-		return fechaRecepcion;
-	}
-
-	public void setFechaRecepcion(LocalDateTime fechaRecepcion) {
 		this.fechaRecepcion = fechaRecepcion;
+		this.codigoArticulo = codigoArticulo;
+		this.color = color;
+		this.talle = talle;
+		this.cantidadSolicitada = cantidadSolicitada;
+		this.tienda = tienda;
 	}
 
-	public List<ItemOrden> getItems() {
-		return items;
+	public String getCodigoArticulo() {
+		return codigoArticulo;
 	}
 
-	public void setItems(List<ItemOrden> items) {
-		this.items = items;
+	public void setCodigoArticulo(String codigoArticulo) {
+		this.codigoArticulo = codigoArticulo;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getTalle() {
+		return talle;
+	}
+
+	public void setTalle(String talle) {
+		this.talle = talle;
+	}
+
+	public Integer getCantidadSolicitada() {
+		return cantidadSolicitada;
+	}
+
+	public void setCantidadSolicitada(Integer cantidadSolicitada) {
+		this.cantidadSolicitada = cantidadSolicitada;
 	}
 
 	public Tienda getTienda() {
@@ -132,4 +175,26 @@ public class OrdenDeCompra {
 	public void setTienda(Tienda tienda) {
 		this.tienda = tienda;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public LocalDate getFechaSolicitud() {
+		return fechaSolicitud;
+	}
+
+	public void setFechaSolicitud(LocalDate fechaSolicitud) {
+		this.fechaSolicitud = fechaSolicitud;
+	}
+
+	public LocalDate getFechaRecepcion() {
+		return fechaRecepcion;
+	}
+
+	public void setFechaRecepcion(LocalDate fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
+	}
+
+	
 }

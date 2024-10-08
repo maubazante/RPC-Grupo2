@@ -9,5 +9,9 @@ import com.unla.proveedorsys.model.OrdenDeCompra;
 
 @Repository
 public interface OrdenDeCompraRepository extends JpaRepository<OrdenDeCompra, Long> {
-    List<OrdenDeCompra> findByTiendaId(Long tiendaId);
+    
+	List<OrdenDeCompra> findByTiendaId(Long tiendaId);
+
+	OrdenDeCompra findByCodigoArticulo(String codigoArticulo);
+    
 }
