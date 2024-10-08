@@ -69,3 +69,24 @@ CREATE TABLE novedades_producto (
     url_foto VARCHAR(255),
     fecha_publicacion DATETIME NOT NULL
 );
+
+-- -----------------------------------------------------
+-- Insertar producto
+-- -----------------------------------------------------
+INSERT INTO producto (id, nombre, codigo, talle, foto, color, habilitado, cantidad, stock)
+VALUES
+(1, 'Camiseta', 'P001', 'M', 'https://www.shutterstock.com/image-vector/3d-realistic-soccer-jersey-argentina-600nw-2446075731.jpg', 'Blanco', 1, 3, 0),
+(2, 'Pantalón', 'P002', 'L', 'https://acdn.mitiendanube.com/stores/002/023/047/products/marino-pantalon-stock-con-bolsillos11-c2e595f8e8f57a760616835590772521-1024-1024.png', 'Negro', 1, 0, 0),
+(3, 'Zapatillas', 'P003', '42', 'https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw5ea76a27/products/NI_BQ3207-002/NI_BQ3207-002-6.JPG', 'Rojo', 1, 0, 0),
+(4, 'Chaqueta', 'P004', 'XL', 'https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw8c3e9aaf/products/KA31153FWA07/KA31153FWA07-1.JPG', 'Azul', 1, 0, 0),
+(5, 'Bufanda', 'P005', 'Único', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ20UdFSOcKUCSAOj-DUpmT0nNNsIxrGD-_yQ&s', 'Verde', 1, 0, 0),
+(6, 'Gorro de Lana', 'P006', 'Único', 'https://http2.mlstatic.com/D_NQ_NP_839450-MLA70350283266_072023-O.webp', 'Negro', 1, 0, 0),
+(7, 'Chaleco', 'P007', 'L', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TjQkwgsGfhwqad7pG68w4LkzwDRgHmm5AQ&s', 'Naranja', 1, 0, 0),
+(8, 'Guantes', 'P008', 'M', 'https://seguridadglobal.com.ar/wp-content/uploads/2023/05/guantes-vaqueta-pulgar-volcado.jpg', 'Oro', 1, 0, 0),
+(9, 'Cinturón', 'P009', 'Único', 'https://m.media-amazon.com/images/I/81qOglWUQAL._AC_SL1500_.jpg', 'Negro', 1, 0, 0),
+(10, 'Pantalón Corto', 'P010', 'L', NULL, 'Gris', 1, 0, 0),
+(11, 'Buzo', 'P011', 'L', NULL, 'Verde', 1, 0, 0),
+(12, 'Sandalias', 'P012', '41', NULL, 'Marrón', 1, 0, 0),
+(13, 'Cartera', 'P013', 'Único', NULL, 'Rojo', 1, 0, 0),
+(14, 'Chaqueta Ligera', 'P014', 'M', NULL, 'Azul', 1, 0, 0),
+(15, 'Pijama', 'P015', 'L', NULL, 'Rosa', 1, 0, 0);
