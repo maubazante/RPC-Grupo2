@@ -186,3 +186,6 @@ VALUES
 ('Chaleco de Punto', 'CHA019', 'XL', 'https://example.com/foto19.jpg', 'Azul', true, 15),
 ('Pantalón Cargo', 'PAN020', 'M', 'https://example.com/foto20.jpg', 'Verde Oliva', true, 50);
 
+INSERT INTO producto (nombre, codigo, talle, foto, color, cantidad, habilitado) VALUES
+('Camiseta Deportiva', 'CAM123', 'M', 'imagenes/camiseta_deportiva_m.jpg', 'Azul', 50, true),
+('Pantalón Jeans', 'PAN456', 'L', 'imagenes/pantalon_jeans_l.jpg', 'Negro', 30, true);
