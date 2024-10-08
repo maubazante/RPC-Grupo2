@@ -23,6 +23,8 @@ message Producto {
 	int64 id = 8;                 // id del producto
 	string foto = 9;               // foto del producto
 	int64 idUserAdmin = 10;    // Id del usuario de casa central
+	int64 stock = 11; // RELACION ENTRE TIENDA Y PRODUCTO
+
 }
 
 message CreateProductoRequest {

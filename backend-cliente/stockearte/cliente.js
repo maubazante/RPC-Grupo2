@@ -258,7 +258,8 @@ app.post('/createProducto', (req, res) => {
       id: productoData.id,
       foto: productoData.foto,
 	  cantidad: productoData.cantidad,
-      idUserAdmin: productoData.idUserAdmin
+      idUserAdmin: productoData.idUserAdmin,
+	  stock: productoData.stock
     }
   };
 
@@ -301,7 +302,9 @@ app.put('/modifyProducto', (req, res) => {
       id: productoData.id,
 	  cantidad: productoData.cantidad,
       foto: productoData.foto,
-      idUserAdmin: productoData.idUserAdmin
+      idUserAdmin: productoData.idUserAdmin,
+	  stock: productoData.stock
+
     }
   };
   clienteProducto.modifyProducto(request, (error, response) => {

@@ -94,6 +94,33 @@ public class ProductoService extends ProductoServiceImplBase {
 			producto.setCantidad((int) request.getProducto().getCantidad());
 			
 			getProductoRepository().save(producto);
+
+			
+			List<Stock> stockList = new ArrayList<>();
+			for (Long tiendaid : request.getProducto().getTiendaIdsList()) {
+				Optional<Tienda> tienda = getTiendaRepository().findById(tiendaid);
+				if (tienda.isPresent()) {
+					Stock stock = new Stock();
+					StockId stockId = new StockId();
+					
+					stockId.setProductoId(producto.getId());
+					stock.setProducto(producto);
+					stock.setTienda(tienda.get());
+					stockId.setTiendaId(tienda.get().getId());
+					stock.setId(stockId);
+					stock.setStock(Integer.valueOf(0));
+					stockList.add(stock);
+				}
+				
+			}
+			
+			stockList.forEach(stock -> {
+			    System.out.println("Producto ID: " + stock.getProducto().getId());
+			    System.out.println("Cantidad: " + stock.getProducto().getCantidad());
+			    System.out.println("Tienda ID: " + stock.getTienda().getId());
+			});
+			
+			getStockRepository().saveAll(stockList);
 			
 			response = CreateProductoResponse.newBuilder()
 					.setMessage("Producto con codigo " + producto.getCodigo() + " creado exitosamente").build();

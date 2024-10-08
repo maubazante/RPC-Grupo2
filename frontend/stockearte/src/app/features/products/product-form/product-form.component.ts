@@ -35,7 +35,7 @@ export class ProductFormComponent {
       cantidad: [this.data.product.cantidad || 1, [Validators.required, Validators.min(0)]], // Control de cantidad
       habilitado: [data.product.habilitado, Validators.required],
       idUserAdmin: [this.authService.getUserId()],
-      // tiendas: [data.product.tiendas.map(stock => stock.tienda)]
+      tiendas: [[1]]
     });
   }
 
@@ -46,6 +46,7 @@ export class ProductFormComponent {
   onSave(): void {
     if (this.productForm.valid) {
       const updatedProduct = this.productForm.value;
+      console.log(updatedProduct);
       this.dialogRef.close(updatedProduct);
     }
   }
