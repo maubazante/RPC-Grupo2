@@ -84,3 +84,28 @@ CREATE TABLE novedades_producto (
 );
 
 /* TODO: INSERTS */
+
+INSERT INTO `proveedorsys`.`producto`
+(`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`, `cantidad`)
+VALUES
+('Camiseta Deportiva', 'CAM001', 'M', 'https://example.com/foto1.jpg', 'Rojo', true, 50),
+('Pantalón Casual', 'PAN002', 'L', 'https://example.com/foto2.jpg', 'Azul', true, 30),
+('Sudadera con Capucha', 'SUD003', 'S', 'https://example.com/foto3.jpg', 'Verde', true, 20),
+('Zapatos de Cuero', 'ZAP004', '42', 'https://example.com/foto4.jpg', 'Negro', false, 0),
+('Camiseta Básica', 'CAM005', 'XL', 'https://example.com/foto5.jpg', 'Blanco', true, 40),
+('Chaqueta de Invierno', 'CHA006', 'M', 'https://example.com/foto6.jpg', 'Gris', true, 15),
+('Cinturón de Cuero', 'CIN007', 'N/A', 'https://example.com/foto7.jpg', 'Marrón', true, 60),
+('Camisa Formal', 'CAM008', 'L', 'https://example.com/foto8.jpg', 'Celeste', true, 25),
+('Short Deportivo', 'SHO009', 'M', 'https://example.com/foto9.jpg', 'Negro', false, 0),
+('Gorra de Béisbol', 'GOR010', 'N/A', 'https://example.com/foto10.jpg', 'Azul Marino', true, 100),
+('Camiseta Estampada', 'CAM011', 'L', 'https://example.com/foto11.jpg', 'Amarillo', true, 45),
+('Pantalón de Jogging', 'PAN012', 'M', 'https://example.com/foto12.jpg', 'Gris', true, 50),
+('Sombrero de Playa', 'SOM013', 'N/A', 'https://example.com/foto13.jpg', 'Beige', true, 30),
+('Chaqueta de Cuero', 'CHA014', 'L', 'https://example.com/foto14.jpg', 'Negro', true, 20),
+('Pantalón de Vestir', 'PAN015', 'S', 'https://example.com/foto15.jpg', 'Negro', true, 35),
+('Zapatos Deportivos', 'ZAP016', '44', 'https://example.com/foto16.jpg', 'Blanco', true, 10),
+('Camiseta sin Mangas', 'CAM017', 'M', 'https://example.com/foto17.jpg', 'Verde', true, 25),
+('Bermudas de Playa', 'BER018', 'L', 'https://example.com/foto18.jpg', 'Rojo', true, 40),
+('Chaleco de Punto', 'CHA019', 'XL', 'https://example.com/foto19.jpg', 'Azul', true, 15),
+('Pantalón Cargo', 'PAN020', 'M', 'https://example.com/foto20.jpg', 'Verde Oliva', true, 50);
+
