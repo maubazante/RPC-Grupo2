@@ -211,21 +211,28 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	@Transactional(readOnly = true)
 	@Override
 	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
-		// Verifica si se deben traer solo los usuarios habilitados, valor por defecto
-		// es
-		// 'false'
-		boolean soloHabilitados = request.hasHabilitadosUnicamente() ? request.getHabilitadosUnicamente() : false;
+		// Verifica si se deben traer solo los usuarios habilitados
+		Boolean habilitados = request.hasHabilitados() ? request.getHabilitados() : null; // Verifica si se ha establecido
+
+		System.out.println("¿Solo habilitados? " + habilitados);
 
 		// Busca los usuarios según si se filtran habilitados o no
-		List<Usuario> usuarios = soloHabilitados
-				? usuarioRepository.findByHabilitado(true)
-				: usuarioRepository.findAll(); // Se traen todos los usuarios
+		List<Usuario> usuarios;
+		if (habilitados != null) {
+			usuarios = usuarioRepository.findByHabilitado(habilitados); // Solo usuarios habilitados o deshabilitados
+		} else {
+			usuarios = usuarioRepository.findAll(); // Todos los usuarios
+		}
+
+		System.out.println("Usuarios encontrados: ");
 
 		// Construye la respuesta
 		GetUsuariosResponse.Builder responseBuilder = GetUsuariosResponse.newBuilder();
 
+		System.out.println("Usuarios encontrados: ");
 		// Agrega los usuarios a la respuesta
 		for (Usuario usuario : usuarios) {
+			System.out.println(usuario);
 			responseBuilder.addUsuarios(convertToProtoUsuario(usuario));
 		}
 

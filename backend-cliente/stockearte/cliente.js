@@ -213,18 +213,23 @@ app.post('/findUsuarios', (req, res) => {
 
 // Endpoint para obtener todos los usuarios
 app.get('/getUsuarios', (req, res) => {
-  // Si habilitadosUnicamente no se proporciona, se asume 'false' (devolver todos los usuarios)
-  const habilitadosUnicamente = req.query.habilitadosUnicamente === 'true' || req.query.habilitadosUnicamente === undefined;
+  // Si habilitados_unicamente no se proporciona, asignamos null
+  const habilitados = req.query.habilitados === 'true'
+    ? true
+    : (req.query.habilitados === 'false' ? false : null);
 
-  // Crear la solicitud con el campo habilitadosUnicamente
-  const request = new GetUsuariosRequest();
-  request.setHabilitadosUnicamente(habilitadosUnicamente);
+  console.log("habilitados: ", habilitados);
+
+  // Crear un objeto request
+  const request = {
+    habilitados: habilitados
+  };
 
   clienteUsuario.getUsuarios(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
     } else {
-      res.json(response.toObject());
+      res.json(response);
     }
   });
 });
@@ -262,7 +267,7 @@ app.post('/createProducto', (req, res) => {
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
       foto: productoData.foto,
-	  cantidad: productoData.cantidad,
+      cantidad: productoData.cantidad,
       idUserAdmin: productoData.idUserAdmin
     }
   };
@@ -304,7 +309,7 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
-	  cantidad: productoData.cantidad,
+      cantidad: productoData.cantidad,
       foto: productoData.foto,
       idUserAdmin: productoData.idUserAdmin
     }

@@ -68,7 +68,7 @@ message FindUsuariosResponse {
 
 // Request para obtener todos los usuarios
 message GetUsuariosRequest {
-    bool habilitados_unicamente = 1; // Indica si se deben traer solo usuarios habilitados
+    optional bool habilitados = 1; // Indica si se deben traer solo usuarios habilitados
 }
 
 // Response para obtener todos los usuarios
