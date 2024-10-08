@@ -79,7 +79,7 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
-			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"jav	a.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createProducto(CreateProductoRequest request, StreamObserver<CreateProductoResponse> responseObserver) {
 		

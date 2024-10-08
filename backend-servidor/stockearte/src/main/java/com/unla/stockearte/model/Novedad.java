@@ -6,27 +6,30 @@ import jakarta.persistence.*;
 @Table(name = "novedades")
 public class Novedad {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "codigo_producto", nullable = false)
-    private String codigo;
-    
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+	@Column(name = "codigo_producto", nullable = false)
+	private String codigo;
+
+	@Column(name = "nombre", nullable = false)
+	private String nombre;
 
 	@Column(name = "talle", nullable = false)
-    private String talle;
+	private String talle;
 
-    @Column(name = "color", nullable = false)
-    private String color;
+	@Column(name = "color", nullable = false)
+	private String color;
 
-    @Column(name = "url_foto", length = 300)
-    private String foto;
+	@Column(name = "url_foto", length = 300)
+	private String foto;
 
-    @Column(name = "habilitado", nullable = false)
-    private Boolean habilitado;
+	@Column(name = "cantidad")
+	private Integer cantidad;
+
+	@Column(name = "habilitado", nullable = false)
+	private Boolean habilitado;
 
 	public Long getId() {
 		return id;
@@ -84,5 +87,12 @@ public class Novedad {
 		this.habilitado = habilitado;
 	}
 
-   
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
 }

@@ -8,49 +8,29 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./news-form.component.css']
 })
 export class NewsFormComponent {
-  selectionForm: FormGroup;
+  form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<NewsFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.selectionForm = this.fb.group({
-      selections: this.fb.array([])
-    });
-    this.initializeForm();
-  }
-
-  initializeForm(): void {
-    const tallesColores = this.data.tallesColores;
-    tallesColores.forEach((talleColor: { talle: string; colores: string[]; }) => {
-      this.addSelection(talleColor.talle, talleColor.colores);
+    this.form = this.fb.group({
+      cantidad: [this.data.cantidad, [Validators.required, Validators.min(0), Validators.max(this.data.cantidad)]]
     });
   }
 
-  get selections(): FormArray {
-    return this.selectionForm.get('selections') as FormArray;
+  ngOnInit(): void {
+    console.log(this.data);
   }
 
-  addSelection(talle: string, colores: string[]): void {
-    colores.forEach(color => {
-      this.selections.push(
-        this.fb.group({
-          talle: [talle],
-          color: [color],
-          cantidad: [0, [Validators.required, Validators.min(0)]]
-        })
-      );
-    });
-  }
-
-  saveSelections(): void {
-    if (this.selectionForm.valid) {
-      this.dialogRef.close(this.selectionForm.value);
+  onSave(): void {
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
     }
   }
 
-  cancel(): void {
+  onClose(): void {
     this.dialogRef.close();
   }
 }

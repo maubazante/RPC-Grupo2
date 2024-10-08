@@ -1,27 +1,31 @@
-<h2 mat-dialog-title>Seleccionar Talles y Colores</h2>
+<h2 mat-dialog-title>Actualizar Stock de Producto</h2>
+
+<!-- Asignar el FormGroup a este div -->
 <mat-dialog-content>
-  <form [formGroup]="selectionForm">
-    <div formArrayName="selections">
-      <div *ngFor="let selection of selections.controls; let i = index" [formGroupName]="i">
-        <div class="selection-row">
-          <span><strong>Talle:</strong> {{ selection.get('talle')?.value }}</span>
-          <span><strong>Color:</strong> {{ selection.get('color')?.value }}</span>
-          <mat-form-field>
-            <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="cantidad" min="0">
-            <mat-error *ngIf="selection.get('cantidad')?.hasError('required')">
-              La cantidad es requerida
-            </mat-error>
-            <mat-error *ngIf="selection.get('cantidad')?.hasError('min')">
-              La cantidad no puede ser negativa
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
+  <form [formGroup]="form">
+    <div class="content">
+      <!-- Muestra Talle y Color -->
+      <p><strong>Talle:</strong> {{ data.talle }} - <strong>Color:</strong> {{ data.color }}</p>
+
+      <!-- Cantidad -->
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="cantidad" [max]="data.cantidad" min="0">
+        <mat-error *ngIf="form.get('cantidad')?.hasError('required')">
+          La cantidad es requerida
+        </mat-error>
+        <mat-error *ngIf="form.get('cantidad')?.hasError('min')">
+          La cantidad no puede ser menor a 0
+        </mat-error>
+        <mat-error *ngIf="form.get('cantidad')?.hasError('max')">
+          La cantidad máxima permitida es {{ data.cantidad }}
+        </mat-error>
+      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="cancel()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="saveSelections()" [disabled]="selectionForm.invalid">Guardar</button>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
 </mat-dialog-actions>

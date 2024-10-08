@@ -133,6 +133,7 @@ const Productos = () => {
         <DialogContent>
           <TextField margin="dense" name="nombre" label="Nombre" fullWidth value={currentProduct.nombre} onChange={handleChange} />
           <TextField margin="dense" name="codigo" label="Código" fullWidth value={currentProduct.codigo} onChange={handleChange} />
+          <TextField margin="dense" type="number" name="cantidad" label="Cantidad" fullWidth value={currentProduct.cantidad} onChange={handleChange} />
           <TextField margin="dense" name="talle" label="Talle" fullWidth value={currentProduct.talle} onChange={handleChange} />
           <TextField margin="dense" name="foto" label="Foto URL" fullWidth value={currentProduct.foto} onChange={handleChange} />
           <TextField margin="dense" name="color" label="Color" fullWidth value={currentProduct.color} onChange={handleChange} />

@@ -53,16 +53,24 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  openSelectionDialog(news: any): void {
-    console.log(news);
+  openSelectionDialog(newsItem: any): void {
     const dialogRef = this.dialog.open(NewsFormComponent, {
-      width: '600px',
-      data: { data: news }
+      width: '400px',
+      data: {
+        id: newsItem.id,
+        codigo: newsItem.codigo,
+        nombre: newsItem.nombre,
+        talle: newsItem.talle,
+        color: newsItem.color,
+        foto: newsItem.foto,
+        cantidad: newsItem.cantidad,
+        habilitado: newsItem.habilitado
+      }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Selección guardada:', result);
+        console.log('Cantidad seleccionada:', result.cantidad);
       }
     });
   }
