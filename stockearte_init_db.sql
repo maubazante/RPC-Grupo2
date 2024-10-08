@@ -56,16 +56,16 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
 -- -----------------------------------------------------
 -- Table `stockearte`.`productos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NOT NULL,
-  `codigo` VARCHAR(10) NULL,
-  `talle` VARCHAR(5) NULL,
-  `foto` VARCHAR(300) NULL,
-  `color` VARCHAR(50) NULL,
-  `habilitado` BOOLEAN NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
+CREATE TABLE productos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  codigo VARCHAR(10) NOT NULL UNIQUE,
+  talle VARCHAR(5) NOT NULL,
+  foto VARCHAR(300) NOT NULL,
+  color VARCHAR(50) NOT NULL,
+  cantidad INT NOT NULL, -- Cambiar "stock" a "cantidad"
+  habilitado BOOLEAN NOT NULL DEFAULT true,
+  PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -120,6 +120,7 @@ CREATE TABLE novedades (
   id BIGINT NOT NULL AUTO_INCREMENT,
   codigo_producto VARCHAR(10) NOT NULL,
   talle VARCHAR(5) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
   color VARCHAR(30) NOT NULL,
   url_foto VARCHAR(300),
   habilitado BOOLEAN NOT NULL,

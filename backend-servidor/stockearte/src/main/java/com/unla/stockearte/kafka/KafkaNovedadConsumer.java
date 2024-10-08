@@ -26,7 +26,7 @@ public class KafkaNovedadConsumer {
             // Persistir en la base de datos
             novedadService.saveNovedad(novedad);
 
-            System.out.println("Mensaje recibido y guardado: " + novedad.getCodigoProducto());
+            System.out.println("Mensaje recibido y guardado: " + novedad.getCodigo());
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();

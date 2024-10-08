@@ -53,61 +53,29 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  selectTallesColores(newsItem: any): void {
+  openSelectionDialog(newsItem: any): void {
     const dialogRef = this.dialog.open(NewsFormComponent, {
       width: '400px',
-      data: { newsItem: newsItem, action: 'select' }
-    });
-
-    const sub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.createSelectedTallesColores(result);
+      data: {
+        id: newsItem.id,
+        codigo: newsItem.codigo,
+        nombre: newsItem.nombre,
+        talle: newsItem.talle,
+        color: newsItem.color,
+        foto: newsItem.foto,
+        cantidad: newsItem.cantidad,
+        habilitado: newsItem.habilitado
       }
     });
-    this.subscriptions.push(sub);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Cantidad seleccionada:', result.cantidad);
+      }
+    });
   }
 
-  createSelectedTallesColores(selectedData: any): void {
-    // const sub = this.newsService.createNews(selectedData).subscribe({
-    //   next: (response) => {
-    //     this.notyf.success('Artículo dado de alta con los talles y colores seleccionados');
-    //     this.loadAllNews();
-    //   },
-    //   error: (err) => {
-    //     this.notyf.error('Error al dar de alta el artículo');
-    //     console.error(err);
-    //   }
-    // });
-    // this.subscriptions.push(sub);
-  }
-
-  editNews(news: any): void {
-    // const dialogRef = this.dialog.open(NewsFormComponent, {
-    //   width: '400px',
-    //   data: { newsItem: news, action: 'edit' }
-    // });
-
-    // const sub = dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.updateNews(result);
-    //   }
-    // });
-    // this.subscriptions.push(sub);
-  }
-
-  updateNews(news: any): void {
-    // const sub = this.newsService.modifyNews(news).subscribe({
-    //   next: (updatedNews) => {
-    //     this.notyf.success('Noticia actualizada con éxito');
-    //     this.loadAllNews();
-    //   },
-    //   error: (err) => {
-    //     this.notyf.error('Error al actualizar la noticia');
-    //     console.error(err);
-    //   }
-    // });
-    // this.subscriptions.push(sub);
-  }
+ 
 
   deleteNews(id: string): void {
     if (confirm('¿Seguro que deseas eliminar esta noticia?')) {

@@ -19,7 +19,7 @@ message Producto {
     string talle = 4;             // talle del producto
 	bool habilitado = 5;          // indica si esta habilitado el producto
 	repeated int64 tiendaIds = 6; // indica a las tiendas a la cual quiero vincular el producto
-	int64 stock = 7;	          // Indica el id de la tienda que tiene asociado el usuario
+	int64 cantidad = 7;	          // Indica el id de la tienda que tiene asociado el usuario
 	int64 id = 8;                 // id del producto
 	string foto = 9;               // foto del producto
 	int64 idUserAdmin = 10;    // Id del usuario de casa central

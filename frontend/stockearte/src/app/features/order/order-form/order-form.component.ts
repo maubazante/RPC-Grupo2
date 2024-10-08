@@ -22,17 +22,22 @@ export class OrderFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: { order: any, productos: Producto[], action: string }
   ) {
     this.productos = data.productos || [];
+    let estadoValue = data.order.estado || 'SOLICITADA';
     this.isEdit = data.action === ModalAction.EDIT;
     this.orderForm = this.fb.group({
-      id: [data.order.id || null],
-      estado: [data.order.estado || 'SOLICITADA', Validators.required],
-      observaciones: [data.order.observaciones],
-      ordenDeDespacho: [data.order.ordenDeDespacho],
-      fechaSolicitud: [data.order.fechaSolicitud || new Date().toISOString()],
-      fechaRecepcion: [data.order.fechaRecepcion],
-      items: this.fb.array(data.order.items ? data.order.items.map((item: any) => this.createItem(item)) : [this.createItem()])
+      id: [null],
+      estado: [{ value: estadoValue, disabled: !this.isEdit }, Validators.required],
+      observaciones: [{ value: data.order.observaciones, disabled: !this.isEdit }],
+      ordenDeDespacho: [{ value: data.order.ordenDeDespacho, disabled: !this.isEdit }],
+      fechaSolicitud: [{ value: data.order.fechaSolicitud || null, disabled: !this.isEdit }],
+      fechaRecepcion: [{ value: data.order.fechaRecepcion, disabled: !this.isEdit }],
+      codigoArticulo: [this.data.order.codigoArticulo || '', Validators.required],
+      color: [this.data.order.color || '', Validators.required],
+      talle: [this.data.order.talle || '', Validators.required],
+      cantidadSolicitada: [this.data.order.cantidadSolicitada || 1, [Validators.required, Validators.min(0)]]
     });
   }
+
 
   // Getter para acceder a los items dentro del formArray
   items(): FormArray {
@@ -68,6 +73,7 @@ export class OrderFormComponent {
   onSave(): void {
     if (this.orderForm.valid) {
       const orderData = this.orderForm.value;
+      console.log(orderData);
       this.dialogRef.close(orderData);
     }
   }

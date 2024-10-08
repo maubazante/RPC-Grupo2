@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -8,47 +8,26 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./news-form.component.css']
 })
 export class NewsFormComponent {
-  newsForm: FormGroup;
+  form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<NewsFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { newsItem: { tallesColores: { talle: string, colores: string[] }[] }, action: string }
+    private dialogRef: MatDialogRef<NewsFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.newsForm = this.fb.group({
-      tallesColores: this.fb.array(this.buildTallesColores())
+    this.form = this.fb.group({
+      cantidad: [this.data.cantidad, [Validators.required, Validators.min(0), Validators.max(this.data.cantidad)]]
     });
   }
 
-  buildTallesColores(): FormGroup[] {
-    const formGroups: FormGroup[] = [];
-
-    this.data.newsItem.tallesColores.forEach(talleProducto => {
-      const talle = talleProducto.talle;
-      talleProducto.colores.forEach(color => {
-        formGroups.push(
-          this.fb.group({
-            talle: [talle],             
-            color: [color],             
-            selected: new FormControl(false)  
-          })
-        );
-      });
-    });
-
-    return formGroups;
-  }
-
-  get tallesColoresArray(): FormArray {
-    return this.newsForm.get('tallesColores') as FormArray;
+  ngOnInit(): void {
+    console.log(this.data);
   }
 
   onSave(): void {
-    const selectedData = this.tallesColoresArray.value
-      .filter((combo: any) => combo.selected)
-      .map((combo: any) => ({ talle: combo.talle, color: combo.color }));
-
-    this.dialogRef.close(selectedData);
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
+    }
   }
 
   onClose(): void {
