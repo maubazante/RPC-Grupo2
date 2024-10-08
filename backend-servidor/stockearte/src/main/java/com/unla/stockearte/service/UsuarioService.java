@@ -245,6 +245,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 					.setUsername(user.get().getUsername())
 					.setRol(user.get().getRol().getValue())
 					.setUserId(user.get().getId())
+					.setTiendaId(user.get().getTienda().getId())
 					.build();
 		} else {
 			response = UserLoginResponse.newBuilder()

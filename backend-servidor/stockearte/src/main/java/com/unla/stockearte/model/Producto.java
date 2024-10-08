@@ -30,15 +30,15 @@ public class Producto {
 
 	@Column(nullable = false, length = 5)
 	private String talle;
-	
+
 	@Column(nullable = false, length = 300)
 	private String foto;
 
 	@Column(nullable = false, length = 50)
 	private String color;
 
-	@OneToMany(mappedBy = "producto")
-	private List<Stock> stock;
+	@Column(nullable = false)
+	private Integer cantidad;
 
 	@Column(name = "habilitado", nullable = false)
 	private boolean habilitado = true;
@@ -113,6 +113,14 @@ public class Producto {
 
 	public void setHabilitado(boolean habilitado) {
 		this.habilitado = habilitado;
+	}
+	
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
 	}
 
 }
