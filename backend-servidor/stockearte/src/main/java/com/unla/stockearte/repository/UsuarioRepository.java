@@ -22,8 +22,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Set<Usuario> findByUsernameContainingAndTiendaId(String username, Long tiendaId);
 
     Optional<Usuario> findByUsername(String username);
-    
+
     Optional<Usuario> findByUsernameAndPassword(String username, String password);
-    
+
+    List<Usuario> findByHabilitado(Boolean habilitado);
+
     boolean existsByIdAndRol(Long idUsuario, Rol rol);
 }

@@ -67,6 +67,7 @@ message FindProductosResponse {
 // Request para traer productos por usuario
 message GetProductosRequest {
   string username = 1;
+  optional bool habilitados = 2;
 }
 
 // Response para la búsqueda de productos
