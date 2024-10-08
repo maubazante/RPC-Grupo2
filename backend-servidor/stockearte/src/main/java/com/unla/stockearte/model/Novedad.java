@@ -11,7 +11,7 @@ public class Novedad {
     private Long id;
 
     @Column(name = "codigo_producto", nullable = false)
-    private String codigoProducto;
+    private String codigo;
     
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -23,34 +23,66 @@ public class Novedad {
     private String color;
 
     @Column(name = "url_foto", length = 300)
-    private String urlFoto;
+    private String foto;
 
     @Column(name = "habilitado", nullable = false)
     private Boolean habilitado;
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+	public Long getId() {
+		return id;
+	}
 
-    public String getCodigoProducto() { return codigoProducto; }
-    public void setCodigoProducto(String codigoProducto) { this.codigoProducto = codigoProducto; }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getTalle() { return talle; }
-    public void setTalle(String talle) { this.talle = talle; }
+	public String getCodigo() {
+		return codigo;
+	}
 
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
-    public String getUrlFoto() { return urlFoto; }
-    public void setUrlFoto(String urlFoto) { this.urlFoto = urlFoto; }
-
-    public Boolean getHabilitado() { return habilitado; }
-    public void setHabilitado(Boolean habilitado) { this.habilitado = habilitado; }
-    
-    public String getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	public String getTalle() {
+		return talle;
+	}
+
+	public void setTalle(String talle) {
+		this.talle = talle;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public Boolean getHabilitado() {
+		return habilitado;
+	}
+
+	public void setHabilitado(Boolean habilitado) {
+		this.habilitado = habilitado;
+	}
+
+   
 }
