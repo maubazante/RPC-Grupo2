@@ -68,7 +68,6 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
   UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
 ) ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `stockearte`.`stock`
 -- -----------------------------------------------------
@@ -96,13 +95,13 @@ CREATE TABLE orden_de_compra (
   id BIGINT NOT NULL AUTO_INCREMENT,
   estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
   observaciones VARCHAR(500),
-  orden_de_despacho VARCHAR(20),
   fecha_solicitud DATETIME NOT NULL,
   fecha_recepcion DATETIME,
   tiendas_id BIGINT NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_tiendas FOREIGN KEY (tiendas_id) REFERENCES tiendas(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
+
 
 -- Crear la tabla de Item de Orden
 CREATE TABLE item_orden (

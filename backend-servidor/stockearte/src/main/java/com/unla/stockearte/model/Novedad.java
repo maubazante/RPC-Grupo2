@@ -12,6 +12,9 @@ public class Novedad {
 
     @Column(name = "codigo_producto", nullable = false)
     private String codigoProducto;
+    
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
 
     @Column(name = "talle", nullable = false)
     private String talle;
@@ -43,4 +46,12 @@ public class Novedad {
 
     public Boolean getHabilitado() { return habilitado; }
     public void setHabilitado(Boolean habilitado) { this.habilitado = habilitado; }
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+    
+    
 }
