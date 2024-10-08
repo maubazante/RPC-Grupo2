@@ -75,22 +75,24 @@ public class TiendaService extends TiendaServiceImplBase {
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createTienda(CreateTiendaRequest request, StreamObserver<CreateTiendaResponse> responseObserver) {
-		
+
 		CreateTiendaResponse response = null;
-		if(getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
+		if (getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
 			Tienda tienda = new Tienda();
 			tienda.setCodigo(request.getTienda().getCodigo());
 			tienda.setDireccion(request.getTienda().getDireccion());
 			tienda.setCiudad(request.getTienda().getCiudad());
 			tienda.setProvincia(request.getTienda().getProvincia());
-			
+
 			getTiendaRepository().save(tienda);
-			
+
 			response = CreateTiendaResponse.newBuilder()
-					.setMessage("Tienda creada con codigo " + tienda.getCodigo() + " con exito").build();			
+					.setMessage("Tienda creada con codigo " + tienda.getCodigo() + " con exito").build();
 		} else {
 			response = CreateTiendaResponse.newBuilder()
-					.setMessage("Error al crear la tienda: el usuario autenticado no existe o carece de los permisos necesarios para crear nuevas tiendas.").build();
+					.setMessage(
+							"Error al crear la tienda: el usuario autenticado no existe o carece de los permisos necesarios para crear nuevas tiendas.")
+					.build();
 		}
 
 		responseObserver.onNext(response);
@@ -122,25 +124,26 @@ public class TiendaService extends TiendaServiceImplBase {
 		Tienda tienda = getTiendaRepository().findByCodigo(request.getTienda().getCodigo());
 		ModifyTiendaResponse response = null;
 
-		if(getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
+		if (getUsuarioRepository().existsByIdAndRol(request.getTienda().getIdUserAdmin(), Rol.ADMIN)) {
 			if (tienda != null) {
 				tienda.setHabilitada(request.getTienda().getHabilitada());
 				tienda.setCiudad(request.getTienda().getCiudad());
 				tienda.setCodigo(request.getTienda().getCodigo());
 				tienda.setDireccion(request.getTienda().getDireccion());
 				tienda.setProvincia(request.getTienda().getProvincia());
-				
+
 				// TODO: Ver el tema de la asignacion de productos
-				
+
 				getTiendaRepository().save(tienda);
-				
+
 				response = ModifyTiendaResponse.newBuilder()
 						.setMessage("Tienda con codigo " + request.getTienda().getCodigo() + " modificada exitosamente")
 						.build();
-			}			
-		}else {
+			}
+		} else {
 			response = ModifyTiendaResponse.newBuilder()
-					.setMessage("Error al modificar la tienda: el usuario autenticado no existe o carece de los permisos necesarios para modificar tiendas.")
+					.setMessage(
+							"Error al modificar la tienda: el usuario autenticado no existe o carece de los permisos necesarios para modificar tiendas.")
 					.build();
 		}
 
@@ -166,7 +169,7 @@ public class TiendaService extends TiendaServiceImplBase {
 		if (usuario.getTienda() == null || !usuario.esDeCasaCentral())
 			throw new RuntimeException("Acceso denegado: solo usuarios de casa central pueden realizar esta acción.");
 
-		Set<Tienda> resultado = new HashSet<>();
+		Set<Tienda> resultado = new HashSet<>(); // Cambiar a Set
 
 		if (codigo != null && habilitada != null) {
 			resultado.addAll(tiendaRepository.findByCodigoAndHabilitada(codigo, habilitada));
@@ -175,9 +178,11 @@ public class TiendaService extends TiendaServiceImplBase {
 			if (tienda != null)
 				resultado.add(tienda);
 		} else if (habilitada != null) {
-			resultado = tiendaRepository.findByHabilitada(habilitada);
+			// Convierte la lista en un Set para asegurar el tipo
+			resultado.addAll(new HashSet<>(tiendaRepository.findByHabilitada(habilitada)));
 		} else {
-			resultado.addAll(tiendaRepository.findAll());
+			// Convierte la lista en un Set para asegurar el tipo
+			resultado.addAll(new HashSet<>(tiendaRepository.findAll()));
 		}
 
 		return resultado.isEmpty() ? Optional.empty() : Optional.of(resultado);
@@ -218,8 +223,16 @@ public class TiendaService extends TiendaServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<List<Tienda>> getTiendas() {
-		List<Tienda> tiendas = tiendaRepository.findAll();
+	public Optional<List<Tienda>> getTiendas(Boolean habilitadas) {
+		List<Tienda> tiendas;
+
+		// Si el parámetro habilitados no es nulo, filtrar por habilitados
+		if (habilitadas != null) {
+			tiendas = tiendaRepository.findByHabilitada(habilitadas); // Filtrar según si están habilitadas o no
+		} else {
+			tiendas = tiendaRepository.findAll(); // Si no se proporciona el parámetro, traer todas las tiendas
+		}
+
 		List<Tienda> tiendasModificadas = new ArrayList<>();
 
 		for (Tienda t : tiendas) {
@@ -234,7 +247,14 @@ public class TiendaService extends TiendaServiceImplBase {
 	@Transactional(readOnly = true)
 	@Override
 	public void getTiendas(GetTiendasRequest request, StreamObserver<GetTiendasResponse> responseObserver) {
-		Optional<List<Tienda>> tiendas = getTiendas();
+		// Verifica si se deben traer solo las tiendas habilitadas
+		Boolean habilitados = request.hasHabilitadas() ? request.getHabilitadas() : null; // Verifica si se ha
+																							// establecido
+
+		System.out.println("¿Solo habilitadas? " + habilitados);
+
+		// Llama al método getTiendas con el parámetro habilitados
+		Optional<List<Tienda>> tiendas = getTiendas(habilitados);
 		GetTiendasResponse.Builder responseBuilder = GetTiendasResponse.newBuilder();
 
 		if (tiendas.isPresent()) {

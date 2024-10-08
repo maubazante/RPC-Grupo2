@@ -90,29 +90,21 @@ app.put('/modifyTienda', (req, res) => {
   })
 })
 
-// Endpoint para buscar tiendas
-app.post('/findTiendas', (req, res) => {
-  const { codigo, habilitada, username } = req.body;
-
-  const request = {
-    codigo: codigo || '',
-    habilitada: habilitada !== undefined ? habilitada : null,
-    username: username || ''
-  };
-
-  clienteTienda.findTiendas(request, (error, response) => {
-    if (error) {
-      res.status(500).send(error);
-    } else {
-      res.json(response);
-    }
-  });
-});
-
 // Endpoint para obtener todas las tiendas
 app.get('/getTiendas', (req, res) => {
-  const request = {}; // No necesitas enviar datos en la solicitud
+  // Si habilitadas no se proporciona, asignamos null
+  const habilitadas = req.query.habilitadas === 'true'
+    ? true
+    : (req.query.habilitadas === 'false' ? false : null);
 
+  console.log("/getTiendas?habilitados=", habilitadas);
+
+  // Crear un objeto request
+  const request = {
+    habilitadas: habilitadas
+  };
+
+  // Llamar al método getTiendas del cliente
   clienteTienda.getTiendas(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
@@ -121,6 +113,7 @@ app.get('/getTiendas', (req, res) => {
     }
   });
 });
+
 
 
 

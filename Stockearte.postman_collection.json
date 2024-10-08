@@ -144,8 +144,11 @@
 				},
 				{
 					"name": "Traer Tiendas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -163,13 +166,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/getTiendas",
+							"raw": "{{baseUrl}}:{{port}}/getTiendas?habilitadas=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"getTiendas"
+							],
+							"query": [
+								{
+									"key": "habilitadas",
+									"value": "true"
+								}
 							]
 						}
 					},
