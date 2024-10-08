@@ -42,8 +42,8 @@ CREATE TABLE orden_de_compra (
   estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
   observaciones VARCHAR(500),
   id_orden_despacho BIGINT,
-  fecha_solicitud DATETIME NOT NULL,
-  fecha_recepcion DATETIME,
+  fecha_solicitud DATE NOT NULL,
+  fecha_recepcion DATE,
   codigo_articulo VARCHAR(50),
   color VARCHAR(50),
   talle VARCHAR(50),
@@ -53,14 +53,16 @@ CREATE TABLE orden_de_compra (
   CONSTRAINT fk_tienda FOREIGN KEY (tienda_id) REFERENCES tienda(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE orden_de_despacho (
   id BIGINT NOT NULL AUTO_INCREMENT,
   id_orden_compra BIGINT,
   fecha_de_envio DATETIME,
   PRIMARY KEY (id),
-  CONSTRAINT fk_orden_compra KEY (id_orden_compra) REFERENCES orden_de_compra(id) ON DELETE CASCADE
+  FOREIGN KEY (id_orden_compra) REFERENCES orden_de_compra(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+/*
 -- Crear la tabla de Despachos
 CREATE TABLE despacho (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -69,6 +71,7 @@ CREATE TABLE despacho (
     fecha_real_envio DATETIME,
     FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id)
 );
+*/
 
 -- Tabla para las novedades de productos nuevos
 CREATE TABLE novedades_producto (

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.enums.EstadoOrden;
@@ -56,6 +57,7 @@ public class OrdenDeCompraService {
        //Lo parsea a JSON
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         try {
             String mensaje = objectMapper.writeValueAsString(nuevaOrden);
             kafkaService.sendMessage(TOPIC_ORDENES, mensaje);
