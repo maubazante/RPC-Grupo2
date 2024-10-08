@@ -32,6 +32,7 @@ export class ProductFormComponent {
       foto: [data.product.foto, Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)],
       color: [data.product.color],
       talle: [data.product.talle],
+      cantidad: [this.data.product.cantidad || 1, [Validators.required, Validators.min(0)]], // Control de cantidad
       habilitado: [data.product.habilitado, Validators.required],
       idUserAdmin: [this.authService.getUserId()],
       // tiendas: [data.product.tiendas.map(stock => stock.tienda)]

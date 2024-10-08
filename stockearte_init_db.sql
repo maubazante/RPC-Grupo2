@@ -56,16 +56,16 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
 -- -----------------------------------------------------
 -- Table `stockearte`.`productos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NOT NULL,
-  `codigo` VARCHAR(10) NULL,
-  `talle` VARCHAR(5) NULL,
-  `foto` VARCHAR(300) NULL,
-  `color` VARCHAR(50) NULL,
-  `habilitado` BOOLEAN NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
+CREATE TABLE productos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  codigo VARCHAR(10) NOT NULL UNIQUE,
+  talle VARCHAR(5) NOT NULL,
+  foto VARCHAR(300) NOT NULL,
+  color VARCHAR(50) NOT NULL,
+  cantidad INT NOT NULL, -- Cambiar "stock" a "cantidad"
+  habilitado BOOLEAN NOT NULL DEFAULT true,
+  PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
 
@@ -90,6 +90,46 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
+
+-- Crear la tabla de Orden de Compra
+CREATE TABLE orden_de_compra (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
+  observaciones VARCHAR(500),
+  orden_de_despacho VARCHAR(20),
+  fecha_solicitud DATETIME NOT NULL,
+  fecha_recepcion DATETIME,
+  tiendas_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_tiendas FOREIGN KEY (tiendas_id) REFERENCES tiendas(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+-- Crear la tabla de Item de Orden
+CREATE TABLE item_orden (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_articulo VARCHAR(50) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  talle VARCHAR(10) NOT NULL,
+  cantidad_solicitada INT NOT NULL,
+  orden_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_orden FOREIGN KEY (orden_id) REFERENCES orden_de_compra(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE novedades (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_producto VARCHAR(10) NOT NULL,
+  talle VARCHAR(5) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  url_foto VARCHAR(300),
+  habilitado BOOLEAN NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Índices adicionales para optimización de búsqueda
+CREATE INDEX idx_codigo_articulo ON item_orden (codigo_articulo);
+CREATE INDEX idx_estado ON orden_de_compra (estado);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

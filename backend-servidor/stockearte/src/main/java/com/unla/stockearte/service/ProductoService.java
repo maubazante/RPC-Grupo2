@@ -64,6 +64,7 @@ public class ProductoService extends ProductoServiceImplBase {
 				.setCodigo(producto.getCodigo())
 				.setColor(producto.getColor())
 				.setTalle(producto.getTalle())
+				.setCantidad(producto.getCantidad())
 				.setHabilitado(producto.isHabilitado());
 				
 				if (producto.getFoto() != null) {
@@ -78,7 +79,7 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
-			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"jav	a.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createProducto(CreateProductoRequest request, StreamObserver<CreateProductoResponse> responseObserver) {
 		
@@ -90,28 +91,9 @@ public class ProductoService extends ProductoServiceImplBase {
 			producto.setFoto(request.getProducto().getFoto());
 			producto.setNombre(request.getProducto().getNombre());
 			producto.setTalle(request.getProducto().getTalle());
+			producto.setCantidad((int) request.getProducto().getCantidad());
 			
 			getProductoRepository().save(producto);
-			
-			List<Stock> stockList = new ArrayList<>();
-			for (Long tiendaid : request.getProducto().getTiendaIdsList()) {
-				Optional<Tienda> tienda = getTiendaRepository().findById(tiendaid);
-				if (tienda.isPresent()) {
-					Stock stock = new Stock();
-					StockId stockId = new StockId();
-					
-					stockId.setProductoId(producto.getId());
-					stock.setProducto(producto);
-					stock.setTienda(tienda.get());
-					stockId.setTiendaId(tienda.get().getId());
-					stock.setId(stockId);
-					stock.setStock(Integer.valueOf(0));
-					stockList.add(stock);
-				}
-				
-			}
-			
-			getStockRepository().saveAll(stockList);
 			
 			response = CreateProductoResponse.newBuilder()
 					.setMessage("Producto con codigo " + producto.getCodigo() + " creado exitosamente").build();
@@ -155,6 +137,7 @@ public class ProductoService extends ProductoServiceImplBase {
 			producto.get().setNombre(request.getProducto().getNombre());
 			producto.get().setTalle(request.getProducto().getTalle());
 			producto.get().setFoto(request.getProducto().getFoto());
+			producto.get().setCantidad((int) request.getProducto().getCantidad());
 
 			getProductoRepository().save(producto.get());
 

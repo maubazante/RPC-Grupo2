@@ -3,7 +3,6 @@ const cors = require('cors');
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
-const sendMessage = require('./kafka/kafkaProducer'); // Importar la función de envío
 
 
 const app = express();
@@ -18,7 +17,7 @@ app.use(cors({
 }));
 
 // Iniciar el servidor en el puerto 3000
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
 });
@@ -258,6 +257,7 @@ app.post('/createProducto', (req, res) => {
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
       foto: productoData.foto,
+	  cantidad: productoData.cantidad,
       idUserAdmin: productoData.idUserAdmin
     }
   };
@@ -299,6 +299,7 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
+	  cantidad: productoData.cantidad,
       foto: productoData.foto,
       idUserAdmin: productoData.idUserAdmin
     }
@@ -347,20 +348,5 @@ app.post('/getProductos', (req, res) => {
       res.json(response);
     }
   });
-});
-
-// Mensajeria Kafka
-app.post('/send', async (req, res) => {
-    const { message } = req.body; // Obtener el mensaje del cuerpo de la petición
-    if (!message || message.trim() === '') {
-        return res.status(400).send('El mensaje no puede estar vacío'); // Retorna un error si el mensaje está vacío
-    }
-    try {
-        await sendMessage(message); // Enviar el mensaje a Kafka
-        res.status(200).send('Message sent to Kafka successfully');
-    } catch (error) {
-        console.error('Error sending message to Kafka:', error);
-        res.status(500).send('Failed to send message to Kafka');
-    }
 });
 
