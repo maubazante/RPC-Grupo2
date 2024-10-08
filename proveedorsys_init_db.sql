@@ -22,6 +22,7 @@ CREATE TABLE producto (
   talle VARCHAR(5) NULL,
   foto VARCHAR(300) NULL,
   color VARCHAR(50) NULL,
+  cantidad int DEFAULT 0,
   habilitado BOOLEAN NULL,
   PRIMARY KEY (id),
   UNIQUE INDEX code_UNIQUE (codigo ASC)
