@@ -82,8 +82,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
         response.message.includes('Error') ? this.notyf.error(response.message) : this.notyf.success(response.message);
       },
       error: (err) => {
-        this.notyf.error("Error al incorporar la novedad a productos");
-        console.log(err);
+        this.loadAllNews();
       },
       complete: () => {
         this.ngOnInit();

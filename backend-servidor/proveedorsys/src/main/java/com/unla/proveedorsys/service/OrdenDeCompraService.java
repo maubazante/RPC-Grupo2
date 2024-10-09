@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OrdenDeCompraService {
@@ -150,5 +151,10 @@ public class OrdenDeCompraService {
 			
 		}
 		
+	}
+	
+	public List<OrdenDeCompra> getList() {
+		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
+    	return list;
 	}
 }
