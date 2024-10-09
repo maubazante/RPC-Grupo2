@@ -70,9 +70,15 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Cantidad seleccionada:', result.cantidad);
+        console.log(result);
+        this.updateNovedad(result);
       }
     });
+  }
+
+  updateNovedad(result: any) {
+    
+
   }
 
  

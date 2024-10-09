@@ -36,6 +36,9 @@ public class Producto {
 
 	@Column(nullable = false, length = 50)
 	private String color;
+	
+	@OneToMany(mappedBy = "producto")
+	private List<Stock> stock;
 
 	@Column(nullable = false)
 	private Integer cantidad;

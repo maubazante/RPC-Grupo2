@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "76fa66e0-e0b2-49f4-b795-78ff0963caae",
+		"_postman_id": "0a4e31ce-20a1-45fc-9a04-64400f01d006",
 		"name": "Stockearte",
 		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26268488"
+		"_exporter_id": "28681801"
 	},
 	"item": [
 		{
@@ -144,8 +144,11 @@
 				},
 				{
 					"name": "Traer Tiendas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -155,7 +158,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,13 +166,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/getTiendas",
+							"raw": "{{baseUrl}}:{{port}}/getTiendas?habilitadas=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"getTiendas"
+							],
+							"query": [
+								{
+									"key": "habilitadas",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -329,8 +338,11 @@
 				},
 				{
 					"name": "Traer Usuarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -340,7 +352,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -348,13 +360,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/getUsuarios",
+							"raw": "{{baseUrl}}:{{port}}/getUsuarios?habilitados=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"getUsuarios"
+							],
+							"query": [
+								{
+									"key": "habilitados",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -421,12 +439,15 @@
 				},
 				{
 					"name": "Traer Productos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"andresUsername\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -434,13 +455,23 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{port}}/getProductos",
+							"raw": "{{baseUrl}}:{{port}}/getProductos?username=andresUsername&habilitados=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"getProductos"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								},
+								{
+									"key": "habilitados",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -533,7 +564,7 @@
 		},
 		{
 			"key": "port",
-			"value": "3000",
+			"value": "3001",
 			"type": "string"
 		}
 	]

@@ -20,4 +20,12 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     Set<Producto> findByNombreContainingOrCodigoContainingOrTalleContainingOrColorContaining(
             String nombre, String codigo, String talle, String color);
+
+    // Método para encontrar productos habilitados
+    List<Producto> findByHabilitado(boolean habilitado);
+
+    // Método para encontrar productos por tienda y estado de habilitación
+    @Query("SELECT p FROM Producto p JOIN Stock s ON p.id = s.producto.id JOIN Tienda t ON s.tienda.id = t.id WHERE t.id = :tiendaId AND p.habilitado = :habilitado")
+    List<Producto> findByTiendaIdAndHabilitado(@Param("tiendaId") Long tiendaId,
+            @Param("habilitado") boolean habilitado);
 }

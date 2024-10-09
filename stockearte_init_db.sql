@@ -156,36 +156,29 @@ INSERT INTO `usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `
 VALUES 
 ('juanperez', 'password1', 'STOREMANAGER', TRUE, 'Juan', 'Perez', (SELECT id FROM `tiendas` WHERE codigo = 'T001')),
 ('mariasanchez', 'password2', 'STOREMANAGER', TRUE, 'Maria', 'Sanchez', (SELECT id FROM `tiendas` WHERE codigo = 'T002')),
-('luisgomez', 'password3', 'STOREMANAGER', TRUE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
+('luisgomez', 'password3', 'STOREMANAGER', FALSE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
 ('analuque', 'password4', 'STOREMANAGER', TRUE, 'Ana', 'Luque', (SELECT id FROM `tiendas` WHERE codigo = 'T004'));
 
--- -----------------------------------------------------
--- Insertar productos
--- -----------------------------------------------------
-INSERT INTO `stockearte`.`productos`
-(`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`, `cantidad`)
+INSERT INTO stockearte.productos
+(nombre, codigo, talle, foto, color, cantidad, habilitado)
 VALUES
-('Camiseta Deportiva', 'CAM001', 'M', 'https://example.com/foto1.jpg', 'Rojo', true, 50),
-('Pantalón Casual', 'PAN002', 'L', 'https://example.com/foto2.jpg', 'Azul', true, 30),
-('Sudadera con Capucha', 'SUD003', 'S', 'https://example.com/foto3.jpg', 'Verde', true, 20),
-('Zapatos de Cuero', 'ZAP004', '42', 'https://example.com/foto4.jpg', 'Negro', false, 0),
-('Camiseta Básica', 'CAM005', 'XL', 'https://example.com/foto5.jpg', 'Blanco', true, 40),
-('Chaqueta de Invierno', 'CHA006', 'M', 'https://example.com/foto6.jpg', 'Gris', true, 15),
-('Cinturón de Cuero', 'CIN007', 'N/A', 'https://example.com/foto7.jpg', 'Marrón', true, 60),
-('Camisa Formal', 'CAM008', 'L', 'https://example.com/foto8.jpg', 'Celeste', true, 25),
-('Short Deportivo', 'SHO009', 'M', 'https://example.com/foto9.jpg', 'Negro', false, 0),
-('Gorra de Béisbol', 'GOR010', 'N/A', 'https://example.com/foto10.jpg', 'Azul Marino', true, 100),
-('Camiseta Estampada', 'CAM011', 'L', 'https://example.com/foto11.jpg', 'Amarillo', true, 45),
-('Pantalón de Jogging', 'PAN012', 'M', 'https://example.com/foto12.jpg', 'Gris', true, 50),
-('Sombrero de Playa', 'SOM013', 'N/A', 'https://example.com/foto13.jpg', 'Beige', true, 30),
-('Chaqueta de Cuero', 'CHA014', 'L', 'https://example.com/foto14.jpg', 'Negro', true, 20),
-('Pantalón de Vestir', 'PAN015', 'S', 'https://example.com/foto15.jpg', 'Negro', true, 35),
-('Zapatos Deportivos', 'ZAP016', '44', 'https://example.com/foto16.jpg', 'Blanco', true, 10),
-('Camiseta sin Mangas', 'CAM017', 'M', 'https://example.com/foto17.jpg', 'Verde', true, 25),
-('Bermudas de Playa', 'BER018', 'L', 'https://example.com/foto18.jpg', 'Rojo', true, 40),
-('Chaleco de Punto', 'CHA019', 'XL', 'https://example.com/foto19.jpg', 'Azul', true, 15),
-('Pantalón Cargo', 'PAN020', 'M', 'https://example.com/foto20.jpg', 'Verde Oliva', true, 50);
-
-INSERT INTO producto (nombre, codigo, talle, foto, color, cantidad, habilitado) VALUES
-('Camiseta Deportiva', 'CAM123', 'M', 'imagenes/camiseta_deportiva_m.jpg', 'Azul', 50, true),
-('Pantalón Jeans', 'PAN456', 'L', 'imagenes/pantalon_jeans_l.jpg', 'Negro', 30, true);
+('Remera básica', 'RMB001', 'M', 'https://example.com/images/remera_basica.jpg', 'Rojo', 50, 1),
+('Pantalón jeans', 'PTJ002', 'L', 'https://example.com/images/pantalon_jeans.jpg', 'Azul', 35, 1),
+('Campera abrigo', 'CMP003', 'XL', 'https://example.com/images/campera_abrigo.jpg', 'Negro', 20, 1),
+('Camisa formal', 'CMS004', 'M', 'https://example.com/images/camisa_formal.jpg', 'Blanco', 15, 1),
+('Vestido casual', 'VST005', 'S', 'https://example.com/images/vestido_casual.jpg', 'Verde', 40, 1),
+('Zapatillas deportivas', 'ZPD006', '42', 'https://example.com/images/zapatillas_deportivas.jpg', 'Negro', 25, 1),
+('Gorra de algodón', 'GRR007', 'Único', 'https://example.com/images/gorra_algodon.jpg', 'Azul', 60, 1),
+('Buzo con capucha', 'BZO008', 'L', 'https://example.com/images/buzo_capucha.jpg', 'Gris', 30, 1),
+('Cinturón cuero', 'CTN009', 'L', 'https://example.com/images/cinturon_cuero.jpg', 'Marrón', 80, 1),
+('Sombrero de playa', 'SMB010', 'Único', 'https://example.com/images/sombrero_playa.jpg', 'Beige', 45, 1),
+('Bufanda lana', 'BFD011', 'Único', 'https://example.com/images/bufanda_lana.jpg', 'Rojo', 25, 1),
+('Guantes cuero', 'GVN012', 'M', 'https://example.com/images/guantes_cuero.jpg', 'Negro', 10, 1),
+('Chaqueta de cuero', 'CHQ013', 'L', 'https://example.com/images/chaqueta_cuero.jpg', 'Marrón', 5, 1),
+('Falda corta', 'FLD014', 'S', 'https://example.com/images/falda_corta.jpg', 'Azul', 30, 1),
+('Pantalones cargo', 'PTC015', 'M', 'https://example.com/images/pantalones_cargo.jpg', 'Verde', 20, 1),
+('Camiseta deportiva', 'CMD016', 'L', 'https://example.com/images/camiseta_deportiva.jpg', 'Blanco', 50, 1),
+('Chaleco acolchado', 'CHL017', 'XL', 'https://example.com/images/chaleco_acolchado.jpg', 'Gris', 15, 1),
+('Zapatos de cuero', 'ZPC018', '42', 'https://example.com/images/zapatos_cuero.jpg', 'Negro', 12, 1),
+('Polo de algodón', 'PLA019', 'M', 'https://example.com/images/polo_algodon.jpg', 'Verde', 22, 0),
+('Mochila escolar', 'MCH020', 'Único', 'https://example.com/images/mochila_escolar.jpg', 'Negro', 40, 0);

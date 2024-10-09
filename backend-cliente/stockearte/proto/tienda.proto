@@ -59,7 +59,9 @@ message FindTiendasResponse {
 }
 
 // Request para obtener todas las tiendas
-message GetTiendasRequest {}
+message GetTiendasRequest {
+  optional bool habilitadas = 1; // Filtra por habilitadas
+}
 
 // Response para obtener todas las tiendas
 message GetTiendasResponse {
