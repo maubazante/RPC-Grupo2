@@ -1,6 +1,7 @@
 package com.unla.proveedorsys.controller;
 
 import com.unla.proveedorsys.model.Producto;
+import com.unla.proveedorsys.service.OrdenDeCompraService;
 import com.unla.proveedorsys.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+    
+    @Autowired
+    private OrdenDeCompraService ordenDeCompraService;
 
     @GetMapping
     public ResponseEntity<List<Producto>> getAllProductos() {
@@ -46,7 +50,9 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
         producto.setId(id);
-        return ResponseEntity.ok(productoService.updateProducto(producto));
+        producto = productoService.updateProducto(producto);
+        ordenDeCompraService.reprocesoDeOrdenes(producto);
+        return ResponseEntity.ok(producto);
     }
 
     @DeleteMapping("/{id}")
