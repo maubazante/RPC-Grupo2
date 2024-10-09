@@ -31,7 +31,7 @@ export class NewsFormComponent {
       habilitado: [data.habilitado, Validators.required],
       idUserAdmin: [this.authService.getUserId()],
       cantidad: [data.cantidad, [Validators.required, Validators.min(0), Validators.max(this.data.cantidad)]],
-      tiendaId: [null, Validators.required]  // Campo para la selección de tienda
+      tiendaIds: [null, Validators.required]  // Campo para la selección de tienda
     });
   }
 
@@ -46,7 +46,7 @@ export class NewsFormComponent {
   onSave(): void {
     if (this.form.valid) {
       console.log(this.form.value);
-      this.form.controls['tiendaId'].setValue([Number(this.form.controls['tiendaId'].value)])
+      this.form.controls['tiendaIds'].setValue([Number(this.form.controls['tiendaIds'].value)])
       this.dialogRef.close(this.form.value);
     }
   }

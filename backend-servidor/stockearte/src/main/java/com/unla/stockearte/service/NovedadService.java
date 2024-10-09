@@ -42,7 +42,7 @@ public class NovedadService {
     }
     
     public boolean darDeAltaProducto(AltaProductoRequest request) {
-        Optional<Novedad> novedadOptional = novedadRepository.findById(request.getId());
+        Optional<Novedad> novedadOptional = novedadRepository.findById((long) request.getId());
         
         if (!novedadOptional.isPresent()) {
             throw new RuntimeException("Novedad no encontrada con el ID: " + request.getId());
@@ -59,14 +59,21 @@ public class NovedadService {
         }
         
         Producto producto = new Producto();
-        producto.setNombre(request.getNombre());
-        producto.setCodigo(request.getCodigo());
-        producto.setTalle(request.getTalle());
-        producto.setColor(request.getColor());
-        producto.setFoto(request.getFoto());
-        producto.setCantidad(request.getCantidad());
-        producto.setHabilitado(request.isHabilitado());
-
+        Optional<Producto> productoOptional = productoRepository.findByCodigo(request.getCodigo());
+        
+        if(productoOptional.isPresent()) {
+        	producto = productoOptional.get();
+        	producto.setCantidad(producto.getCantidad() + request.getCantidad());
+        } else {
+        	producto.setNombre(request.getNombre());
+            producto.setCodigo(request.getCodigo());
+            producto.setTalle(request.getTalle());
+            producto.setColor(request.getColor());
+            producto.setFoto(request.getFoto());
+            producto.setCantidad(request.getCantidad());
+            producto.setHabilitado(request.isHabilitado());
+        }
+       
         Producto productoPersistido = productoRepository.save(producto);
 
         List<Stock> stockList = request.getTiendaIds().stream()

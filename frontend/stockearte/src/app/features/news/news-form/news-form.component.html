@@ -9,12 +9,12 @@
       <!-- Select para la Tienda -->
       <mat-form-field appearance="outline">
         <mat-label>Seleccionar Tienda</mat-label>
-        <mat-select formControlName="tiendaId">
+        <mat-select formControlName="tiendaIds">
           <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">
             {{ tienda.codigo }} - {{ tienda.ciudad }} ({{ tienda.provincia }})
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.get('tiendaId')?.hasError('required')">
+        <mat-error *ngIf="form.get('tiendaIds')?.hasError('required')">
           La tienda es requerida
         </mat-error>
       </mat-form-field>

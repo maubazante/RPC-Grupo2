@@ -30,8 +30,8 @@ export class NewsService {
     return this.http.post<Novedad>(`${environment.controllerURL}`, novedad);
   }
 
-  modifyNews(novedad: any) {
-    return this.http.put<Novedad>(`${environment.controllerURL}`, novedad);
+  modifyNews(novedad: any): Observable<string> {
+    return this.http.put<string>(`${environment.controllerURL}/api/novedades`, novedad);
   }
 
 }
