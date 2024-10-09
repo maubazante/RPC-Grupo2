@@ -20,6 +20,10 @@ export class AuthService {
     return sessionStorage.getItem("USER_ID");
   }
 
+  public getTiendaId(): number {
+    return Number(sessionStorage.getItem("TIENDA_ID"));
+  }
+
   public isLogged(): boolean {
     return this.getUsername() ? true : false;
   }

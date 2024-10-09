@@ -87,7 +87,8 @@ public class OrdenDeCompraService {
 		OrdenDeCompra orden = ordenDeCompraRepository.getReferenceById(idOrden);
 
 		// Verifica que la orden esté en estado ACEPTADA y tenga id de orden de despacho
-		if (orden.getEstado() != EstadoOrden.ACEPTADA || orden.getId_orden_despacho() == null) {
+		if ((orden.getEstado() != EstadoOrden.ACEPTADA && orden.getEstado() != EstadoOrden.RECIBIDA)
+				|| orden.getId_orden_despacho() == null) {
 			throw new IllegalArgumentException("La orden no puede ser marcada como recibida");
 		}
 
@@ -151,17 +152,17 @@ public class OrdenDeCompraService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Transactional
 	public OrdenDeCompra updateOrdenDeCompra(Long id, OrdenDeCompra ordenDeCompraDetails) {
-	    OrdenDeCompra existingOrden = ordenDeCompraRepository.findById(id)
-	            .orElseThrow(() -> new RuntimeException("Orden de Compra no encontrada con ID: " + id));
+		OrdenDeCompra existingOrden = ordenDeCompraRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Orden de Compra no encontrada con ID: " + id));
 
-	    existingOrden.setEstado(ordenDeCompraDetails.getEstado());
-	    existingOrden.setObservaciones(ordenDeCompraDetails.getObservaciones());
-	    existingOrden.setFechaRecepcion(ordenDeCompraDetails.getFechaRecepcion());
+		existingOrden.setEstado(ordenDeCompraDetails.getEstado());
+		existingOrden.setObservaciones(ordenDeCompraDetails.getObservaciones());
+		existingOrden.setFechaRecepcion(ordenDeCompraDetails.getFechaRecepcion());
 
-	    return ordenDeCompraRepository.save(existingOrden);
+		return ordenDeCompraRepository.save(existingOrden);
 	}
 
 	public List<OrdenDeCompra> getList() {

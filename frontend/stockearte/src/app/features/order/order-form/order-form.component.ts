@@ -4,6 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Producto } from '../../../shared/types/Producto';
 import { ModalAction } from '../../../shared/types/ModalAction';
 import { OrderService } from '../../../core/services/order.service';
+import { StoresService } from '../../../core/services/stores.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-order-form',
@@ -18,7 +20,7 @@ export class OrderFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private orderService: OrderService,
+    private authService: AuthService,
     public dialogRef: MatDialogRef<OrderFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { order: any, productos: Producto[], action: string }
   ) {
@@ -26,9 +28,10 @@ export class OrderFormComponent {
     let estadoValue = data.order.estado || 'SOLICITADA';
     this.isEdit = data.action === ModalAction.EDIT;
     this.hasOrderDespacho = data.order.id_orden_despacho != null;
+
     console.log(this.data.order);
     this.orderForm = this.fb.group({
-      id: [null],
+      id: [data.order.id || null],
       estado: [{ value: estadoValue, disabled: !this.isEdit || !this.hasOrderDespacho }, Validators.required],
       observaciones: [{ value: data.order.observaciones, disabled: !this.isEdit }],
       id_orden_despacho: [{ value: data.order.id_orden_despacho, disabled: true }],
@@ -38,7 +41,7 @@ export class OrderFormComponent {
       color: [this.data.order.color || '', Validators.required],
       talle: [this.data.order.talle || '', Validators.required],
       cantidadSolicitada: [this.data.order.cantidadSolicitada || 1, [Validators.required, Validators.min(0)]],
-      tienda: [1]
+      tienda: [this.data.order.tienda || this.authService.getTiendaId()]
     });
   }
 

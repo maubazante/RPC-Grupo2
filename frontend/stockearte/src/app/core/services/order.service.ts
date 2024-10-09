@@ -28,11 +28,16 @@ export class OrderService {
     }
 
     modifyOrder(order: any) {
+        console.log(order);
         return this.http.put(`${environment.controllerURL}/api/ordenDeCompra/${order.id}`, order);
     }
 
     deleteOrder(id: string) {
         return this.http.delete(`${environment.controllerURL}/api/ordenDeCompra/${id}`);
+    }
+
+    marcarOrderComoRecibida(id: string): Observable<any> {
+        return this.http.post(`${environment.controllerURL}/api/ordenDeCompra/marcarComoRecibida/${id}`, {});
     }
   
 }

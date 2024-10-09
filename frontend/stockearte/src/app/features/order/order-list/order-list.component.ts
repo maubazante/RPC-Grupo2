@@ -72,6 +72,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       width: '400px',
       data: { order: order, productos: this.dataSource, action: ModalAction.EDIT }
     });
+    
 
     const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -109,11 +110,13 @@ export class OrderListComponent implements OnInit, OnDestroy {
     const sub = this.orderService.modifyOrder(order).subscribe({
       next: (updatedOrder: any) => {
         updatedOrder ? this.notyf.success('Orden actualizada con éxito') : this.notyf.success('Error actualizando orden');
-        this.loadAllOrders();
       },
       error: (err: any) => {
         this.notyf.error('Error al actualizar la orden');
         console.error(err);
+      },
+      complete: () => {
+        if(order.estado === "RECIBIDA") this.marcarOrderComoRecibida(order.id);
       }
     });
     this.subscriptions.push(sub);
@@ -148,6 +151,24 @@ export class OrderListComponent implements OnInit, OnDestroy {
       }
     })
   }
+
+  
+  marcarOrderComoRecibida(id: string) {
+    const subs = this.orderService.marcarOrderComoRecibida(id).subscribe({
+      next: (response: any) => {
+        response ? this.notyf.success('Se ha incorporado nuevo producto al stock!') : this.notyf.error("Error: No se ha devuelto respuesta") 
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.notyf.error("Error del servidor")
+      },
+      complete: () => {
+        subs.unsubscribe();
+      }
+    })
+  }
+
+  // Búsqueda de órdenes de compra, quizás se sumen a la entrega 3
 
   filterOrders(searchTerm: string): void {
     this.dataSource = this.dataSource.filter(order =>
