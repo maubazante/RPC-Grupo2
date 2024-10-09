@@ -5,7 +5,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NewsService } from '../../../core/services/news.service';
-import { dataSourceNews } from '../datasource-temporal';
 import { NewsFormComponent } from '../news-form/news-form.component';
 
 @Component({
@@ -15,7 +14,7 @@ import { NewsFormComponent } from '../news-form/news-form.component';
 })
 export class NewsListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'nombre', 'codigo', 'selectTallesColores'];
-  dataSource: any[] = dataSourceNews;
+  dataSource: any[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
 
@@ -77,11 +76,21 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   updateNovedad(result: any) {
-    
+    this.newsService.modifyNews(result).subscribe({
+      next: (response) => {
+        response.message.includes('Error') ? this.notyf.error(response.message) : this.notyf.success(response.message);
+      },
+      error: (err) => {
+        this.notyf.error("Error del servidor")
+        console.log(err);
+      },
+      complete: () => {
+        this.ngOnInit();
+      }
+    })
 
   }
 
- 
 
   deleteNews(id: string): void {
     if (confirm('¿Seguro que deseas eliminar esta noticia?')) {

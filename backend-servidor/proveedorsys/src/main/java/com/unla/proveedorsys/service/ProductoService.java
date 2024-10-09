@@ -6,6 +6,8 @@ import com.unla.proveedorsys.model.Producto;
 import com.unla.proveedorsys.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +51,14 @@ public class ProductoService {
         }
     }
 
+    @Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public Optional<Producto> getProductoById(Long id) {
 		return productoRepository.findById(id);
 	}
 
+    @Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public Optional<Producto> getProductoByCodigo(String codigo) {
 		return Optional.ofNullable(productoRepository.findByCodigo(codigo));
 	}

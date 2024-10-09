@@ -31,7 +31,7 @@ export class NewsService {
   }
 
   modifyNews(novedad: any) {
-    return this.http.put<Novedad>(`${environment.controllerURL}`, novedad);
+    return this.http.put<any>(`${environment.controllerURL}/api/novedades`, novedad);
   }
 
 }

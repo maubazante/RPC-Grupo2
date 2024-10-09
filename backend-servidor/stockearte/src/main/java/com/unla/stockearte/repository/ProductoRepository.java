@@ -13,11 +13,11 @@ import com.unla.stockearte.model.Producto;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
-	@Override
-	List<Producto> findAll();
+    @Override
+    List<Producto> findAll();
 
-	@Query("SELECT p FROM Producto p JOIN Stock s ON p.id = s.producto.id JOIN Tienda t ON s.tienda.id = t.id WHERE t.id = :tiendaId")
-	List<Producto> findByTiendaId(@Param("tiendaId") Long tiendaId);
+    @Query("SELECT p FROM Producto p JOIN Stock s ON p.id = s.producto.id JOIN Tienda t ON s.tienda.id = t.id WHERE t.id = :tiendaId")
+    List<Producto> findByTiendaId(@Param("tiendaId") Long tiendaId);
 
     Set<Producto> findByNombreContainingOrCodigoContainingOrTalleContainingOrColorContaining(
             String nombre, String codigo, String talle, String color);
@@ -30,6 +30,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByTiendaIdAndHabilitado(@Param("tiendaId") Long tiendaId,
             @Param("habilitado") boolean habilitado);
 
-	// Método para buscar un producto por código
-	Producto findByCodigo(String codigo);
+    // Método para buscar un producto por código
+    Producto findByCodigo(String codigo);
 }

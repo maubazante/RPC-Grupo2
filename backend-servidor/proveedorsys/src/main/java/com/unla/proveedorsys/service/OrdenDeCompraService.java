@@ -2,10 +2,14 @@ package com.unla.proveedorsys.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +19,6 @@ import com.unla.proveedorsys.enums.EstadoOrden;
 import com.unla.proveedorsys.model.OrdenDeCompra;
 import com.unla.proveedorsys.model.OrdenDeDespacho;
 import com.unla.proveedorsys.model.Producto;
-import com.unla.proveedorsys.model.Stock;
 import com.unla.proveedorsys.repository.OrdenDeCompraRepository;
 import com.unla.proveedorsys.repository.OrdenDeDespachoRepository;
 import com.unla.proveedorsys.repository.ProductoRepository;
@@ -36,10 +39,10 @@ public class OrdenDeCompraService {
 
 	@Autowired
 	private OrdenDeCompraRepository ordenDeCompraRepository;
-	
+
 	@Autowired
 	private TiendaRepository tiendaRepository;
-	
+
 	@Autowired
 	private ProductoRepository productoRepository;
 
@@ -85,16 +88,19 @@ public class OrdenDeCompraService {
 		}
 	}
 
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public void procesarOrdenDeCompra(OrdenDeCompra orden) {
 		StringBuilder observacionesProcesoOrden = new StringBuilder();
 
 		ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.registerModule(new JavaTimeModule());
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		String mensaje;
 
-		if (productoRepository.findByCodigo(orden.getCodigoArticulo()) == null) {
+		Producto producto = productoRepository.findByCodigo(orden.getCodigoArticulo());
+		if (producto == null) {
 			observacionesProcesoOrden.append("Artículo ").append(orden.getCodigoArticulo()).append(": no existe. ");
 			orden.setObservaciones(observacionesProcesoOrden.toString());
 			orden.setEstado(EstadoOrden.RECHAZADA);
@@ -119,13 +125,13 @@ public class OrdenDeCompraService {
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
-		} else if (!stockRepository.tieneStockSuficiente(orden.getCodigoArticulo(), orden.getCantidadSolicitada())) {
+		} else if (producto.getCantidad() < orden.getCantidadSolicitada()) {
 			observacionesProcesoOrden.append("Articulo ").append(orden.getCodigoArticulo())
 					.append(": cantidad de stock insuficiente");
 			orden.setEstado(EstadoOrden.ACEPTADA);
 			tiendaRepository.save(orden.getTienda());
-			ordenDeCompraRepository.save(orden);
 			orden.setObservaciones(observacionesProcesoOrden.toString());
+			ordenDeCompraRepository.save(orden);
 			try {
 				mensaje = mapper.writeValueAsString(orden);
 				kafkaProducerService.sendMessage(TOPIC_SOLICITUDES, String.valueOf(orden.getId()), mensaje);
@@ -136,34 +142,47 @@ public class OrdenDeCompraService {
 			orden.setEstado(EstadoOrden.ACEPTADA);
 			try {
 				mensaje = mapper.writeValueAsString(orden);
+				orden.setObservaciones("Se genero con exito el pedido de compra");
 				kafkaProducerService.sendMessage(TOPIC_SOLICITUDES, String.valueOf(orden.getId()), mensaje);
-
 
 				tiendaRepository.save(orden.getTienda());
 				orden = ordenDeCompraRepository.save(orden);
-				
+
 				OrdenDeDespacho ordenDeDespacho = new OrdenDeDespacho();
 				ordenDeDespacho.setFechaDeEnvio(LocalDateTime.now().plusDays(1));
 				ordenDeDespacho.setOrdenDeCompra(orden);
 				ordenDeDespacho = orderDeDespachoRepository.save(ordenDeDespacho);
-				
+
 				orden.setId_orden_despacho(ordenDeDespacho.getId());
-				
-				Producto producto = productoRepository.findByCodigo(orden.getCodigoArticulo());
-				Stock stock = stockRepository.findByProductoIdAndTiendaId(producto.getId(), orden.getTienda().getId());
-				if(stock != null) {
-					stock.setCantidad(stock.getCantidad() - orden.getCantidadSolicitada());
-					stockRepository.save(stock);					
-				}
-				
+				orden = ordenDeCompraRepository.save(orden);
+
+				producto.setCantidad(producto.getCantidad() - orden.getCantidadSolicitada());
+				productoRepository.save(producto);
+
 				mensaje = mapper.writeValueAsString(orden);
-				orden.setObservaciones("Se genero con exito el pedido de compa");
 				kafkaProducerService.sendMessage(TOPIC_DESPACHO, String.valueOf(orden.getId()), mensaje);
 
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
 		}
+	}
 
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public void reprocesoDeOrdenes(Producto producto) {
+		List<OrdenDeCompra> listOrdenDeCompra = ordenDeCompraRepository
+				.findOrdenesAceptadasSinDespachoPorCodigoArticulo(EstadoOrden.ACEPTADA, producto.getCodigo());
+		
+		for(OrdenDeCompra orden: listOrdenDeCompra) {
+			if (producto.getCantidad() >= orden.getCantidadSolicitada()) {
+				procesarOrdenDeCompra(orden);
+			}
+		}
+	}
+	
+	public List<OrdenDeCompra> getList() {
+		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
+    	return list;
 	}
 }

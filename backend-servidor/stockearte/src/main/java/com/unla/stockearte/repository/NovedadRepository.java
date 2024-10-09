@@ -8,5 +8,5 @@ import com.unla.stockearte.model.Novedad;
 
 public interface NovedadRepository extends JpaRepository<Novedad, Long> {
 
-	Optional<Novedad> findById(int id);
+	Optional<Novedad> findById(Long id);
 }
