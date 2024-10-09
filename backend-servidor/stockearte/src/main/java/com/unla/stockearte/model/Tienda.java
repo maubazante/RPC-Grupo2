@@ -2,6 +2,8 @@ package com.unla.stockearte.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,6 +40,7 @@ public class Tienda {
 	private Boolean esCasaCentral = false;
 
 	@OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<Stock> productos;
 
 	public Tienda(Long id, String codigo, String direccion, String ciudad, String provincia, Boolean habilitada,

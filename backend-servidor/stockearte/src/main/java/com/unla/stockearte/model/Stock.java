@@ -20,12 +20,12 @@ public class Stock {
 	@ManyToOne
 	@MapsId("productoId")
 	@JoinColumn(name = "fk_producto_id", nullable = false)
-	@JsonBackReference
 	private Producto producto;
 
 	@ManyToOne
 	@MapsId("tiendaId")
 	@JoinColumn(name = "fk_tienda_id", nullable = false)
+	@JsonBackReference
 	private Tienda tienda;
 
 	@Column(nullable = false)

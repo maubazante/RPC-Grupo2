@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -45,6 +46,7 @@ public class OrdenDeCompraService {
 
 	private static final String TOPIC_ORDENES = "orden-de-compra";
 	private static final String TOPIC_RECEPCION = "recepcion";
+	private static final String TOPIC_PROVEEDOR_SYS = "proveedor-sys";
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
@@ -127,18 +129,26 @@ public class OrdenDeCompraService {
 		// Guarda la orden actualizada
 		OrdenDeCompra ordenActualizada = ordenDeCompraRepository.save(orden);
 
-		// Envía un mensaje a Kafka
+		// Envía un mensaje a Kafka para el topic '/recepcion'
+		enviarMensajeKafka(TOPIC_RECEPCION, ordenActualizada);
+
+		// Envía un mensaje a el topic de ProveedorSys
+		enviarMensajeKafka(TOPIC_PROVEEDOR_SYS, ordenActualizada);
+
+		return ordenActualizada;
+	}
+
+	private void enviarMensajeKafka(String topic, OrdenDeCompra ordenActualizada) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			String mensaje = objectMapper.writeValueAsString(ordenActualizada);
-			kafkaService.sendMessage(TOPIC_RECEPCION, mensaje); // Usar el topic "/recepcion"
+			kafkaService.sendMessage(topic, mensaje);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-
-		return ordenActualizada;
 	}
 
 	public List<OrdenDeCompra> getList() {
