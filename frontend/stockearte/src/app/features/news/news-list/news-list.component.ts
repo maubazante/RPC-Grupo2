@@ -82,7 +82,8 @@ export class NewsListComponent implements OnInit, OnDestroy {
         response.message.includes('Error') ? this.notyf.error(response.message) : this.notyf.success(response.message);
       },
       error: (err) => {
-        this.loadAllNews();
+        this.notyf.error("Error del servidor")
+        console.log(err);
       },
       complete: () => {
         this.ngOnInit();

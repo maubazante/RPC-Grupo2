@@ -75,7 +75,8 @@ public class NovedadService {
         }
        
         Producto productoPersistido = productoRepository.save(producto);
-
+        
+        if(productoOptional.isEmpty()) {
         List<Stock> stockList = request.getTiendaIds().stream()
             .map(tiendaId -> {
                 Tienda tienda = tiendaRepository.findById(tiendaId)
@@ -99,7 +100,8 @@ public class NovedadService {
             .collect(Collectors.toList());
 
         stockRepository.saveAll(stockList);
-
+        }
+        
         return true;
     }
 }
