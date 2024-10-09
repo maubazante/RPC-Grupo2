@@ -23,7 +23,8 @@ export class ProductsService {
     return this.http.post(`${environment.clientURL}/createProducto`, productData);
   }
 
-  deleteProduct(productId: string): Observable<any> {
+  deleteProduct(productId: any): Observable<any> {
+    console.log(productId)
     return this.http.delete(`${environment.clientURL}/deleteProducto`, { body: { productoId: productId } });
   }
 
