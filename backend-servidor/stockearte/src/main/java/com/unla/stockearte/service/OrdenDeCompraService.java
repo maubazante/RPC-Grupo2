@@ -17,73 +17,126 @@ import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.enums.EstadoOrden;
 import com.unla.stockearte.model.OrdenDeCompra;
 import com.unla.stockearte.model.Producto;
+import com.unla.stockearte.model.Stock;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.repository.OrdenDeCompraRepository;
 import com.unla.stockearte.repository.ProductoRepository;
+import com.unla.stockearte.repository.StockRepository;
 import com.unla.stockearte.repository.TiendaRepository;
 
 @Service
 public class OrdenDeCompraService {
 
-    @Autowired
-    private OrdenDeCompraRepository ordenDeCompraRepository;
-    
-    @Autowired
-    private TiendaRepository tiendaRepository;
-    
-    @Autowired
-    private ProductoRepository productoRepository;
+	@Autowired
+	private OrdenDeCompraRepository ordenDeCompraRepository;
 
-    @Autowired
-    KafkaProducerService kafkaService;
-    
-    private static final String TOPIC_ORDENES = "orden-de-compra";
-    
-    
-    @Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
-    public OrdenDeCompra crearOrdenCompra(OrdenCompraRequest ordenDeCompraReq) {
-    	
-    	OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
-    	
-        ordenDeCompra.setEstado(EstadoOrden.SOLICITADA);
-        ordenDeCompra.setFechaSolicitud(LocalDate.now());
-        ordenDeCompra.setCantidadSolicitada(ordenDeCompraReq.getCantidadSolicitada());
-        ordenDeCompra.setCodigoArticulo(ordenDeCompraReq.getCodigoArticulo());
-        ordenDeCompra.setColor(ordenDeCompraReq.getColor());
-        ordenDeCompra.setTalle(ordenDeCompraReq.getTalle());
-        ordenDeCompra.setTienda((Tienda) Hibernate.unproxy(tiendaRepository.getReferenceById(ordenDeCompraReq.getTienda())));
-        
-        
-        // Guardar la orden en la base de datos
-        OrdenDeCompra nuevaOrden = ordenDeCompraRepository.save(ordenDeCompra);
+	@Autowired
+	private TiendaRepository tiendaRepository;
 
-       //Lo parsea a JSON
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        try {
-            String mensaje = objectMapper.writeValueAsString(nuevaOrden);
-            kafkaService.sendMessage(TOPIC_ORDENES, mensaje);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+	@Autowired
+	private ProductoRepository productoRepository;
 
-        return nuevaOrden;
-    }
-    
-    public List<OrdenDeCompra> getList() {
-    	List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
-    	return list;
-    }
-    
-    public OrdenDeCompra getById(Long id) {
-    	OrdenDeCompra order = ordenDeCompraRepository.getReferenceById(id);
-    	return order;
-    }
-    
-    public Boolean deleteById(Long id) {
-    	ordenDeCompraRepository.deleteById(id);
-    	return Boolean.TRUE;
-    }
+	@Autowired
+	private StockRepository stockRepository;
+
+	@Autowired
+	KafkaProducerService kafkaService;
+
+	private static final String TOPIC_ORDENES = "orden-de-compra";
+	private static final String TOPIC_RECEPCION = "recepcion";
+
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public OrdenDeCompra crearOrdenCompra(OrdenCompraRequest ordenDeCompraReq) {
+
+		OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
+
+		ordenDeCompra.setEstado(EstadoOrden.SOLICITADA);
+		ordenDeCompra.setFechaSolicitud(LocalDate.now());
+		ordenDeCompra.setCantidadSolicitada(ordenDeCompraReq.getCantidadSolicitada());
+		ordenDeCompra.setCodigoArticulo(ordenDeCompraReq.getCodigoArticulo());
+		ordenDeCompra.setColor(ordenDeCompraReq.getColor());
+		ordenDeCompra.setTalle(ordenDeCompraReq.getTalle());
+		ordenDeCompra
+				.setTienda((Tienda) Hibernate.unproxy(tiendaRepository.getReferenceById(ordenDeCompraReq.getTienda())));
+
+		// Guardar la orden en la base de datos
+		OrdenDeCompra nuevaOrden = ordenDeCompraRepository.save(ordenDeCompra);
+
+		// Lo parsea a JSON
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		try {
+			String mensaje = objectMapper.writeValueAsString(nuevaOrden);
+			kafkaService.sendMessage(TOPIC_ORDENES, mensaje);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return nuevaOrden;
+	}
+
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public OrdenDeCompra marcarOrdenComoRecibida(Long idOrden) {
+		OrdenDeCompra orden = ordenDeCompraRepository.getReferenceById(idOrden);
+
+		// Verifica que la orden esté en estado ACEPTADA y tenga id de orden de despacho
+		if (orden.getEstado() != EstadoOrden.ACEPTADA || orden.getId_orden_despacho() == null) {
+			throw new IllegalArgumentException("La orden no puede ser marcada como recibida");
+		}
+
+		// Actualiza la fecha de recepción y el estado de la orden
+		orden.setFechaRecepcion(LocalDate.now());
+		orden.setEstado(EstadoOrden.RECIBIDA);
+
+		// Actualiza el stock
+		Producto producto = productoRepository.findByCodigo(orden.getCodigoArticulo());
+		if (producto != null) {
+			// Obtener el stock del producto en la tienda correspondiente
+			Stock stock = stockRepository.findByProductoCodigoAndTiendaId(orden.getCodigoArticulo(),
+					orden.getTienda().getId());
+
+			if (stock != null) {
+				// Actualizar el stock
+				stock.setStock(stock.getStock() + orden.getCantidadSolicitada());
+				stockRepository.save(stock);
+			} else {
+				// Manejar el caso en que no se encuentra el stock para el producto y tienda
+				// Puedes lanzar una excepción o crear un nuevo stock si es necesario
+			}
+		}
+
+		// Guarda la orden actualizada
+		OrdenDeCompra ordenActualizada = ordenDeCompraRepository.save(orden);
+
+		// Envía un mensaje a Kafka
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		try {
+			String mensaje = objectMapper.writeValueAsString(ordenActualizada);
+			kafkaService.sendMessage(TOPIC_RECEPCION, mensaje); // Usar el topic "/recepcion"
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return ordenActualizada;
+	}
+
+	public List<OrdenDeCompra> getList() {
+		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
+		return list;
+	}
+
+	public OrdenDeCompra getById(Long id) {
+		OrdenDeCompra order = ordenDeCompraRepository.getReferenceById(id);
+		return order;
+	}
+
+	public Boolean deleteById(Long id) {
+		ordenDeCompraRepository.deleteById(id);
+		return Boolean.TRUE;
+	}
 }
