@@ -1,8 +1,9 @@
 const express = require('express');
-const cors = require('cors');  
+const cors = require('cors');
 const clienteTienda = require('./tienda');
 const clienteUsuario = require('./usuario')
 const clienteProducto = require('./producto')
+
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON
@@ -12,11 +13,11 @@ app.use(cors({
   origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true  
+  credentials: true
 }));
 
 // Iniciar el servidor en el puerto 3000
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Servidor Rest escuchando en el puerto ${PORT}`);
 });
@@ -77,8 +78,8 @@ app.put('/modifyTienda', (req, res) => {
     }
   };
 
-  if(tiendaData.usuarioId) request.tienda.usuarioId = tiendaData.usuarioId;
-  if(tiendaData.idUserAdmin) request.tienda.idUserAdmin = tiendaData.idUserAdmin
+  if (tiendaData.usuarioId) request.tienda.usuarioId = tiendaData.usuarioId;
+  if (tiendaData.idUserAdmin) request.tienda.idUserAdmin = tiendaData.idUserAdmin
 
   clienteTienda.modifyTienda(request, (error, response) => {
     if (error) {
@@ -89,29 +90,21 @@ app.put('/modifyTienda', (req, res) => {
   })
 })
 
-// Endpoint para buscar tiendas
-app.post('/findTiendas', (req, res) => {
-  const { codigo, habilitada, username } = req.body;
-
-  const request = {
-    codigo: codigo || '',
-    habilitada: habilitada !== undefined ? habilitada : null,
-    username: username || ''
-  };
-
-  clienteTienda.findTiendas(request, (error, response) => {
-    if (error) {
-      res.status(500).send(error);
-    } else {
-      res.json(response);
-    }
-  });
-});
-
 // Endpoint para obtener todas las tiendas
 app.get('/getTiendas', (req, res) => {
-  const request = {}; // No necesitas enviar datos en la solicitud
+  // Si habilitadas no se proporciona, asignamos null
+  const habilitadas = req.query.habilitadas === 'true'
+    ? true
+    : (req.query.habilitadas === 'false' ? false : null);
 
+  console.log("/getTiendas?habilitados=", habilitadas);
+
+  // Crear un objeto request
+  const request = {
+    habilitadas: habilitadas
+  };
+
+  // Llamar al método getTiendas del cliente
   clienteTienda.getTiendas(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
@@ -120,6 +113,7 @@ app.get('/getTiendas', (req, res) => {
     }
   });
 });
+
 
 
 
@@ -212,7 +206,17 @@ app.post('/findUsuarios', (req, res) => {
 
 // Endpoint para obtener todos los usuarios
 app.get('/getUsuarios', (req, res) => {
-  const request = {}; // No necesitas enviar datos en la solicitud
+  // Si habilitados_unicamente no se proporciona, asignamos null
+  const habilitados = req.query.habilitados === 'true'
+    ? true
+    : (req.query.habilitados === 'false' ? false : null);
+
+  console.log("/getUsuarios?habilitados=", habilitados);
+
+  // Crear un objeto request
+  const request = {
+    habilitados: habilitados
+  };
 
   clienteUsuario.getUsuarios(request, (error, response) => {
     if (error) {
@@ -256,7 +260,9 @@ app.post('/createProducto', (req, res) => {
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
       foto: productoData.foto,
-      idUserAdmin: productoData.idUserAdmin
+	  cantidad: productoData.cantidad,
+      idUserAdmin: productoData.idUserAdmin,
+	  stock: productoData.stock
     }
   };
 
@@ -297,8 +303,11 @@ app.put('/modifyProducto', (req, res) => {
       habilitado: productoData.habilitado,
       tiendaIds: productoData.tiendaIds,
       id: productoData.id,
+      cantidad: productoData.cantidad,
       foto: productoData.foto,
-      idUserAdmin: productoData.idUserAdmin
+      idUserAdmin: productoData.idUserAdmin,
+	  stock: productoData.stock
+
     }
   };
   clienteProducto.modifyProducto(request, (error, response) => {
@@ -330,14 +339,25 @@ app.post('/findProductos', (req, res) => {
   });
 });
 
-// Endpoint para traer productos
-app.post('/getProductos', (req, res) => {
-  const { username } = req.body;
+// Endpoint para obtener productos
+app.get('/getProductos', (req, res) => {
+  // Obtener el username del query
+  const username = req.query.username || '';
 
+  // Si habilitados no se proporciona, asignamos null
+  const habilitados = req.query.habilitados === 'true'
+    ? true
+    : (req.query.habilitados === 'false' ? false : null);
+
+  console.log("/getProductos?username=", username, "&habilitados=", habilitados);
+
+  // Crear un objeto request
   const request = {
-    username: username || ''
+    username: username,
+    habilitados: habilitados
   };
 
+  // Llamar al método getProductos del cliente
   clienteProducto.getProductos(request, (error, response) => {
     if (error) {
       res.status(500).send(error);
@@ -346,3 +366,4 @@ app.post('/getProductos', (req, res) => {
     }
   });
 });
+

@@ -16,7 +16,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'foto', 'edit', 'erase'];
+  displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'cantidad', 'foto', 'edit', 'erase'];
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
@@ -82,6 +82,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   editProduct(product: Producto): void {
+    console.log(product);
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
       data: { product: product, action: ModalAction.EDIT }

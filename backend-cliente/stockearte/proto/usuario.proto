@@ -65,11 +65,13 @@ message FindUsuariosResponse {
 }
 
 // Request para obtener todos los usuarios
-message GetUsuariosRequest {}
+message GetUsuariosRequest {
+  optional bool habilitados = 1; // Indica si se deben traer solo usuarios habilitados
+}
 
 // Response para obtener todos los usuarios
 message GetUsuariosResponse {
-    repeated Usuario usuarios = 1; // Lista de usuarios
+  repeated Usuario usuarios = 1; // Lista de usuarios
 }
 
 // Request para logear un usuario
@@ -83,5 +85,6 @@ message UserLoginResponse	{
 	string password = 2;
 	string rol = 3;
 	int64 userId = 4;
-	string errorMessage = 5;
+	int64 tiendaId = 5;
+	string errorMessage = 6;
 }

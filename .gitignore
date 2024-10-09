@@ -12,3 +12,6 @@ application.properties
 
 # vscode
 .vscode/settings.json
+
+# Compilacion de java
+bin/

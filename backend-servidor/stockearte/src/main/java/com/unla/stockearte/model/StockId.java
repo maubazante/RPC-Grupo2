@@ -45,4 +45,14 @@ public class StockId implements Serializable {
     public void setProductoId(Long productoId) {
         this.productoId = productoId;
     }
+
+	public StockId(Long tiendaId, Long productoId) {
+		super();
+		this.tiendaId = tiendaId;
+		this.productoId = productoId;
+	}
+
+	public StockId() {
+		// TODO Auto-generated constructor stub
+	}
 }

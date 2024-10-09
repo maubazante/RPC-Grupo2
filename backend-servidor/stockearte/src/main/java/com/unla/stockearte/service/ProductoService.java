@@ -64,11 +64,24 @@ public class ProductoService extends ProductoServiceImplBase {
 				.setCodigo(producto.getCodigo())
 				.setColor(producto.getColor())
 				.setTalle(producto.getTalle())
+				.setCantidad(producto.getCantidad())
 				.setHabilitado(producto.isHabilitado());
-				
+		
+				List<Stock> stockList = stockRepository.findByProducto(producto);
+		 		List<Long> idsTienda = new ArrayList<>();
+		 	
+		 		for(Stock stockIt: stockList ) {
+		 			if(stockIt.getTienda() != null) {
+		 				idsTienda.add(stockIt.getTienda().getId());
+		 			}
+		 		}
+		 
+		 		protoProductoBuilder.addAllTiendaIds(idsTienda);
+		 		
 				if (producto.getFoto() != null) {
 			        protoProductoBuilder.setFoto(producto.getFoto());
 			    }
+
 
 		return protoProductoBuilder.build();
 	}
@@ -81,25 +94,26 @@ public class ProductoService extends ProductoServiceImplBase {
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	@Override
 	public void createProducto(CreateProductoRequest request, StreamObserver<CreateProductoResponse> responseObserver) {
-		
+
 		CreateProductoResponse response = null;
-		if(getUsuarioRepository().existsByIdAndRol(request.getProducto().getIdUserAdmin(), Rol.ADMIN)) {
+		if (getUsuarioRepository().existsByIdAndRol(request.getProducto().getIdUserAdmin(), Rol.ADMIN)) {
 			Producto producto = new Producto();
 			producto.setCodigo(Helper.generarCadenaAleatoria());
 			producto.setColor(request.getProducto().getColor());
 			producto.setFoto(request.getProducto().getFoto());
 			producto.setNombre(request.getProducto().getNombre());
 			producto.setTalle(request.getProducto().getTalle());
-			
+			producto.setCantidad((int) request.getProducto().getCantidad());
+
 			getProductoRepository().save(producto);
-			
+
 			List<Stock> stockList = new ArrayList<>();
 			for (Long tiendaid : request.getProducto().getTiendaIdsList()) {
 				Optional<Tienda> tienda = getTiendaRepository().findById(tiendaid);
 				if (tienda.isPresent()) {
 					Stock stock = new Stock();
 					StockId stockId = new StockId();
-					
+
 					stockId.setProductoId(producto.getId());
 					stock.setProducto(producto);
 					stock.setTienda(tienda.get());
@@ -108,16 +122,22 @@ public class ProductoService extends ProductoServiceImplBase {
 					stock.setStock(Integer.valueOf(0));
 					stockList.add(stock);
 				}
-				
+
 			}
-			
+
+			stockList.forEach(stock -> {
+				System.out.println("Producto ID: " + stock.getProducto().getId());
+				System.out.println("Cantidad: " + stock.getProducto().getCantidad());
+				System.out.println("Tienda ID: " + stock.getTienda().getId());
+			});
+
 			getStockRepository().saveAll(stockList);
-			
+
 			response = CreateProductoResponse.newBuilder()
 					.setMessage("Producto con codigo " + producto.getCodigo() + " creado exitosamente").build();
 		} else {
-			response = CreateProductoResponse.newBuilder()
-					.setMessage("Error al crear el producto: el usuario autenticado no existe o carece de los permisos necesarios para crear productos.").build();
+			response = CreateProductoResponse.newBuilder().setMessage(
+					"Error al crear el producto: el usuario autenticado no existe o carece de los permisos necesarios para crear productos.").build();
 		}
 
 		responseObserver.onNext(response);
@@ -155,6 +175,7 @@ public class ProductoService extends ProductoServiceImplBase {
 			producto.get().setNombre(request.getProducto().getNombre());
 			producto.get().setTalle(request.getProducto().getTalle());
 			producto.get().setFoto(request.getProducto().getFoto());
+			producto.get().setCantidad((int) request.getProducto().getCantidad());
 
 			getProductoRepository().save(producto.get());
 
@@ -162,9 +183,10 @@ public class ProductoService extends ProductoServiceImplBase {
 					.setMessage("Producto con id " + request.getProducto().getId() + " modificado exitosamente")
 					.build();
 		}
-		
-		else response = ModifyProductoResponse.newBuilder().setMessage("Error - Producto no existe").build();
-		
+
+		else
+			response = ModifyProductoResponse.newBuilder().setMessage("Error - Producto no existe").build();
+
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}
@@ -176,18 +198,17 @@ public class ProductoService extends ProductoServiceImplBase {
 	@Transactional(readOnly = true)
 	public Optional<Set<Producto>> findProductos(String nombre, String codigo, String talle, String color) {
 		Set<Producto> productos = productoRepository
-				.findByNombreContainingOrCodigoContainingOrTalleContainingOrColorContaining(
-						nombre, codigo, talle, color);
+				.findByNombreContainingOrCodigoContainingOrTalleContainingOrColorContaining(nombre, codigo, talle,
+						color);
 
 		return productos.isEmpty() ? Optional.empty() : Optional.of(productos);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public void findProductos(FindProductosRequest request,
-			StreamObserver<FindProductosResponse> responseObserver) {
-		Optional<Set<Producto>> productos = findProductos(request.getNombre(), request.getCodigo(),
-				request.getTalle(), request.getColor());
+	public void findProductos(FindProductosRequest request, StreamObserver<FindProductosResponse> responseObserver) {
+		Optional<Set<Producto>> productos = findProductos(request.getNombre(), request.getCodigo(), request.getTalle(),
+				request.getColor());
 		FindProductosResponse.Builder responseBuilder = FindProductosResponse.newBuilder();
 
 		if (productos.isPresent()) {
@@ -205,43 +226,69 @@ public class ProductoService extends ProductoServiceImplBase {
 	// ==========================
 
 	@Transactional(readOnly = true)
-	public Optional<List<Producto>> getProductos(String username) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByUsername(username);
-		List<Producto> productos = new ArrayList<>();
-
-		if (usuarioOptional.isPresent()) {
-			Usuario usuario = usuarioOptional.get();
-
-			if (usuario.esDeCasaCentral()) {
-				productos = productoRepository.findAll();
-			} else {
-				Tienda tienda = usuario.getTienda();
-				if (tienda != null) {
-					productos = productoRepository.findByTiendaId(tienda.getId());
-				} else {
-					return Optional.empty();
-				}
-			}
-		}
-
-		return productos.isEmpty() ? Optional.empty() : Optional.of(productos);
-	}
-
-	@Transactional(readOnly = true)
 	@Override
-	public void getProductos(GetProductosRequest request,
-			StreamObserver<GetProductosResponse> responseObserver) {
-		Optional<List<Producto>> productos = getProductos(request.getUsername());
+	public void getProductos(GetProductosRequest request, StreamObserver<GetProductosResponse> responseObserver) {
+
+		String username = request.getUsername();
+		Boolean habilitados = request.hasHabilitados() ? request.getHabilitados() : null;
+
+		System.out.println("Usuario: " + username);
+		System.out.println("¿Solo habilitados? " + habilitados);
+
+		// Busca productos basados en el usuario y los filtros aplicados
+		List<Producto> productos = buscarProductosPorUsuarioYHabilitacion(username, habilitados);
+
+		// Construye la respuesta
 		GetProductosResponse.Builder responseBuilder = GetProductosResponse.newBuilder();
 
-		if (productos.isPresent()) {
-			for (Producto producto : productos.get()) {
-				responseBuilder.addProductos(convertToProtoProducto(producto));
-			}
+		// Agrega los productos a la respuesta
+		for (Producto producto : productos) {
+			System.out.println(producto);
+			responseBuilder.addProductos(convertToProtoProducto(producto));
 		}
 
 		responseObserver.onNext(responseBuilder.build());
 		responseObserver.onCompleted();
+	}
+
+	// Método para buscar productos según el tipo de usuario y el filtro de
+	// habilitación
+	private List<Producto> buscarProductosPorUsuarioYHabilitacion(String username, Boolean habilitados) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByUsername(username);
+
+		if (usuarioOptional.isPresent()) {
+			Usuario usuario = usuarioOptional.get();
+			if (usuario.esDeCasaCentral()) {
+				return buscarProductosDeCasaCentral(habilitados);
+			} else {
+				return buscarProductosDeTienda(usuario.getTienda(), habilitados);
+			}
+		} else {
+			return new ArrayList<>(); // Devuelve lista vacía si no se encuentra el usuario
+		}
+	}
+
+	// Método para buscar productos de la casa central
+	private List<Producto> buscarProductosDeCasaCentral(Boolean habilitados) {
+		if (habilitados != null) {
+			return productoRepository.findByHabilitado(habilitados); // Filtra por habilitados o deshabilitados
+		} else {
+			return productoRepository.findAll(); // Sin filtro, todos los productos
+		}
+	}
+
+	// Método para buscar productos de una tienda específica
+	private List<Producto> buscarProductosDeTienda(Tienda tienda, Boolean habilitados) {
+		if (tienda == null) {
+			return new ArrayList<>(); // Devuelve lista vacía si no hay tienda
+		}
+
+		if (habilitados != null) {
+			return productoRepository.findByTiendaIdAndHabilitado(tienda.getId(), habilitados); // Filtra por
+																								// habilitados
+		} else {
+			return productoRepository.findByTiendaId(tienda.getId()); // Todos los productos de su tienda
+		}
 	}
 
 	public ProductoRepository getProductoRepository() {
@@ -259,7 +306,5 @@ public class ProductoService extends ProductoServiceImplBase {
 	public UsuarioRepository getUsuarioRepository() {
 		return usuarioRepository;
 	}
-	
-	
 
 }

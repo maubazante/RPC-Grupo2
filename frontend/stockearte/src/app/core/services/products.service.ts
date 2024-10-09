@@ -37,8 +37,7 @@ export class ProductsService {
   }
 
   getProductos(usernameParam: string | null): Observable<ProductoArray> {
-    let body = { username: usernameParam }
-    return this.http.post<ProductoArray>(`${environment.clientURL}/getProductos`, body);
+    return this.http.get<ProductoArray>(`${environment.clientURL}/getProductos?username=${usernameParam}&habilitados=true`);
   }
 
   getAllProductos(): Observable<ProductoArray> {

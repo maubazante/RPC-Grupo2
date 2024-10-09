@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "4d7febd1-74c0-4c5a-9dfa-29a5ed8a3407",
+		"name": "ProveedorSys",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28681801"
+	},
+	"item": [
+		{
+			"name": "Ordenes de Compra",
+			"item": [
+				{
+					"name": "Agregar Orden de Compra",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigoArticulo\": \"CAM123\",\r\n    \"color\": \"Azul\",\r\n    \"talle\": \"M\",\r\n    \"tienda\": 1,\r\n    \"cantidadSolicitada\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/api/ordenDeCompra",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"ordenDeCompra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Orden de Compra - CHECK",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/api/ordenDeCompra",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"ordenDeCompra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Marcar Orden Como Recibida",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/api/ordenDeCompra/marcarComoRecibida/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"ordenDeCompra",
+								"marcarComoRecibida",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Ordenes de Compra",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/api/ordenDeCompra/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"ordenDeCompra",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Orden de Compra por Cod Articulo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}:{{port}}/api/ordenDeCompra?id=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"ordenDeCompra"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Productos",
+			"item": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "8081",
+			"type": "string"
+		}
+	]
+}

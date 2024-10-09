@@ -56,18 +56,17 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`tiendas` (
 -- -----------------------------------------------------
 -- Table `stockearte`.`productos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `stockearte`.`productos` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NOT NULL,
-  `codigo` VARCHAR(10) NULL,
-  `talle` VARCHAR(5) NULL,
-  `foto` VARCHAR(300) NULL,
-  `color` VARCHAR(50) NULL,
-  `habilitado` BOOLEAN NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`codigo` ASC) VISIBLE
+CREATE TABLE productos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  codigo VARCHAR(10) NOT NULL UNIQUE,
+  talle VARCHAR(5) NOT NULL,
+  foto VARCHAR(300) NOT NULL,
+  color VARCHAR(50) NOT NULL,
+  cantidad INT NOT NULL, -- Cambiar "stock" a "cantidad"
+  habilitado BOOLEAN NOT NULL DEFAULT true,
+  PRIMARY KEY (id)
 ) ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `stockearte`.`stock`
@@ -90,6 +89,40 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`stock` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
+
+
+
+-- Crear la tabla de Orden de Compra
+CREATE TABLE orden_de_compra (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  estado ENUM('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA') NOT NULL,
+  observaciones VARCHAR(500),
+  id_orden_despacho BIGINT,
+  fecha_solicitud DATE NOT NULL,
+  fecha_recepcion DATE,
+  codigo_articulo VARCHAR(50),
+  color VARCHAR(50),
+  talle VARCHAR(50),
+  cantidad_solicitada int not null,
+  tiendas_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_tiendas FOREIGN KEY (tiendas_id) REFERENCES tiendas(id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
+CREATE TABLE novedades (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  codigo_producto VARCHAR(10) NOT NULL,
+  talle VARCHAR(5) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  url_foto VARCHAR(300),
+  habilitado BOOLEAN NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Índices adicionales para optimización de búsqueda
+CREATE INDEX idx_estado ON orden_de_compra (estado);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -123,47 +156,29 @@ INSERT INTO `usuarios` (`username`, `password`, `rol`, `habilitado`, `nombre`, `
 VALUES 
 ('juanperez', 'password1', 'STOREMANAGER', TRUE, 'Juan', 'Perez', (SELECT id FROM `tiendas` WHERE codigo = 'T001')),
 ('mariasanchez', 'password2', 'STOREMANAGER', TRUE, 'Maria', 'Sanchez', (SELECT id FROM `tiendas` WHERE codigo = 'T002')),
-('luisgomez', 'password3', 'STOREMANAGER', TRUE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
+('luisgomez', 'password3', 'STOREMANAGER', FALSE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
 ('analuque', 'password4', 'STOREMANAGER', TRUE, 'Ana', 'Luque', (SELECT id FROM `tiendas` WHERE codigo = 'T004'));
 
--- -----------------------------------------------------
--- Insertar productos
--- -----------------------------------------------------
-INSERT INTO `productos` (`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`)
-VALUES 
-('Camiseta', 'P001', 'M', "https://www.shutterstock.com/image-vector/3d-realistic-soccer-jersey-argentina-600nw-2446075731.jpg", 'Blanco', TRUE),
-('Pantalón', 'P002', 'L', "https://acdn.mitiendanube.com/stores/002/023/047/products/marino-pantalon-stock-con-bolsillos11-c2e595f8e8f57a760616835590772521-1024-1024.png", 'Negro', TRUE),
-('Zapatillas', 'P003', '42', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw5ea76a27/products/NI_BQ3207-002/NI_BQ3207-002-6.JPG", 'Rojo', TRUE),
-('Chaqueta', 'P004', 'XL', "https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dw8c3e9aaf/products/KA31153FWA07/KA31153FWA07-1.JPG", 'Azul', TRUE),
-('Bufanda', 'P005', 'Único', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ20UdFSOcKUCSAOj-DUpmT0nNNsIxrGD-_yQ&s", 'Verde', TRUE),
-('Gorro de Lana', 'P006', 'Único', "https://http2.mlstatic.com/D_NQ_NP_839450-MLA70350283266_072023-O.webp", 'Negro', TRUE),
-('Chaleco', 'P007', 'L', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TjQkwgsGfhwqad7pG68w4LkzwDRgHmm5AQ&s", 'Naranja', TRUE),
-('Guantes', 'P008', 'M', "https://seguridadglobal.com.ar/wp-content/uploads/2023/05/guantes-vaqueta-pulgar-volcado.jpg", 'Oro', TRUE),
-('Cinturón', 'P009', 'Único', "https://m.media-amazon.com/images/I/81qOglWUQAL._AC_SL1500_.jpg", 'Negro', TRUE),
-('Pantalón Corto', 'P010', 'L', NULL, 'Gris', TRUE),
-('Buzo', 'P011', 'L', NULL, 'Verde', TRUE),
-('Sandalias', 'P012', '41', NULL, 'Marrón', TRUE),
-('Cartera', 'P013', 'Único', NULL, 'Rojo', TRUE),
-('Chaqueta Ligera', 'P014', 'M', NULL, 'Azul', TRUE),
-('Pijama', 'P015', 'L', NULL, 'Rosa', TRUE);
-
--- -----------------------------------------------------
--- Insertar stock
--- -----------------------------------------------------
-INSERT INTO `stock` (`fk_tienda_id`, `fk_producto_id`, `stock`)
-VALUES 
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P001'), 100),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P002'), 50),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P003'), 75),
-((SELECT id FROM `tiendas` WHERE codigo = 'T001'), (SELECT id FROM `productos` WHERE codigo = 'P004'), 30),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P005'), 80),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P006'), 60),
-((SELECT id FROM `tiendas` WHERE codigo = 'T002'), (SELECT id FROM `productos` WHERE codigo = 'P007'), 45),
-((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P008'), 100),
-((SELECT id FROM `tiendas` WHERE codigo = 'T003'), (SELECT id FROM `productos` WHERE codigo = 'P009'), 90),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P010'), 70),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P011'), 50),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P012'), 40),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P013'), 80),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P014'), 30),
-((SELECT id FROM `tiendas` WHERE codigo = 'T004'), (SELECT id FROM `productos` WHERE codigo = 'P015'), 20);
+INSERT INTO stockearte.productos
+(nombre, codigo, talle, foto, color, cantidad, habilitado)
+VALUES
+('Remera básica', 'RMB001', 'M', 'https://example.com/images/remera_basica.jpg', 'Rojo', 50, 1),
+('Pantalón jeans', 'PTJ002', 'L', 'https://example.com/images/pantalon_jeans.jpg', 'Azul', 35, 1),
+('Campera abrigo', 'CMP003', 'XL', 'https://example.com/images/campera_abrigo.jpg', 'Negro', 20, 1),
+('Camisa formal', 'CMS004', 'M', 'https://example.com/images/camisa_formal.jpg', 'Blanco', 15, 1),
+('Vestido casual', 'VST005', 'S', 'https://example.com/images/vestido_casual.jpg', 'Verde', 40, 1),
+('Zapatillas deportivas', 'ZPD006', '42', 'https://example.com/images/zapatillas_deportivas.jpg', 'Negro', 25, 1),
+('Gorra de algodón', 'GRR007', 'Único', 'https://example.com/images/gorra_algodon.jpg', 'Azul', 60, 1),
+('Buzo con capucha', 'BZO008', 'L', 'https://example.com/images/buzo_capucha.jpg', 'Gris', 30, 1),
+('Cinturón cuero', 'CTN009', 'L', 'https://example.com/images/cinturon_cuero.jpg', 'Marrón', 80, 1),
+('Sombrero de playa', 'SMB010', 'Único', 'https://example.com/images/sombrero_playa.jpg', 'Beige', 45, 1),
+('Bufanda lana', 'BFD011', 'Único', 'https://example.com/images/bufanda_lana.jpg', 'Rojo', 25, 1),
+('Guantes cuero', 'GVN012', 'M', 'https://example.com/images/guantes_cuero.jpg', 'Negro', 10, 1),
+('Chaqueta de cuero', 'CHQ013', 'L', 'https://example.com/images/chaqueta_cuero.jpg', 'Marrón', 5, 1),
+('Falda corta', 'FLD014', 'S', 'https://example.com/images/falda_corta.jpg', 'Azul', 30, 1),
+('Pantalones cargo', 'PTC015', 'M', 'https://example.com/images/pantalones_cargo.jpg', 'Verde', 20, 1),
+('Camiseta deportiva', 'CMD016', 'L', 'https://example.com/images/camiseta_deportiva.jpg', 'Blanco', 50, 1),
+('Chaleco acolchado', 'CHL017', 'XL', 'https://example.com/images/chaleco_acolchado.jpg', 'Gris', 15, 1),
+('Zapatos de cuero', 'ZPC018', '42', 'https://example.com/images/zapatos_cuero.jpg', 'Negro', 12, 1),
+('Polo de algodón', 'PLA019', 'M', 'https://example.com/images/polo_algodon.jpg', 'Verde', 22, 0),
+('Mochila escolar', 'MCH020', 'Único', 'https://example.com/images/mochila_escolar.jpg', 'Negro', 40, 0);

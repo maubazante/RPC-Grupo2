@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Actualizar Stock de Producto</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="content">
+      <!-- Muestra Talle y Color -->
+      <p><strong>Talle:</strong> {{ data.talle }} - <strong>Color:</strong> {{ data.color }}</p>
+
+      <!-- Select para la Tienda -->
+      <mat-form-field appearance="outline">
+        <mat-label>Seleccionar Tienda</mat-label>
+        <mat-select formControlName="tiendaIds">
+          <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">
+            {{ tienda.codigo }} - {{ tienda.ciudad }} ({{ tienda.provincia }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('tiendaIds')?.hasError('required')">
+          La tienda es requerida
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Cantidad -->
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="cantidad" [max]="data.cantidad" min="0">
+        <mat-error *ngIf="form.get('cantidad')?.hasError('required')">
+          La cantidad es requerida
+        </mat-error>
+        <mat-error *ngIf="form.get('cantidad')?.hasError('min')">
+          La cantidad no puede ser menor a 0
+        </mat-error>
+        <mat-error *ngIf="form.get('cantidad')?.hasError('max')">
+          La cantidad máxima permitida es {{ data.cantidad }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</mat-dialog-actions>
