@@ -151,6 +151,18 @@ public class OrdenDeCompraService {
 			e.printStackTrace();
 		}
 	}
+	
+	@Transactional
+	public OrdenDeCompra updateOrdenDeCompra(Long id, OrdenDeCompra ordenDeCompraDetails) {
+	    OrdenDeCompra existingOrden = ordenDeCompraRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Orden de Compra no encontrada con ID: " + id));
+
+	    existingOrden.setEstado(ordenDeCompraDetails.getEstado());
+	    existingOrden.setObservaciones(ordenDeCompraDetails.getObservaciones());
+	    existingOrden.setFechaRecepcion(ordenDeCompraDetails.getFechaRecepcion());
+
+	    return ordenDeCompraRepository.save(existingOrden);
+	}
 
 	public List<OrdenDeCompra> getList() {
 		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();

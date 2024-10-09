@@ -36,8 +36,8 @@ export class ProductsService {
     return this.http.post(`${environment.clientURL}/findProductos`, { body: { productos } });
   }
 
-  getProductos(usernameParam: string | null): Observable<ProductoArray> {
-    return this.http.get<ProductoArray>(`${environment.clientURL}/getProductos?username=${usernameParam}&habilitados=true`);
+  getProductos(usernameParam: string | null, habilitados: boolean): Observable<ProductoArray> {
+    return this.http.get<ProductoArray>(`${environment.clientURL}/getProductos?username=${usernameParam}&habilitados=${habilitados}`);
   }
 
   getAllProductos(): Observable<ProductoArray> {

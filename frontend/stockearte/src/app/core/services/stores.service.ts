@@ -36,7 +36,7 @@ export class StoresService {
   }
 
 
-  getTiendas(): Observable<TiendaArray> {
-    return this.http.get<TiendaArray>(`${environment.clientURL}/getTiendas`);
+  getTiendas(usernameParam: string | null, habilitadas: boolean): Observable<TiendaArray> {
+    return this.http.get<TiendaArray>(`${environment.clientURL}/getTiendas?username=${usernameParam}&habilitadas=${habilitadas}`);
   }
 }

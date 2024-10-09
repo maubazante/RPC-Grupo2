@@ -20,6 +20,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
+  soloHabilitados: boolean = true;
   searchTerm$ = new Subject<string>();
 
   private subscriptions: Subscription[] = [];
@@ -66,7 +67,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   loadProductsByUsername(): void {
-    const sub = this.productsService.getProductos(this.AuthService.getUsername()).subscribe({
+    const sub = this.productsService.getProductos(this.AuthService.getUsername(), this.soloHabilitados).subscribe({
       next: (products) => {
         this.dataSource = products.productos;
       },
@@ -172,6 +173,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
   }
   
-  
+  toggleHabilitadas(event: any): void {
+    this.soloHabilitados = event.checked;
+    this.ngOnInit(); 
+  }
 
 }

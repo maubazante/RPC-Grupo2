@@ -9,7 +9,8 @@ import { OrdenDeCompra } from "../../shared/types/OrdenDeCompra";
     providedIn: 'root'
 })
 export class OrderService {
-
+    
+    
     constructor(private http: HttpClient) { }
 
     httpOptions = {
@@ -22,5 +23,16 @@ export class OrderService {
         return this.http.post(`${environment.controllerURL}/api/ordenDeCompra`, productData);
     }
 
+    getAllOrders() {
+        return this.http.get(`${environment.controllerURL}/api/ordenDeCompra/list`);
+    }
 
+    modifyOrder(order: any) {
+        return this.http.put(`${environment.controllerURL}/api/ordenDeCompra/${order.id}`, order);
+    }
+
+    deleteOrder(id: string) {
+        return this.http.delete(`${environment.controllerURL}/api/ordenDeCompra/${id}`);
+    }
+  
 }

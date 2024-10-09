@@ -10,7 +10,7 @@ import { StoreListComponent } from './store-list/store-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StoreFormComponent } from './store-form/store-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -32,7 +32,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatOptionModule,
     MatSelectModule,
     MatInputModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FormsModule
   ],
   exports: [StoreListComponent]
 })

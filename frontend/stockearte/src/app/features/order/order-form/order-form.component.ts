@@ -14,6 +14,7 @@ export class OrderFormComponent {
   orderForm: FormGroup;
   productos: Producto[];  // Lista de productos para el select
   isEdit: boolean;
+  hasOrderDespacho: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -24,11 +25,13 @@ export class OrderFormComponent {
     this.productos = data.productos || [];
     let estadoValue = data.order.estado || 'SOLICITADA';
     this.isEdit = data.action === ModalAction.EDIT;
+    this.hasOrderDespacho = data.order.id_orden_despacho != null;
+    console.log(this.data.order);
     this.orderForm = this.fb.group({
       id: [null],
-      estado: [{ value: estadoValue, disabled: !this.isEdit }, Validators.required],
+      estado: [{ value: estadoValue, disabled: !this.isEdit || !this.hasOrderDespacho }, Validators.required],
       observaciones: [{ value: data.order.observaciones, disabled: !this.isEdit }],
-      ordenDeDespacho: [{ value: data.order.ordenDeDespacho, disabled: !this.isEdit }],
+      id_orden_despacho: [{ value: data.order.id_orden_despacho, disabled: true }],
       fechaSolicitud: [{ value: data.order.fechaSolicitud || null, disabled: !this.isEdit }],
       fechaRecepcion: [{ value: data.order.fechaRecepcion, disabled: !this.isEdit }],
       codigoArticulo: [this.data.order.codigoArticulo || '', Validators.required],
