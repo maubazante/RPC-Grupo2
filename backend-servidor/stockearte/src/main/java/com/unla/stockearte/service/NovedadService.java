@@ -82,11 +82,18 @@ public class NovedadService {
                         .orElseThrow(() -> new RuntimeException("Tienda no encontrada con ID: " + tiendaId));
                 
                 Stock stock = new Stock();
-                stock.setId(new StockId(productoPersistido.getId(), tienda.getId()));
-                stock.setProducto(productoPersistido);
-                stock.setTienda(tienda);
-                stock.setStock(request.getCantidad());
-
+                Optional<Stock> stockOpt = stockRepository.findById(new StockId(productoPersistido.getId(), tienda.getId()));
+                
+                if(stockOpt.isPresent()) {
+                	stock = stockOpt.get();
+                	stock.setStock(stock.getStock() + request.getCantidad());
+                } else {
+                	stock.setId(new StockId(productoPersistido.getId(), tienda.getId()));
+                    stock.setProducto(productoPersistido);
+                    stock.setTienda(tienda);
+                    stock.setStock(request.getCantidad());
+                }
+                
                 return stock;
             })
             .collect(Collectors.toList());

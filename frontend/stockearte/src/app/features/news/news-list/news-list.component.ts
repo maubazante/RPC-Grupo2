@@ -78,8 +78,8 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   updateNovedad(result: any) {
     this.newsService.modifyNews(result).subscribe({
-      next: (response: string) => {
-        response.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
+      next: (response) => {
+        response.message.includes('Error') ? this.notyf.error(response.message) : this.notyf.success(response.message);
       },
       error: (err) => {
         this.notyf.error("Error al incorporar la novedad a productos");
@@ -92,7 +92,6 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   }
 
- 
 
   deleteNews(id: string): void {
     if (confirm('¿Seguro que deseas eliminar esta noticia?')) {
