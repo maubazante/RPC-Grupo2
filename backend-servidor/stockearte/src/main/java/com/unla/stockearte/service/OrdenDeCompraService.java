@@ -18,6 +18,7 @@ import com.unla.stockearte.enums.EstadoOrden;
 import com.unla.stockearte.model.OrdenDeCompra;
 import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Stock;
+import com.unla.stockearte.model.StockId;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.repository.OrdenDeCompraRepository;
 import com.unla.stockearte.repository.ProductoRepository;
@@ -99,13 +100,28 @@ public class OrdenDeCompraService {
 					orden.getTienda().getId());
 
 			if (stock != null) {
-				// Actualizar el stock
+				// Actualizar el stock existente
 				stock.setStock(stock.getStock() + orden.getCantidadSolicitada());
-				stockRepository.save(stock);
+				stockRepository.save(stock); // Guardar el stock actualizado
 			} else {
-				// Manejar el caso en que no se encuentra el stock para el producto y tienda
-				// Puedes lanzar una excepción o crear un nuevo stock si es necesario
+				// Crear un nuevo stock si no se encuentra
+				Stock nuevoStock = new Stock();
+				StockId nuevoStockId = new StockId();
+				nuevoStockId.setTiendaId(orden.getTienda().getId());
+				nuevoStockId.setProductoId(producto.getId());
+				nuevoStock.setId(nuevoStockId);
+				nuevoStock.setProducto(producto);
+				nuevoStock.setTienda(orden.getTienda());
+				nuevoStock.setStock(orden.getCantidadSolicitada());
+				stockRepository.save(nuevoStock); // Guardar el nuevo stock
 			}
+
+			// Actualizar la cantidad del producto
+			producto.setCantidad(producto.getCantidad() + orden.getCantidadSolicitada());
+			productoRepository.save(producto);
+		} else {
+			// Manejar el caso en que no se encuentra el producto
+			throw new IllegalArgumentException("No se encontró el producto con código: " + orden.getCodigoArticulo());
 		}
 
 		// Guarda la orden actualizada

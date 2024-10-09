@@ -2,15 +2,13 @@ package com.unla.stockearte.model;
 
 import java.util.List;
 
-import org.hibernate.mapping.Set;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -36,8 +34,9 @@ public class Producto {
 
 	@Column(nullable = false, length = 50)
 	private String color;
-	
+
 	@OneToMany(mappedBy = "producto")
+	@JsonManagedReference
 	private List<Stock> stock;
 
 	@Column(nullable = false)
@@ -117,7 +116,7 @@ public class Producto {
 	public void setHabilitado(boolean habilitado) {
 		this.habilitado = habilitado;
 	}
-	
+
 	public Integer getCantidad() {
 		return cantidad;
 	}

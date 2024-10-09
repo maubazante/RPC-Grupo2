@@ -1,5 +1,7 @@
 package com.unla.stockearte.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -18,6 +20,7 @@ public class Stock {
 	@ManyToOne
 	@MapsId("productoId")
 	@JoinColumn(name = "fk_producto_id", nullable = false)
+	@JsonBackReference
 	private Producto producto;
 
 	@ManyToOne
