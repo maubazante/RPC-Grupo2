@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +16,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.enums.EstadoOrden;
 import com.unla.stockearte.model.OrdenDeCompra;
+import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.repository.OrdenDeCompraRepository;
+import com.unla.stockearte.repository.ProductoRepository;
 import com.unla.stockearte.repository.TiendaRepository;
 
 @Service
@@ -29,6 +30,9 @@ public class OrdenDeCompraService {
     
     @Autowired
     private TiendaRepository tiendaRepository;
+    
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Autowired
     KafkaProducerService kafkaService;
