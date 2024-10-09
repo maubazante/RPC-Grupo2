@@ -181,6 +181,12 @@ public class OrdenDeCompraService {
 		}
 	}
 	
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public void guardarOrdenDeCompra(OrdenDeCompra orden) {
+		ordenDeCompraRepository.save(orden);
+	}
+	
 	public List<OrdenDeCompra> getList() {
 		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
     	return list;

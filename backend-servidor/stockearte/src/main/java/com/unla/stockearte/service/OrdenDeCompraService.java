@@ -2,6 +2,7 @@ package com.unla.stockearte.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,8 +96,8 @@ public class OrdenDeCompraService {
 		orden.setEstado(EstadoOrden.RECIBIDA);
 
 		// Actualiza el stock
-		Producto producto = productoRepository.findByCodigo(orden.getCodigoArticulo());
-		if (producto != null) {
+		Optional<Producto> producto = productoRepository.findByCodigo(orden.getCodigoArticulo());
+		if (producto.get() != null) {
 			// Obtener el stock del producto en la tienda correspondiente
 			Stock stock = stockRepository.findByProductoCodigoAndTiendaId(orden.getCodigoArticulo(),
 					orden.getTienda().getId());
@@ -110,17 +111,17 @@ public class OrdenDeCompraService {
 				Stock nuevoStock = new Stock();
 				StockId nuevoStockId = new StockId();
 				nuevoStockId.setTiendaId(orden.getTienda().getId());
-				nuevoStockId.setProductoId(producto.getId());
+				nuevoStockId.setProductoId(producto.get().getId());
 				nuevoStock.setId(nuevoStockId);
-				nuevoStock.setProducto(producto);
+				nuevoStock.setProducto(producto.get());
 				nuevoStock.setTienda(orden.getTienda());
 				nuevoStock.setStock(orden.getCantidadSolicitada());
 				stockRepository.save(nuevoStock); // Guardar el nuevo stock
 			}
 
 			// Actualizar la cantidad del producto
-			producto.setCantidad(producto.getCantidad() + orden.getCantidadSolicitada());
-			productoRepository.save(producto);
+			producto.get().setCantidad(producto.get().getCantidad() + orden.getCantidadSolicitada());
+			productoRepository.save(producto.get());
 		} else {
 			// Manejar el caso en que no se encuentra el producto
 			throw new IllegalArgumentException("No se encontró el producto con código: " + orden.getCodigoArticulo());

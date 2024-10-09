@@ -1,6 +1,7 @@
 package com.unla.stockearte.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +32,5 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
             @Param("habilitado") boolean habilitado);
 
     // Método para buscar un producto por código
-    Producto findByCodigo(String codigo);
+    Optional<Producto> findByCodigo(String codigo);
 }
