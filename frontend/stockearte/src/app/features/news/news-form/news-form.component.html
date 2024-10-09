@@ -1,11 +1,23 @@
 <h2 mat-dialog-title>Actualizar Stock de Producto</h2>
 
-<!-- Asignar el FormGroup a este div -->
 <mat-dialog-content>
   <form [formGroup]="form">
     <div class="content">
       <!-- Muestra Talle y Color -->
       <p><strong>Talle:</strong> {{ data.talle }} - <strong>Color:</strong> {{ data.color }}</p>
+
+      <!-- Select para la Tienda -->
+      <mat-form-field appearance="outline">
+        <mat-label>Seleccionar Tienda</mat-label>
+        <mat-select formControlName="tiendaIds">
+          <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">
+            {{ tienda.codigo }} - {{ tienda.ciudad }} ({{ tienda.provincia }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('tiendaIds')?.hasError('required')">
+          La tienda es requerida
+        </mat-error>
+      </mat-form-field>
 
       <!-- Cantidad -->
       <mat-form-field appearance="outline">

@@ -3,6 +3,7 @@ export interface ILoginResponse {
     password: string
     rol: string
     userId: string
+    tiendaId: string
     errorMessage: string
   }
   

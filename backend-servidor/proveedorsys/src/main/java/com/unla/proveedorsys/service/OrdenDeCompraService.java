@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -178,5 +179,10 @@ public class OrdenDeCompraService {
 				procesarOrdenDeCompra(orden);
 			}
 		}
+	}
+	
+	public List<OrdenDeCompra> getList() {
+		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
+    	return list;
 	}
 }

@@ -30,8 +30,8 @@ export class NewsService {
     return this.http.post<Novedad>(`${environment.controllerURL}`, novedad);
   }
 
-  modifyNews(news: any) {
-    throw new Error('Method not implemented.');
+  modifyNews(novedad: any) {
+    return this.http.put<any>(`${environment.controllerURL}/api/novedades`, novedad);
   }
 
 }

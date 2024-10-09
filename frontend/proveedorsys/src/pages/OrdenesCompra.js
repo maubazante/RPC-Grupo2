@@ -1,48 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
-import OrderModal from './OrderModal';
+import axios from 'axios'; 
 
 const OrdenesCompra = () => {
-  // Placeholder para las órdenes de compra
-  const [orders, setOrders] = useState([
-    { id: 1, code: 'OC-001', idStore: 'T001', estado: 'SOLICITADA', fecha: '2024-09-01' },
-    { id: 2, code: 'OC-002', idStore: 'T002', estado: 'RECIBIDA', fecha: '2024-09-12' },
-  ]);
-  const [selectedOrder, setSelectedOrder] = useState(null); 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [orders, setOrders] = useState([]); 
 
   useEffect(() => {
-
+    axios.get('http://localhost:8081/api/ordenDeCompra/list')
+      .then((response) => {
+        setOrders(response.data); 
+      })
+      .catch((error) => {
+        console.error("Error al obtener las órdenes de compra:", error);
+      });
   }, []);
-
-  const handleSaveOrder = (newOrder) => {
-    if (selectedOrder) {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) => (order.id === selectedOrder.id ? newOrder : order))
-      );
-    } else {
-      setOrders([...orders, { ...newOrder, id: orders.length + 1 }]);
-    }
-  };
-
-  const handleOpenModal = (order = null) => {
-    setSelectedOrder(order);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedOrder(null);
-  };
 
   return (
     <div>
       <h1>Órdenes de Compra</h1>
-      {/* Botón para abrir el modal de creación */}
-      <Button variant="contained" color="primary" onClick={() => handleOpenModal()}>
-        Crear Nueva Orden
-      </Button>
-
       {/* Tabla de órdenes de compra */}
       <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
         <Table>
@@ -60,19 +35,12 @@ const OrdenesCompra = () => {
             {orders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell>{order.id}</TableCell>
-                <TableCell>{order.code}</TableCell>
-                <TableCell>{order.idStore}</TableCell>
+                <TableCell>{order.codigoArticulo}</TableCell>
+                <TableCell>{order.tienda.codigo}</TableCell>
                 <TableCell>{order.estado}</TableCell>
-                <TableCell>{order.fecha}</TableCell>
+                <TableCell>{order.fechaSolicitud}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    style={{ marginRight: '10px' }}
-                    onClick={() => handleOpenModal(order)}
-                  >
-                    Modificar
-                  </Button>
+                  {/* Solo dejar opción de eliminar */}
                   <Button
                     variant="outlined"
                     color="error"
@@ -86,14 +54,6 @@ const OrdenesCompra = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* Modal de alta/modificación */}
-      <OrderModal
-        open={isModalOpen}
-        handleClose={handleCloseModal}
-        order={selectedOrder}
-        handleSave={handleSaveOrder}
-      />
     </div>
   );
 };

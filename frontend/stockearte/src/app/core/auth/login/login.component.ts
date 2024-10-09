@@ -51,6 +51,7 @@ export class LoginComponent {
           sessionStorage.setItem("ROLE", response.rol);
           sessionStorage.setItem("USERNAME", response.username);
           sessionStorage.setItem("USER_ID", response.userId);
+          sessionStorage.setItem("TIENDA_ID", response.tiendaId);
           this.notyf.success("Usuario ingresado exitosamente")
           response.rol === Rol.ADMIN ? this.router.navigate(['/users']) : this.router.navigate(['/products']);
         }

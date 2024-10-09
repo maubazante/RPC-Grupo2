@@ -82,6 +82,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   editProduct(product: Producto): void {
+    console.log(product);
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
       data: { product: product, action: ModalAction.EDIT }
