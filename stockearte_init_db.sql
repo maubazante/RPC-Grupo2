@@ -159,26 +159,125 @@ VALUES
 ('luisgomez', 'password3', 'STOREMANAGER', FALSE, 'Luis', 'Gomez', (SELECT id FROM `tiendas` WHERE codigo = 'T003')),
 ('analuque', 'password4', 'STOREMANAGER', TRUE, 'Ana', 'Luque', (SELECT id FROM `tiendas` WHERE codigo = 'T004'));
 
-INSERT INTO stockearte.productos
-(nombre, codigo, talle, foto, color, cantidad, habilitado)
-VALUES
-('Remera básica', 'RMB001', 'M', 'https://example.com/images/remera_basica.jpg', 'Rojo', 50, 1),
-('Pantalón jeans', 'PTJ002', 'L', 'https://example.com/images/pantalon_jeans.jpg', 'Azul', 35, 1),
-('Campera abrigo', 'CMP003', 'XL', 'https://example.com/images/campera_abrigo.jpg', 'Negro', 20, 1),
-('Camisa formal', 'CMS004', 'M', 'https://example.com/images/camisa_formal.jpg', 'Blanco', 15, 1),
-('Vestido casual', 'VST005', 'S', 'https://example.com/images/vestido_casual.jpg', 'Verde', 40, 1),
-('Zapatillas deportivas', 'ZPD006', '42', 'https://example.com/images/zapatillas_deportivas.jpg', 'Negro', 25, 1),
-('Gorra de algodón', 'GRR007', 'Único', 'https://example.com/images/gorra_algodon.jpg', 'Azul', 60, 1),
-('Buzo con capucha', 'BZO008', 'L', 'https://example.com/images/buzo_capucha.jpg', 'Gris', 30, 1),
-('Cinturón cuero', 'CTN009', 'L', 'https://example.com/images/cinturon_cuero.jpg', 'Marrón', 80, 1),
-('Sombrero de playa', 'SMB010', 'Único', 'https://example.com/images/sombrero_playa.jpg', 'Beige', 45, 1),
-('Bufanda lana', 'BFD011', 'Único', 'https://example.com/images/bufanda_lana.jpg', 'Rojo', 25, 1),
-('Guantes cuero', 'GVN012', 'M', 'https://example.com/images/guantes_cuero.jpg', 'Negro', 10, 1),
-('Chaqueta de cuero', 'CHQ013', 'L', 'https://example.com/images/chaqueta_cuero.jpg', 'Marrón', 5, 1),
-('Falda corta', 'FLD014', 'S', 'https://example.com/images/falda_corta.jpg', 'Azul', 30, 1),
-('Pantalones cargo', 'PTC015', 'M', 'https://example.com/images/pantalones_cargo.jpg', 'Verde', 20, 1),
-('Camiseta deportiva', 'CMD016', 'L', 'https://example.com/images/camiseta_deportiva.jpg', 'Blanco', 50, 1),
-('Chaleco acolchado', 'CHL017', 'XL', 'https://example.com/images/chaleco_acolchado.jpg', 'Gris', 15, 1),
-('Zapatos de cuero', 'ZPC018', '42', 'https://example.com/images/zapatos_cuero.jpg', 'Negro', 12, 1),
-('Polo de algodón', 'PLA019', 'M', 'https://example.com/images/polo_algodon.jpg', 'Verde', 22, 0),
-('Mochila escolar', 'MCH020', 'Único', 'https://example.com/images/mochila_escolar.jpg', 'Negro', 40, 0);
+-- -----------------------------------------------------
+-- Insertar productos
+-- -----------------------------------------------------
+-- Camiseta Deportiva
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Camiseta Deportiva', 'CMD016', 'L', 'https://sublimesport.com.ar/wp-content/uploads/2017/09/011-01.png', 'Azul', 50, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 50);
+
+-- Remera básica
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Remera básica', 'RMB001', 'M', 'https://acdn.mitiendanube.com/stores/943/997/products/basica-negra1-9ede7dca77d434160616676898161690-1024-1024.jpg', 'Negro', 50, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 50);
+
+-- Pantalón jeans
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Pantalón jeans', 'PTJ002', 'L', 'https://www.grupooxicas.com/3082-thickbox_default/pantalon-jean-far-west-indigo-14-onzas-talles-del-38-al-60.jpg', 'Azul', 35, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 35);
+
+-- Campera abrigo
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Campera abrigo', 'CMP003', 'XL', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/c/a/campera-de-abrigo-con-capucha-under-armour-storm-armour-mujer-gris-700021372648001-1.jpg', 'Negro', 20, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 20);
+
+-- Camisa formal
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Camisa formal', 'CMS004', 'M', 'https://http2.mlstatic.com/D_660286-MLA53603382519_022023-O.jpg', 'Blanco', 15, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 15);
+
+-- Vestido casual
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Vestido casual', 'VST005', 'S', 'https://i.pinimg.com/736x/2d/9a/6a/2d9a6a4ef44d6b078a92fec52119538d.jpg', 'Verde', 40, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 40);
+
+-- Zapatillas deportivas
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Zapatillas deportivas', 'ZPD006', '42', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/z/a/zapatillas-running-adidas-runfalcon-3-0-negra-90497022-100010hq3790001-1.jpg', 'Negro', 25, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 25);
+
+-- Gorra de algodón
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Gorra de algodón', 'GRR007', 'Único', 'https://nuevogema-cdn.b-cdn.net/Content/UploadDirectory/Products/1452/image_144495c2-5e15-4533-8f98-1fc770e4915b.jpg', 'Azul', 60, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 60);
+
+-- Buzo con capucha
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Buzo con capucha', 'BZO008', 'L', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/b/u/buzo-con-capucha-hang-loose-picher-208020008029002-1.jpg', 'Gris', 30, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 30);
+
+-- Cinturón cuero
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Cinturón cuero', 'CTN009', 'L', 'https://d368r8jqz0fwvm.cloudfront.net/7038-product_lg/cinturon-de-cuero-de-hombre-chane.jpg', 'Marrón', 80, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 80);
+
+-- Sombrero de playa
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Sombrero de playa', 'SMB010', 'Único', 'https://acdn.mitiendanube.com/stores/003/993/269/products/whatsapp-image-2024-07-05-at-15-59-59-2-ee57fbd46044c6b33e17206467966326-1024-1024.jpeg', 'Beige', 45, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 45);
+
+-- Bufanda lana
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Bufanda lana', 'BFD011', 'Único', 'https://ar.isadoraonline.com/media/catalog/product/4/3/43451101_0_1_20240412120951.jpg', 'Rojo', 25, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 25);
+
+-- Guantes cuero
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Guantes cuero', 'GVN012', 'M', 'https://arandu.com.ar/media/2020/06/07490N-1.jpg', 'Negro', 10, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 10);
+
+-- Chaqueta de cuero
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Chaqueta de cuero', 'CHQ013', 'L', 'https://dorianargentina.com/wp-content/uploads/2021/01/Montreal-Marro%CC%81n-A.jpg', 'Marrón', 5, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 5);
+
+-- Falda corta
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Falda corta', 'FLD014', 'S', 'https://acdn.mitiendanube.com/stores/096/689/products/54-6c5ff8e2a85e469e8617271883599591-1024-1024.png', 'Rojo', 30, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (1, @producto_id, 30);
+
+-- Pantalones cargo
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Pantalones cargo', 'PTC015', 'M', 'https://acdn.mitiendanube.com/stores/339/112/products/sin-titulo-5kkk-60-c620fe2964d543272a52b54f45bba2a-1024-1024.png', 'Verde', 20, false);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (2, @producto_id, 20);
+
+-- Chaleco de abrigo
+INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad, habilitado) 
+VALUES ('Chaleco de abrigo', 'CHV016', 'M', 'https://cdn.shopify.com/s/files/1/0637/4801/products/F79705_01.jpg?v=1676931640', 'Gris', 15, true);
+SET @producto_id = LAST_INSERT_ID();
+INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
+VALUES (2, @producto_id, 15);
+
