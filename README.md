@@ -8,9 +8,10 @@
 - Sergio Simón Robles Flores
 - Valentín Olivero
 
-## Link a la demo del proyecto en YouTube:
-
+## Demo de la entrega 1 utilizando gRPC:
 [https://youtu.be/m7Y2N5eE9b4](https://youtu.be/m7Y2N5eE9b4)
+## Demo de la entrega 2 utilizando Kafka:
+[https://youtu.be/N_nWzSGu-gg](https://youtu.be/N_nWzSGu-gg)
 
 ## Link al repositorio:
 
