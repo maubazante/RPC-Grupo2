@@ -20,6 +20,7 @@ export class UserListComponent implements OnDestroy {
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
   private subscriptions: Subscription[] = [];
+  soloHabilitados: boolean = true;
   searchTerm$ = new Subject<string>();
   searchTerm: string = '';
 
@@ -51,7 +52,7 @@ export class UserListComponent implements OnDestroy {
   }
 
   loadUsers(): void {
-    const sub = this.usersService.getUsers().subscribe({
+    const sub = this.usersService.getUsers(this.soloHabilitados).subscribe({
       next: (users) => {
         this.dataSource = users.usuarios;
       },
@@ -153,5 +154,10 @@ export class UserListComponent implements OnDestroy {
     if (inputElement && inputElement.value) {
       this.searchTerm$.next(inputElement.value);
     }
+  }
+
+  toggleHabilitadas(event: any): void {
+    this.soloHabilitados = event.checked;
+    this.loadUsers(); 
   }
 }

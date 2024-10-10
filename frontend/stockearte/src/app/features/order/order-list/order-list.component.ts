@@ -16,10 +16,11 @@ import { Producto, ProductoArray } from '../../../shared/types/Producto';
   styleUrls: ['./order-list.component.css']
 })
 export class OrderListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['id', 'estado', 'observaciones', 'ordenDeDespacho', 'fechaSolicitud', 'fechaRecepcion', 'edit', 'erase'];
+  displayedColumns: string[] = ['id', "codigoArticulo", 'estado', 'observaciones', 'ordenDeDespacho', 'fechaSolicitud', 'fechaRecepcion', 'edit', 'erase'];
   dataSource: any[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   searchTerm$ = new Subject<string>();
+  productos: Producto[] = [];
 
   private subscriptions: Subscription[] = [];
   searchTerm!: string;
@@ -34,6 +35,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAllOrders();
+    this.loadProducts();
 
     this.searchTerm$.pipe(
       debounceTime(300),
@@ -49,26 +51,28 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   loadAllOrders(): void {
-    // const sub = this.orderService.getAllOrders().subscribe({
-    //   next: (orders) => {
-    //     this.dataSource = orders;
-    //   },
-    //   error: (err) => {
-    //     this.notyf.error('Error al cargar órdenes de compra');
-    //     console.error(err);
-    //   },
-    //   complete: () => {
-    //     this.cdr.detectChanges();
-    //   }
-    // });
-    // this.subscriptions.push(sub);
+    const sub = this.orderService.getAllOrders().subscribe({
+      next: (orders: any) => {
+        this.dataSource = orders;
+      },
+      error: (err) => {
+        this.notyf.error('Error al cargar órdenes de compra');
+        console.error(err);
+      },
+      complete: () => {
+        this.cdr.detectChanges();
+      }
+    });
+    this.subscriptions.push(sub);
   }
 
   editOrder(order: any): void {
+    console.log(order);
     const dialogRef = this.dialog.open(OrderFormComponent, {
       width: '400px',
       data: { order: order, productos: this.dataSource, action: ModalAction.EDIT }
     });
+    
 
     const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -79,70 +83,92 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   createOrder(): void {
-    let productosInject: Producto[]; 
-    this.productsService.getProductos(this.authService.getUsername()).subscribe({
+    const dialogRef = this.dialog.open(OrderFormComponent, {
+      panelClass: 'custom-dialog-container',
+      width: '900px',
+      data: { order: {}, productos: this.productos, action: ModalAction.CREATE }
+    })
+
+    const sub = dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const createSub = this.orderService.createOrder(result).subscribe({
+          next: () => {
+            this.notyf.success('Orden de compra creada con éxito');
+            this.loadAllOrders();
+          },
+          error: (err: any) => {
+            this.notyf.error('Error al crear la orden');
+            console.error(err);
+          }
+        });
+        this.subscriptions.push(createSub);
+      }
+    });
+  }
+
+  updateOrder(order: any): void {
+    const sub = this.orderService.modifyOrder(order).subscribe({
+      next: (updatedOrder: any) => {
+        updatedOrder ? this.notyf.success('Orden actualizada con éxito') : this.notyf.success('Error actualizando orden');
+      },
+      error: (err: any) => {
+        this.notyf.error('Error al actualizar la orden');
+        console.error(err);
+      },
+      complete: () => {
+        if(order.estado === "RECIBIDA") this.marcarOrderComoRecibida(order.id);
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  deleteOrder(id: string): void {
+    if (confirm('¿Seguro que deseas eliminar esta orden?')) {
+      const sub = this.orderService.deleteOrder(id).subscribe({
+        next: () => {
+          this.notyf.success('Orden eliminada con éxito');
+          this.loadAllOrders();
+        },
+        error: (err) => {
+          this.notyf.error('Error al eliminar la orden');
+          console.error(err);
+        }
+      });
+      this.subscriptions.push(sub);
+    }
+  }
+
+  loadProducts() {
+    const subs = this.productsService.getProductos(this.authService.getUsername(), true).subscribe({
       next: (value: ProductoArray) => {
-        productosInject = value.productos
+        this.productos = value.productos
       },
       error: (error) => {
         console.error(error);
       },
       complete: () => {
-        const dialogRef = this.dialog.open(OrderFormComponent, {
-          panelClass: 'custom-dialog-container',
-          width: '900px',
-          data: { order: {}, productos: productosInject, action: ModalAction.CREATE }
-        });
-
-        const sub = dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            const createSub = this.orderService.createOrder(result).subscribe({
-              next: () => {
-                this.notyf.success('Orden de compra creada con éxito');
-                this.loadAllOrders();
-              },
-              error: (err: any) => {
-                this.notyf.error('Error al crear la orden');
-                console.error(err);
-              }
-            });
-            this.subscriptions.push(createSub);
-          }
-        });
-        this.subscriptions.push(sub);
+        subs.unsubscribe();
       }
     })
   }
 
-  updateOrder(order: any): void {
-    // const sub = this.orderService.modifyOrder(order).subscribe({
-    //   next: (updatedOrder) => {
-    //     this.notyf.success('Orden actualizada con éxito');
-    //     this.loadAllOrders();
-    //   },
-    //   error: (err) => {
-    //     this.notyf.error('Error al actualizar la orden');
-    //     console.error(err);
-    //   }
-    // });
-    // this.subscriptions.push(sub);
+  
+  marcarOrderComoRecibida(id: string) {
+    const subs = this.orderService.marcarOrderComoRecibida(id).subscribe({
+      next: (response: any) => {
+        response ? this.notyf.success('Se ha incorporado nuevo producto al stock!') : this.notyf.error("Error: No se ha devuelto respuesta") 
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.notyf.error("Error del servidor")
+      },
+      complete: () => {
+        subs.unsubscribe();
+      }
+    })
   }
 
-  deleteOrder(id: string): void {
-    // if (confirm('¿Seguro que deseas eliminar esta orden?')) {
-    //   const sub = this.orderService.deleteOrder(id).subscribe({
-    //     next: () => {
-    //       this.notyf.success('Orden eliminada con éxito');
-    //       this.loadAllOrders();
-    //     },
-    //     error: (err) => {
-    //       this.notyf.error('Error al eliminar la orden');
-    //       console.error(err);
-    //     }
-    //   });
-    //   this.subscriptions.push(sub);
-    // }
-  }
+  // Búsqueda de órdenes de compra, quizás se sumen a la entrega 3
 
   filterOrders(searchTerm: string): void {
     this.dataSource = this.dataSource.filter(order =>

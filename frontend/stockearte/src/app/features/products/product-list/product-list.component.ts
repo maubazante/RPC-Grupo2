@@ -20,6 +20,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   dataSource: Producto[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
+  soloHabilitados: boolean = true;
   searchTerm$ = new Subject<string>();
 
   private subscriptions: Subscription[] = [];
@@ -34,11 +35,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isAdmin = this.AuthService.isAdmin();
-    this.isAdmin ? this.loadAllProducts() : this.loadProductsByUsername();
-    
+    this.loadProductsByUsername();
+
     this.searchTerm$.pipe(
       debounceTime(300),
-      distinctUntilChanged() 
+      distinctUntilChanged()
     ).subscribe(searchTerm => {
       this.searchTerm = searchTerm;
       this.filterProducts(searchTerm);
@@ -49,24 +50,24 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  loadAllProducts(): void {
-    const sub = this.productsService.getAllProductos().subscribe({
-      next: (products) => {
-        this.dataSource = products.productos;
-      },
-      error: (err) => {
-        this.notyf.error('Error al cargar productos');
-        console.error(err);
-      },
-      complete: () => {
-        this.cdr.detectChanges();
-      }
-    });
-    this.subscriptions.push(sub);
-  }
+  // loadAllProducts(): void {
+  //   const sub = this.productsService.getAllProductos().subscribe({
+  //     next: (products) => {
+  //       this.dataSource = products.productos;
+  //     },
+  //     error: (err) => {
+  //       this.notyf.error('Error al cargar productos');
+  //       console.error(err);
+  //     },
+  //     complete: () => {
+  //       this.cdr.detectChanges();
+  //     }
+  //   });
+  //   this.subscriptions.push(sub);
+  // }
 
   loadProductsByUsername(): void {
-    const sub = this.productsService.getProductos(this.AuthService.getUsername()).subscribe({
+    const sub = this.productsService.getProductos(this.AuthService.getUsername(), this.soloHabilitados).subscribe({
       next: (products) => {
         this.dataSource = products.productos;
       },
@@ -137,19 +138,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   deleteProduct(id: string): void {
-    if (confirm('Eliminar no funcionará esta entrega')) {
-      const sub = this.productsService.deleteProduct(id).subscribe({
-        next: () => {
-          // this.dataSource = this.dataSource.filter(p => p.id !== id);
-          // this.notyf.success('Producto eliminado con éxito');
-        },
-        error: (err) => {
-          this.notyf.error('Error al eliminar producto');
-          console.error(err);
-        }
-      });
-      this.subscriptions.push(sub);
-    }
+    const sub = this.productsService.deleteProduct(id).subscribe({
+      next: (response: any) => {
+        response.message.includes("Error") || response.message === ""  ? this.notyf.error("El producto no ha podido ser eliminado") : this.notyf.success(response.message) 
+      },
+      error: (err) => {
+        this.notyf.error('Error al eliminar producto');
+        console.error(err);
+      },
+      complete: () => {
+        this.ngOnInit()
+      }
+    });
+    this.subscriptions.push(sub);
+
   }
 
   filterProducts(searchTerm: string): void {
@@ -160,9 +162,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   clearSearch(): void {
-    this.searchTerm = ''; 
-    this.searchTerm$.next(''); 
-    this.loadAllProducts(); 
+    this.searchTerm = '';
+    this.searchTerm$.next('');
+    this.ngOnInit();
   }
 
   onSearchChange(event: Event): void {
@@ -171,7 +173,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.searchTerm$.next(inputElement.value);
     }
   }
-  
-  
+
+  toggleHabilitadas(event: any): void {
+    this.soloHabilitados = event.checked;
+    this.ngOnInit();
+  }
 
 }

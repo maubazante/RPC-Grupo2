@@ -12,6 +12,12 @@
           <th mat-header-cell *matHeaderCellDef> ID </th>
           <td mat-cell *matCellDef="let order"> {{order.id}} </td>
         </ng-container>
+
+        <!-- Cod Articulo -->
+        <ng-container matColumnDef="codigoArticulo">
+          <th mat-header-cell *matHeaderCellDef> Código de Producto </th>
+          <td mat-cell *matCellDef="let order"> {{order.codigoArticulo}} </td>
+        </ng-container>
   
         <!-- Estado Column -->
         <ng-container matColumnDef="estado">
@@ -22,13 +28,13 @@
         <!-- Observaciones Column -->
         <ng-container matColumnDef="observaciones">
           <th mat-header-cell *matHeaderCellDef> Observaciones </th>
-          <td mat-cell *matCellDef="let order"> {{order.observaciones}} </td>
+          <td mat-cell *matCellDef="let order"> {{order.observaciones ? order.observaciones : "-"}} </td>
         </ng-container>
   
         <!-- Orden de Despacho Column -->
         <ng-container matColumnDef="ordenDeDespacho">
           <th mat-header-cell *matHeaderCellDef> Orden de Despacho </th>
-          <td mat-cell *matCellDef="let order"> {{order.ordenDeDespacho}} </td>
+          <td mat-cell *matCellDef="let order"> {{order.id_orden_despacho  ? order.id_orden_despacho : "-"}} </td>
         </ng-container>
   
         <!-- Fecha de Solicitud Column -->
@@ -40,7 +46,7 @@
         <!-- Fecha de Recepción Column -->
         <ng-container matColumnDef="fechaRecepcion">
           <th mat-header-cell *matHeaderCellDef> Fecha de Recepción </th>
-          <td mat-cell *matCellDef="let order"> {{order.fechaRecepcion | date}} </td>
+          <td mat-cell *matCellDef="let order"> {{order.fechaRecepcion ? (order.fechaRecepcion | date) : "-"}} </td>
         </ng-container>
   
         <!-- Edit Column -->
@@ -57,7 +63,7 @@
         <ng-container matColumnDef="erase">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let order">
-            <button mat-icon-button (click)="deleteOrder(order)">
+            <button mat-icon-button (click)="deleteOrder(order.id)">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
