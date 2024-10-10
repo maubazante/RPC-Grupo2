@@ -84,40 +84,30 @@ CREATE TABLE novedades_producto (
     fecha_publicacion DATETIME NOT NULL
 );
 
-/* TODO: INSERTS */
-
+-- -----------------------------------------------------
+-- Insertar producto
+-- -----------------------------------------------------
 INSERT INTO `proveedorsys`.`producto`
 (`nombre`, `codigo`, `talle`, `foto`, `color`, `habilitado`, `cantidad`)
 VALUES
-('Camiseta Deportiva', 'CAM001', 'M', 'https://example.com/foto1.jpg', 'Rojo', true, 50),
-('Pantalón Casual', 'PAN002', 'L', 'https://example.com/foto2.jpg', 'Azul', true, 30),
-('Sudadera con Capucha', 'SUD003', 'S', 'https://example.com/foto3.jpg', 'Verde', true, 20),
-('Zapatos de Cuero', 'ZAP004', '42', 'https://example.com/foto4.jpg', 'Negro', false, 0),
-('Camiseta Básica', 'CAM005', 'XL', 'https://example.com/foto5.jpg', 'Blanco', true, 40),
-('Chaqueta de Invierno', 'CHA006', 'M', 'https://example.com/foto6.jpg', 'Gris', true, 15),
-('Cinturón de Cuero', 'CIN007', 'N/A', 'https://example.com/foto7.jpg', 'Marrón', true, 60),
-('Camisa Formal', 'CAM008', 'L', 'https://example.com/foto8.jpg', 'Celeste', true, 25),
-('Short Deportivo', 'SHO009', 'M', 'https://example.com/foto9.jpg', 'Negro', false, 0),
-('Gorra de Béisbol', 'GOR010', 'N/A', 'https://example.com/foto10.jpg', 'Azul Marino', true, 100),
-('Camiseta Estampada', 'CAM011', 'L', 'https://example.com/foto11.jpg', 'Amarillo', true, 45),
-('Pantalón de Jogging', 'PAN012', 'M', 'https://example.com/foto12.jpg', 'Gris', true, 50),
-('Sombrero de Playa', 'SOM013', 'N/A', 'https://example.com/foto13.jpg', 'Beige', true, 30),
-('Chaqueta de Cuero', 'CHA014', 'L', 'https://example.com/foto14.jpg', 'Negro', true, 20),
-('Pantalón de Vestir', 'PAN015', 'S', 'https://example.com/foto15.jpg', 'Negro', true, 35),
-('Zapatos Deportivos', 'ZAP016', '44', 'https://example.com/foto16.jpg', 'Blanco', true, 10),
-('Camiseta sin Mangas', 'CAM017', 'M', 'https://example.com/foto17.jpg', 'Verde', true, 25),
-('Bermudas de Playa', 'BER018', 'L', 'https://example.com/foto18.jpg', 'Rojo', true, 40),
-('Chaleco de Punto', 'CHA019', 'XL', 'https://example.com/foto19.jpg', 'Azul', true, 15),
-('Pantalón Cargo', 'PAN020', 'M', 'https://example.com/foto20.jpg', 'Verde Oliva', true, 50);
-
-INSERT INTO producto (nombre, codigo, talle, foto, color, cantidad, habilitado) 
-VALUES ('Camiseta Deportiva', 'CAM123', 'M', 'imagenes/camiseta_deportiva_m.jpg', 'Azul', 50, true);
-SET @producto_id = LAST_INSERT_ID();
-INSERT INTO stock (tienda_id, producto_id, cantidad) 
-VALUES (1, @producto_id, 50);
-
-INSERT INTO producto (nombre, codigo, talle, foto, color, cantidad, habilitado) 
-VALUES ('Pantalón Jeans', 'PAN456', 'L', 'imagenes/pantalon_jeans_l.jpg', 'Negro', 30, true);
-SET @producto_id = LAST_INSERT_ID();
-INSERT INTO stock (tienda_id, producto_id, cantidad) 
-VALUES (2, @producto_id, 30);
+('Camiseta Deportiva', 'CMD016', 'L', 'https://sublimesport.com.ar/wp-content/uploads/2017/09/011-01.png', 'Azul', true, 50),
+('Remera básica', 'RMB001', 'M', 'https://acdn.mitiendanube.com/stores/943/997/products/basica-negra1-9ede7dca77d434160616676898161690-1024-1024.jpg', 'Negro', true, 50),
+('Pantalón jeans', 'PTJ002', 'L', 'https://www.grupooxicas.com/3082-thickbox_default/pantalon-jean-far-west-indigo-14-onzas-talles-del-38-al-60.jpg', 'Azul', true, 35),
+('Campera abrigo', 'CMP003', 'XL', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/c/a/campera-de-abrigo-con-capucha-under-armour-storm-armour-mujer-gris-700021372648001-1.jpg', 'Negro', true, 20),
+('Camisa formal', 'CMS004', 'M', 'https://http2.mlstatic.com/D_660286-MLA53603382519_022023-O.jpg', 'Blanco', true, 15),
+('Vestido casual', 'VST005', 'S', 'https://i.pinimg.com/736x/2d/9a/6a/2d9a6a4ef44d6b078a92fec52119538d.jpg', 'Verde', true, 40),
+('Zapatillas deportivas', 'ZPD006', '42', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/z/a/zapatillas-running-adidas-runfalcon-3-0-negra-90497022-100010hq3790001-1.jpg', 'Negro', true, 25),
+('Gorra de algodón', 'GRR007', 'Único', 'https://nuevogema-cdn.b-cdn.net/Content/UploadDirectory/Products/1452/image_144495c2-5e15-4533-8f98-1fc770e4915b.jpg', 'Azul', true, 60),
+('Buzo con capucha', 'BZO008', 'L', 'https://media2.solodeportes.com.ar/media/catalog/product/cache/7c4f9b393f0b8cb75f2b74fe5e9e52aa/b/u/buzo-con-capucha-hang-loose-picher-208020008029002-1.jpg', 'Gris', true, 30),
+('Cinturón cuero', 'CTN009', 'L', 'https://d368r8jqz0fwvm.cloudfront.net/7038-product_lg/cinturon-de-cuero-de-hombre-chane.jpg', 'Marrón', true, 80),
+('Sombrero de playa', 'SMB010', 'Único', 'https://acdn.mitiendanube.com/stores/003/993/269/products/whatsapp-image-2024-07-05-at-15-59-59-2-ee57fbd46044c6b33e17206467966326-1024-1024.jpeg', 'Beige', true, 45),
+('Bufanda lana', 'BFD011', 'Único', 'https://ar.isadoraonline.com/media/catalog/product/4/3/43451101_0_1_20240412120951.jpg', 'Rojo', true, 25),
+('Guantes cuero', 'GVN012', 'M', 'https://arandu.com.ar/media/2020/06/07490N-1.jpg', 'Negro', true, 10),
+('Chaqueta de cuero', 'CHQ013', 'L', 'https://dorianargentina.com/wp-content/uploads/2021/01/Montreal-Marro%CC%81n-A.jpg', 'Marrón', true, 5),
+('Falda corta', 'FLD014', 'S', 'https://acdn.mitiendanube.com/stores/096/689/products/54-6c5ff8e2a85e469e8617271883599591-1024-1024.png', 'Rojo', true, 30),
+('Pantalones cargo', 'PTC015', 'M', 'https://acdn.mitiendanube.com/stores/339/112/products/sin-titulo-5kkk-60-c620fe2964d543272a52b54f45bba2a-1024-1024.png', 'Verde', true, 20),
+('Chaleco de abrigo', 'CHV016', 'M', 'https://cdn.shopify.com/s/files/1/0637/4801/products/F79705_01.jpg?v=1676931640', 'Gris', true, 15),
+('Chaleco acolchado', 'CHL017', 'XL', 'https://tequierofashion.com/cdn/shop/products/S4661db27284344abb417a10634348cafN_1024x1024.jpg', 'Negro', true, 60),
+('Zapatos de cuero', 'ZPC018', '42', 'https://www.rallys.com.ar/wp-content/uploads/2021/04/24575-4.jpg', 'Negro', true, 75),
+('Polo de algodón', 'PLA019', 'M', 'https://plazavea.vteximg.com.br/arquivos/ids/1924772-512-512/image-98ea0e8908874d2789428b8e38d55bbe.jpg', 'Celeste', false, 80),
+('Mochila escolar', 'MCH020', 'Único', 'https://samsonite.com.ar/cdn/shop/files/46a249b3520e294154a612a2e2d3113fea4569c210ba5e04185c209dd2a1695d.jpg', 'Rosa', true, 90);
