@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +33,8 @@ public class OrderDeCompraController {
 		return new ResponseEntity<OrdenDeCompra>(oc, HttpStatus.CREATED);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<Boolean> deleteOrdenDeCompra(Long id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Boolean> deleteOrdenDeCompra(@PathVariable Long id) {
 		Boolean p = orderDeCompraService.deleteById(id);
 		return new ResponseEntity<Boolean>(p, HttpStatus.OK);
 	}
@@ -54,6 +55,16 @@ public class OrderDeCompraController {
 	public ResponseEntity<OrdenDeCompra> marcarOrdenComoRecibida(@PathVariable Long id) {
 		OrdenDeCompra ordenRecibida = orderDeCompraService.marcarOrdenComoRecibida(id);
 		return new ResponseEntity<>(ordenRecibida, HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<OrdenDeCompra> updateOrdenDeCompra(@PathVariable Long id, @RequestBody OrdenDeCompra ordenDeCompra) {
+	    try {
+	        OrdenDeCompra updatedOrder = orderDeCompraService.updateOrdenDeCompra(id, ordenDeCompra);
+	        return ResponseEntity.ok(updatedOrder);
+	    } catch (Exception e) {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 
 }

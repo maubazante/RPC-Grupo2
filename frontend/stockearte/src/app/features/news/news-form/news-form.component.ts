@@ -38,7 +38,7 @@ export class NewsFormComponent {
   ngOnInit(): void {
     console.log(this.data);
       // Cargar las tiendas desde el servicio
-     this.storesService.getTiendas().subscribe((tiendas) => {
+     this.storesService.getTiendas(this.authService.getUsername(), true).subscribe((tiendas) => {
       this.tiendas = tiendas.tiendas;
     });
   }

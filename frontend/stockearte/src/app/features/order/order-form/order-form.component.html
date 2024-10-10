@@ -22,7 +22,7 @@
     <!-- Orden de Despacho -->
     <mat-form-field appearance="outline">
       <mat-label>Orden de Despacho ID</mat-label>
-      <input matInput formControlName="ordenDeDespacho">
+      <input matInput formControlName="id_orden_despacho">
     </mat-form-field>
 
     <!-- Fecha de Solicitud -->
@@ -42,7 +42,7 @@
     <h6>Selección de items</h6>
 
     <!-- Producto -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="!this.isEdit">
       <mat-label>Producto</mat-label>
       <mat-select formControlName="codigoArticulo">
         <mat-option *ngFor="let producto of productos" [value]="producto.codigo">

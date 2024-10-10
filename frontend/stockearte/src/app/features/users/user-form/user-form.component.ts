@@ -65,7 +65,7 @@ export class UserFormComponent implements OnInit {
   }
 
   loadTiendas(): void {
-    this.tiendaService.getTiendas().subscribe({
+    this.tiendaService.getTiendas(this.authService.getUsername(), true).subscribe({
       next: (tiendas) => {
         this.tiendas = tiendas.tiendas;
       },

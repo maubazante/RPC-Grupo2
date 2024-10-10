@@ -2,6 +2,10 @@
   <div class="content-container">
     <div class="add-search">
       <button mat-button *ngIf="isAdmin" (click)="createUser()"><mat-icon>add</mat-icon>Agregar usuario</button>
+      <mat-slide-toggle
+          class="example-margin" [(ngModel)]="soloHabilitados" (change)="toggleHabilitadas($event)">
+        Mostrar habilitados
+      </mat-slide-toggle>
     <mat-form-field class="search-field" appearance="outline" [style.width.px]=500>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput placeholder="Buscar usuario" (input)="onSearchChange($event)" />

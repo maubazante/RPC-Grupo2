@@ -19,6 +19,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
   dataSource: Tienda[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
+  soloHabilitados: boolean = true;
   private subscriptions: Subscription[] = [];
   searchTerm$ = new Subject<string>();
   searchTerm: string = '';
@@ -51,7 +52,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
   }
 
   loadTiendas(): void {
-    const sub = this.tiendaService.getTiendas().subscribe({
+    const sub = this.tiendaService.getTiendas(this.authService.getUsername(), this.soloHabilitados).subscribe({
       next: (tiendas) => {
         this.dataSource = tiendas.tiendas;
       },
@@ -152,5 +153,10 @@ export class StoreListComponent implements OnInit, OnDestroy {
     if (inputElement && inputElement.value) {
       this.searchTerm$.next(inputElement.value);
     }
+  }
+
+  toggleHabilitadas(event: any): void {
+    this.soloHabilitados = event.checked;
+    this.loadTiendas(); 
   }
 }
