@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.unla.stockearte.dto.InformeOrdenCompraDTO;
+import com.unla.stockearte.dto.InformeOrdenCompraRequest;
 import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.enums.EstadoOrden;
 import com.unla.stockearte.model.OrdenDeCompra;
@@ -163,6 +165,23 @@ public class OrdenDeCompraService {
 		existingOrden.setFechaRecepcion(ordenDeCompraDetails.getFechaRecepcion());
 
 		return ordenDeCompraRepository.save(existingOrden);
+	}
+
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	public List<InformeOrdenCompraDTO> obtenerInformeDeCompra(InformeOrdenCompraRequest request) {
+		Tienda tiendaRequest = null;
+		if(request.getTiendaId() != null) {
+			Optional<Tienda> tienda = tiendaRepository.findById(request.getTiendaId());
+			if(tienda.isPresent()) {
+				tiendaRequest = tienda.get();
+			}		
+		}
+		List<InformeOrdenCompraDTO> listInforme = ordenDeCompraRepository.obtenerInformeOrdenesDeCompra(
+				request.getCodigoArticulo(), request.getFechaInicio(), request.getFechaFin(), request.getEstado(),
+				tiendaRequest);
+
+		return listInforme;
 	}
 
 	public List<OrdenDeCompra> getList() {
