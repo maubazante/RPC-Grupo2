@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://unla.com/soapsys/wsdl"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             name="ProductoService"
+             targetNamespace="http://unla.com/soapsys/wsdl">
+
+    <!-- Tipo de datos -->
+    <types>
+        <xsd:schema targetNamespace="http://unla.com/soapsys/wsdl">
+            <xsd:element name="ProductoRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="ProductoResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:int"/>
+                        <xsd:element name="nombre" type="xsd:string"/>
+                        <xsd:element name="precio" type="xsd:float"/>
+                        <xsd:element name="stock" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <!-- Mensajes -->
+    <message name="GetProductoRequest">
+        <part name="parameters" element="tns:ProductoRequest"/>
+    </message>
+
+    <message name="GetProductoResponse">
+        <part name="parameters" element="tns:ProductoResponse"/>
+    </message>
+
+    <!-- Operaciones -->
+    <portType name="ProductoPortType">
+        <operation name="GetProducto">
+            <input message="tns:GetProductoRequest"/>
+            <output message="tns:GetProductoResponse"/>
+        </operation>
+    </portType>
+
+    <!-- Binding SOAP -->
+    <binding name="ProductoServiceSoapBinding" type="tns:ProductoPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="GetProducto">
+            <soap:operation soapAction="http://unla.com/soapsys/GetProducto"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Servicio -->
+    <service name="ProductoService">
+        <port name="ProductoPort" binding="tns:ProductoServiceSoapBinding">
+            <soap:address location="http://localhost:8082/ws/producto"/>
+        </port>
+    </service>
+</definitions>
+
