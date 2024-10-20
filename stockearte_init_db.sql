@@ -38,6 +38,24 @@ CREATE TABLE IF NOT EXISTS `stockearte`.`usuarios` (
 ) ENGINE = InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS `stockearte`.`filtro_de_ordenes` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NULL,
+  `filtro_codigo_producto` TINYINT NULL,
+  `filtro_rango_de_fechas` TINYINT NULL,
+  `filtro_estado` TINYINT NULL,
+  `filtro_tienda` TINYINT NULL,
+  `fk_usuarios_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`, `fk_usuarios_id`),
+  INDEX `fk_filtro_de_ordenes_usuarios_idx` (`fk_usuarios_id` ASC) VISIBLE,
+  CONSTRAINT `fk_filtro_de_ordenes_usuarios`
+    FOREIGN KEY (`fk_usuarios_id`)
+    REFERENCES `stockearte`.`usuarios` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)ENGINE = InnoDB;
+
+
 -- -----------------------------------------------------
 -- Table `stockearte`.`tiendas`
 -- -----------------------------------------------------

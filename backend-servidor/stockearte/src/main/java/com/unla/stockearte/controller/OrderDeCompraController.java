@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unla.stockearte.dto.InformeOrdenCompraDTO;
+import com.unla.stockearte.dto.InformeOrdenCompraRequest;
 import com.unla.stockearte.dto.OrdenCompraRequest;
 import com.unla.stockearte.model.OrdenDeCompra;
 import com.unla.stockearte.service.OrdenDeCompraService;
@@ -56,15 +58,23 @@ public class OrderDeCompraController {
 		OrdenDeCompra ordenRecibida = orderDeCompraService.marcarOrdenComoRecibida(id);
 		return new ResponseEntity<>(ordenRecibida, HttpStatus.OK);
 	}
-	
+
+	@PostMapping("/informeOrdenDeCompra")
+	public ResponseEntity<List<InformeOrdenCompraDTO>> informeOrdenDeCompra(
+			@RequestBody InformeOrdenCompraRequest request) {
+		List<InformeOrdenCompraDTO> informeList = orderDeCompraService.obtenerInformeDeCompra(request);
+		return new ResponseEntity<>(informeList, HttpStatus.OK);
+	}
+
 	@PutMapping("/{id}")
-	public ResponseEntity<OrdenDeCompra> updateOrdenDeCompra(@PathVariable Long id, @RequestBody OrdenDeCompra ordenDeCompra) {
-	    try {
-	        OrdenDeCompra updatedOrder = orderDeCompraService.updateOrdenDeCompra(id, ordenDeCompra);
-	        return ResponseEntity.ok(updatedOrder);
-	    } catch (Exception e) {
-	        return ResponseEntity.notFound().build();
-	    }
+	public ResponseEntity<OrdenDeCompra> updateOrdenDeCompra(@PathVariable Long id,
+			@RequestBody OrdenDeCompra ordenDeCompra) {
+		try {
+			OrdenDeCompra updatedOrder = orderDeCompraService.updateOrdenDeCompra(id, ordenDeCompra);
+			return ResponseEntity.ok(updatedOrder);
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 }
