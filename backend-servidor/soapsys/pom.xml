@@ -79,9 +79,10 @@
 					</execution>
 				</executions>
 				<configuration>
-					<schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
-					<outputDirectory>${project.basedir}/src/main/java</outputDirectory>
-
+					<sources>
+						<source>
+							${project.basedir}/src/main/resources/helloworld.xsd</source>
+					</sources>
 				</configuration>
 			</plugin>
 		</plugins>
