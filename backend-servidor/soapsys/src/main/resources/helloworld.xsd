@@ -1,22 +1,17 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           elementFormDefault="qualified">
-
-    <!-- Definición de la solicitud del saludo -->
-    <xs:element name="getGreetingRequest">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://example.com/helloworld" targetNamespace="http://example.com/helloworld" elementFormDefault="qualified">
+    <xs:element name="HelloRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
-    <!-- Definición de la respuesta del saludo -->
-    <xs:element name="getGreetingResponse">
+    
+    <xs:element name="HelloResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="greeting" type="xs:string"/>
+                <xs:element name="message" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
 </xs:schema>
