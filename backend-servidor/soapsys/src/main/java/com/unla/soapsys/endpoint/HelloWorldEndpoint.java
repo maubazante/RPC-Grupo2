@@ -5,13 +5,13 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import generated.HelloRequest;
-import generated.HelloResponse;
+import com.example.helloworld.HelloRequest;
+import com.example.helloworld.HelloResponse;
 
 @Endpoint
 public class HelloWorldEndpoint {
-
-    private static final String NAMESPACE_URI = "http://example.com/helloworld";
+	
+	private static final String NAMESPACE_URI = "http://example.com/helloworld";
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HelloRequest")
     @ResponsePayload
@@ -20,4 +20,5 @@ public class HelloWorldEndpoint {
         response.setMessage("Hola, " + request.getName() + "!");
         return response;
     }
+
 }
