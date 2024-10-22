@@ -1,5 +1,7 @@
 
-# Llamado a procedimiento remoto
+# Desarrollo de Software en Sistemas Distribuidos
+
+Este trabajo consiste en las dos entregas (TP1 - Grpc y TP2 - Kafka)
 
 ### Integrantes del Grupo 2
 
