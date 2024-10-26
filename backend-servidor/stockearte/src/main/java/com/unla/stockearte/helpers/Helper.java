@@ -2,19 +2,29 @@ package com.unla.stockearte.helpers;
 
 import java.security.SecureRandom;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 public class Helper {
 
 	private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final int LONGITUD_CADENA = 10;
-    private static final SecureRandom random = new SecureRandom();
+	private static final int LONGITUD_CADENA = 10;
+	private static final SecureRandom random = new SecureRandom();
 
-    public static String generarCadenaAleatoria() {
-        StringBuilder sb = new StringBuilder(LONGITUD_CADENA);
-        for (int i = 0; i < LONGITUD_CADENA; i++) {
-            int indiceAleatorio = random.nextInt(CARACTERES.length());
-            char caracterAleatorio = CARACTERES.charAt(indiceAleatorio);
-            sb.append(caracterAleatorio);
-        }
-        return sb.toString();
-    }
+	public static String generarCadenaAleatoria() {
+		StringBuilder sb = new StringBuilder(LONGITUD_CADENA);
+		for (int i = 0; i < LONGITUD_CADENA; i++) {
+			int indiceAleatorio = random.nextInt(CARACTERES.length());
+			char caracterAleatorio = CARACTERES.charAt(indiceAleatorio);
+			sb.append(caracterAleatorio);
+		}
+		return sb.toString();
+	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public static class UnauthorizedException extends RuntimeException {
+		public UnauthorizedException(String message) {
+			super(message);
+		}
+	}
 }
