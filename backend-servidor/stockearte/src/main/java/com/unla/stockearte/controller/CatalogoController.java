@@ -26,37 +26,35 @@ public class CatalogoController {
 	private CatalogoService catalogoService;
 
 	@GetMapping
-	public ResponseEntity<List<Catalogo>> getCatalogos(@RequestParam(required = false) Long tiendaId) {
-		List<Catalogo> catalogos;
-		if (tiendaId != null) {
-			catalogos = catalogoService.getCatalogosByTienda(tiendaId);
-		} else {
-			catalogos = catalogoService.getAllCatalogos();
-		}
+	public ResponseEntity<List<Catalogo>> getAllCatalogos(@RequestParam String username,
+			@RequestParam(required = false) Long tiendaId) {
+		List<Catalogo> catalogos = catalogoService.getAllCatalogos(username, tiendaId);
 		return new ResponseEntity<>(catalogos, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Catalogo> getCatalogoById(@PathVariable Long id) {
-		return catalogoService.getCatalogoById(id).map(catalogo -> new ResponseEntity<>(catalogo, HttpStatus.OK))
+	public ResponseEntity<Catalogo> getCatalogoById(@PathVariable Long id, @RequestParam String username) {
+		return catalogoService.getCatalogoById(id, username)
+				.map(catalogo -> new ResponseEntity<>(catalogo, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	@PostMapping
-	public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo) {
-		Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo);
+	public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo, @RequestParam String username) {
+		Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo, username);
 		return new ResponseEntity<>(createdCatalogo, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Catalogo> updateCatalogo(@PathVariable Long id, @RequestBody Catalogo catalogo) {
-		return new ResponseEntity<>(catalogoService.updateCatalogo(id, catalogo), HttpStatus.OK);
+	public ResponseEntity<Catalogo> updateCatalogo(@PathVariable Long id, @RequestBody Catalogo catalogo,
+			@RequestParam String username) {
+		Catalogo updatedCatalogo = catalogoService.updateCatalogo(id, catalogo, username);
+		return new ResponseEntity<>(updatedCatalogo, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCatalogo(@PathVariable Long id) {
-		catalogoService.deleteCatalogo(id);
+	public ResponseEntity<Void> deleteCatalogo(@PathVariable Long id, @RequestParam String username) {
+		catalogoService.deleteCatalogo(id, username);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
 }
