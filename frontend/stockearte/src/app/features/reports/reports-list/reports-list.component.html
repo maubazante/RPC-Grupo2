@@ -1,0 +1,54 @@
+<div class="table-container">
+    <div class="content-container">
+      <div class="add-search">
+        <!-- Botón para abrir el modal de filtros -->
+        <button mat-button (click)="openFilterModal()">
+          <mat-icon>filter_list</mat-icon> Filtros
+        </button>
+        
+        <!-- Barra de búsqueda -->
+        <mat-form-field class="search-field" appearance="outline" [style.width.px]="500">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Buscar Reporte" (input)="onSearchChange($event)" />
+          <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      
+      <!-- Tabla de reportes -->
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let report"> {{ report.id }} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="codigoArticulo">
+          <th mat-header-cell *matHeaderCellDef> Código de Producto </th>
+          <td mat-cell *matCellDef="let report"> {{ report.codigoArticulo }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tienda">
+            <th mat-header-cell *matHeaderCellDef> Tienda </th>
+            <td mat-cell *matCellDef="let report"> {{ report.tienda.codigo }} </td>
+          </ng-container>
+
+        <ng-container matColumnDef="fechaSolicitud">
+            <th mat-header-cell *matHeaderCellDef> Fecha de Solicitud </th>
+            <td mat-cell *matCellDef="let report"> {{report.fechaSolicitud | date}} </td>
+          </ng-container>
+        
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let report"> {{ report.estado }} </td>
+        </ng-container>
+        
+        <!-- Header Row -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <!-- Data Rows -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+  
