@@ -1,11 +1,13 @@
 package com.unla.stockearte.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.helpers.Helper.UnauthorizedException;
 import com.unla.stockearte.model.Catalogo;
 import com.unla.stockearte.model.Rol;
@@ -22,6 +24,20 @@ public class CatalogoService {
 	@Autowired
 	private CatalogoRepository catalogoRepository;
 
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
+	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
+	// traer todos!!!
 	public List<Catalogo> getAllCatalogos(String username, Long tiendaId) {
 		if (!isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para ver los catálogos.");
@@ -68,4 +84,12 @@ public class CatalogoService {
 				&& (usuario.get().getRol() == Rol.ADMIN || usuario.get().getRol() == Rol.STOREMANAGER);
 	}
 
+	public byte[] exportCatalogoPDF(Long id, String username) throws IOException {
+		Catalogo catalogo = getCatalogoById(id, username)
+				.orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
+
+		String contenido = "Catálogo: " + catalogo.getNombre();
+
+		return Helper.generarPDF(contenido);
+	}
 }

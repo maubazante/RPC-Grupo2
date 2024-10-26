@@ -1,9 +1,11 @@
 package com.unla.stockearte.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,7 @@ public class CatalogoController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	// TODO PODER ENVIARLE PRODUCTOS
 	@PostMapping
 	public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo, @RequestParam String username) {
 		Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo, username);
@@ -57,4 +60,18 @@ public class CatalogoController {
 		catalogoService.deleteCatalogo(id, username);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
+	@GetMapping("/exportar/pdf/{id}")
+	public ResponseEntity<?> exportCatalogoPDF(@PathVariable Long id, @RequestParam String username) {
+		try {
+			byte[] pdfBytes = catalogoService.exportCatalogoPDF(id, username);
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al generar el PDF: " + e.getMessage());
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Catálogo no encontrado: " + e.getMessage());
+		}
+	}
+
 }
