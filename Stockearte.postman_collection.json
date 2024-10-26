@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "4ed3828b-e0a9-4827-8399-f1c472b0d8da",
+		"_postman_id": "c4657ad5-8f67-45f9-8d6b-4e820722071f",
 		"name": "Stockearte",
 		"description": "Esta colección está diseñada para facilitar las pruebas de la API de nuestro sistema. Incluye múltiples endpoints que permiten realizar operaciones como la creación, actualización y eliminación de tiendas, usuarios y productos.\n\n#### Variables de la Colección\n\n- **`baseUrl`**: Define la URL base del entorno de desarrollo. Incluye el protocolo, por ejemplo, `http://localhost`. Esto permite que las solicitudes sean fácilmente reutilizables al cambiar entre diferentes entornos.\n    \n- **`port`**: Especifica el número de puerto en el que está corriendo la aplicación. Por ejemplo, `3000`.\n    \n\nAsegúrate de configurar estas variables en el entorno adecuado antes de ejecutar las solicitudes, para que se resuelvan correctamente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26268488"
+		"_exporter_id": "28681801"
 	},
 	"item": [
 		{
@@ -560,6 +560,200 @@
 								"api",
 								"ordenDeCompra",
 								"informeOrdenDeCompra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Ordenes de Compra",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/ordenDeCompra/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"ordenDeCompra",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Catalogos",
+			"item": [
+				{
+					"name": "Traer catalogos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer catalogos por tienda",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?tiendaId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos"
+							],
+							"query": [
+								{
+									"key": "tiendaId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer catalogo por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Catalogo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nuevo Catalogo 1\",\r\n    \"tienda\": {\r\n        \"id\": 1\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Catalogo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Catalogo Actualizado\",\r\n    \"tienda\": {\r\n        \"id\": 1\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos",
+								"1"
 							]
 						}
 					},
