@@ -620,7 +620,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -628,6 +628,12 @@
 							"path": [
 								"api",
 								"catalogos"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
 							]
 						}
 					},
@@ -651,7 +657,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?tiendaId=1",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?username=andresUsername&tiendaId=1",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -661,6 +667,10 @@
 								"catalogos"
 							],
 							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								},
 								{
 									"key": "tiendaId",
 									"value": "1"
@@ -688,7 +698,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -697,6 +707,12 @@
 								"api",
 								"catalogos",
 								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
 							]
 						}
 					},
@@ -717,7 +733,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -725,6 +741,12 @@
 							"path": [
 								"api",
 								"catalogos"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
 							]
 						}
 					},
@@ -745,7 +767,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -754,6 +776,12 @@
 								"api",
 								"catalogos",
 								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
 							]
 						}
 					},
