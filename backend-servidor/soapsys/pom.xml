@@ -84,8 +84,6 @@
 				<configuration>
 					<sources>
 						<source>
-							${project.basedir}/src/main/resources/helloworld.xsd</source>
-						<source>
 							${project.basedir}/src/main/resources/filtroOrdenes.xsd</source>
 					</sources>
 				</configuration>
