@@ -143,7 +143,7 @@ public class CatalogoService {
 		return catalogoRepository.save(catalogo);
 	}
 
-	public Catalogo updateCatalogo(Long id, Catalogo catalogo, String username) {
+	public Catalogo updateCatalogo(Long id, CatalogoDTO catalogoDTO, String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
 
@@ -161,7 +161,21 @@ public class CatalogoService {
 			throw new UnauthorizedException("El usuario no tiene permisos para actualizar este catálogo.");
 		}
 
-		catalogoExistente.setNombre(catalogo.getNombre());
+		catalogoExistente.setNombre(catalogoDTO.getNombre());
+
+		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+		for (Long productoId : catalogoDTO.getProductoIds()) {
+			Producto producto = productoRepository.findById(productoId)
+					.orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
+
+			CatalogoProducto catalogoProducto = new CatalogoProducto();
+			catalogoProducto.setCatalogo(catalogoExistente);
+			catalogoProducto.setProducto(producto);
+			catalogoProductos.add(catalogoProducto);
+		}
+
+		catalogoExistente.setCatalogoProductos(catalogoProductos);
+
 		return catalogoRepository.save(catalogoExistente);
 	}
 
