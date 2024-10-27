@@ -1,8 +1,10 @@
 package com.unla.stockearte.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unla.stockearte.dto.CatalogoDTO;
 import com.unla.stockearte.model.Catalogo;
+import com.unla.stockearte.model.CatalogoProducto;
+import com.unla.stockearte.model.Producto;
+import com.unla.stockearte.model.Tienda;
+import com.unla.stockearte.repository.ProductoRepository;
+import com.unla.stockearte.repository.TiendaRepository;
 import com.unla.stockearte.service.CatalogoService;
 
 @RestController
@@ -26,6 +34,12 @@ public class CatalogoController {
 
 	@Autowired
 	private CatalogoService catalogoService;
+
+	@Autowired
+	private TiendaRepository tiendaRepository;
+
+	@Autowired
+	private ProductoRepository productoRepository;
 
 	@GetMapping
 	public ResponseEntity<List<Catalogo>> getAllCatalogos(@RequestParam String username,
@@ -41,9 +55,29 @@ public class CatalogoController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	// TODO PODER ENVIARLE PRODUCTOS
 	@PostMapping
-	public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo, @RequestParam String username) {
+	public ResponseEntity<Catalogo> createCatalogo(@RequestBody CatalogoDTO catalogoDTO,
+			@RequestParam String username) {
+		Catalogo catalogo = new Catalogo();
+		catalogo.setNombre(catalogoDTO.getNombre());
+
+		Tienda tienda = tiendaRepository.findById(catalogoDTO.getTiendaId())
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada"));
+		catalogo.setTienda(tienda);
+
+		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+		for (Long productoId : catalogoDTO.getProductoIds()) {
+			Producto producto = productoRepository.findById(productoId)
+					.orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
+
+			CatalogoProducto catalogoProducto = new CatalogoProducto();
+			catalogoProducto.setCatalogo(catalogo);
+			catalogoProducto.setProducto(producto);
+			catalogoProductos.add(catalogoProducto);
+		}
+
+		catalogo.setCatalogoProductos(catalogoProductos);
+
 		Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo, username);
 		return new ResponseEntity<>(createdCatalogo, HttpStatus.CREATED);
 	}
@@ -72,6 +106,11 @@ public class CatalogoController {
 		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Catálogo no encontrado: " + e.getMessage());
 		}
+	}
+
+	@GetMapping("/{catalogoId}/productos")
+	public List<Producto> obtenerProductosPorCatalogo(@PathVariable Long catalogoId) {
+		return catalogoService.obtenerProductosPorCatalogo(catalogoId);
 	}
 
 }
