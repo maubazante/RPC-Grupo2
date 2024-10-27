@@ -720,7 +720,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Catálogo de Verano\",\r\n    \"tiendaId\": 1,\r\n    \"productoIds\": [1, 2, 3]\r\n}",
+							"raw": "{\r\n    \"nombre\": \"Catálogo para pdf\",\r\n    \"tiendaId\": 1,\r\n    \"productoIds\": [1, 3]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
