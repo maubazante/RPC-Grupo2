@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.helpers.Helper.UnauthorizedException;
 import com.unla.stockearte.model.Catalogo;
+import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.CatalogoRepository;
@@ -23,6 +24,10 @@ public class CatalogoService {
 
 	@Autowired
 	private CatalogoRepository catalogoRepository;
+
+	public List<Producto> obtenerProductosPorCatalogo(Long catalogoId) {
+		return catalogoRepository.findProductosByCatalogoId(catalogoId);
+	}
 
 	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
 	// traer todos!!!
@@ -43,11 +48,20 @@ public class CatalogoService {
 			throw new UnauthorizedException("El usuario no tiene permisos para ver los catálogos.");
 		}
 
+		List<Catalogo> catalogos;
+
 		if (tiendaId != null) {
-			return catalogoRepository.findByTienda_Id(tiendaId);
+			catalogos = catalogoRepository.findByTienda_Id(tiendaId);
+		} else {
+			catalogos = catalogoRepository.findAll();
 		}
 
-		return catalogoRepository.findAll();
+		// Aseguramos que los productos se carguen para cada catálogo
+		catalogos.forEach(catalogo -> {
+			catalogo.getProductos().size();
+		});
+
+		return catalogos;
 	}
 
 	public Optional<Catalogo> getCatalogoById(Long id, String username) {
