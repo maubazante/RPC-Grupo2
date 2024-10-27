@@ -640,7 +640,7 @@
 					"response": []
 				},
 				{
-					"name": "Traer catalogos por tienda",
+					"name": "Traer catalogo por ID",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -657,23 +657,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos?username=andresUsername&tiendaId=1",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"port": "{{portStockearte}}",
 							"path": [
 								"api",
-								"catalogos"
+								"catalogos",
+								"1"
 							],
 							"query": [
 								{
 									"key": "username",
 									"value": "andresUsername"
-								},
-								{
-									"key": "tiendaId",
-									"value": "1"
 								}
 							]
 						}
@@ -765,7 +762,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/exportar/pdf/1?username=andresUsername",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/exportar/pdf/4?username=andresUsername",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -775,7 +772,7 @@
 								"catalogos",
 								"exportar",
 								"pdf",
-								"1"
+								"4"
 							],
 							"query": [
 								{
