@@ -143,7 +143,7 @@ public class CatalogoService {
 		return catalogoRepository.save(catalogo);
 	}
 
-	public Catalogo updateCatalogo(Long id, Catalogo catalogo, String username) {
+	public Catalogo updateCatalogo(Long id, CatalogoDTO catalogoDTO, String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
 
@@ -161,7 +161,21 @@ public class CatalogoService {
 			throw new UnauthorizedException("El usuario no tiene permisos para actualizar este catálogo.");
 		}
 
-		catalogoExistente.setNombre(catalogo.getNombre());
+		catalogoExistente.setNombre(catalogoDTO.getNombre());
+
+		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+		for (Long productoId : catalogoDTO.getProductoIds()) {
+			Producto producto = productoRepository.findById(productoId)
+					.orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
+
+			CatalogoProducto catalogoProducto = new CatalogoProducto();
+			catalogoProducto.setCatalogo(catalogoExistente);
+			catalogoProducto.setProducto(producto);
+			catalogoProductos.add(catalogoProducto);
+		}
+
+		catalogoExistente.setCatalogoProductos(catalogoProductos);
+
 		return catalogoRepository.save(catalogoExistente);
 	}
 
@@ -195,7 +209,30 @@ public class CatalogoService {
 	public byte[] exportCatalogoPDF(Long id, String username) throws IOException {
 		Catalogo catalogo = getCatalogoById(id, username)
 				.orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
+
 		Tienda tienda = catalogo.getTienda();
+
+		Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
+
+		if (!usuario.isPresent()) {
+			throw new RuntimeException("Acceso denegado: el usuario no encontrado.");
+		}
+
+		Optional<Tienda> tiendaUsuarioOpt = tiendaRepository.findById(usuario.get().getTienda().getId());
+
+		if (!tiendaUsuarioOpt.isPresent()) {
+			throw new RuntimeException("Acceso denegado: la tienda del usuario no encontrada.");
+		}
+
+		Tienda tiendaUsuario = tiendaUsuarioOpt.get();
+
+		// Verificar si la tienda del usuario es la casa central o la misma tienda del
+		// catálogo
+		if (!isAuthorizedUser(username)
+				|| (!tiendaUsuario.getEsCasaCentral() && !tiendaUsuario.getId().equals(tienda.getId()))) {
+			throw new RuntimeException("Acceso denegado: el usuario no tiene permiso para acceder a este catálogo.");
+		}
+
 		List<Producto> productos = catalogo.getProductos();
 
 		// Crear la lista de contenidos para el PDF
