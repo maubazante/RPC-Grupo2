@@ -1,14 +1,16 @@
 package com.unla.stockearte.helpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.catalogos.CatalogoDTO;
+import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.ListCatalogoResponse;
-import com.example.catalogos.TiendaDTO;
 import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
 import com.example.filtroordenes.ObjectFactory;
 import com.unla.stockearte.model.Catalogo;
+import com.unla.stockearte.model.CatalogoProducto;
 import com.unla.stockearte.model.FiltroOrdenes;
 
 public class CatalogoHelper {
@@ -51,21 +53,20 @@ public class CatalogoHelper {
 	public static ListCatalogoResponse getCatalogosResponse(List<Catalogo> catalogos) {
 		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
 		ListCatalogoResponse listCatalogoResponse = new ListCatalogoResponse();
-
-		for (Catalogo c : catalogos) {
+		
+		for(Catalogo catalogo: catalogos) {
 			CatalogoDTO catalogoDTO = new CatalogoDTO();
-			catalogoDTO.setId(factory.createCatalogoDTOId(c.getId()));
-			catalogoDTO.setNombre(c.getNombre());
-			TiendaDTO tienda = new TiendaDTO();
-			tienda.setId(factory.createTiendaDTOId(c.getTienda().getId()));
-			tienda.setCiudad(c.getTienda().getCiudad());
-			tienda.setCodigo(c.getTienda().getCodigo());
-			tienda.setDireccion(c.getTienda().getDireccion());
-			tienda.setEsCasaCentral(c.getTienda().getEsCasaCentral());
-			tienda.setHabilitada(c.getTienda().getHabilitada());
-			tienda.setProvincia(c.getTienda().getProvincia());
-
-			catalogoDTO.setTienda(tienda);
+			ProductoIds productoIds = new ProductoIds();
+			catalogoDTO.setProductoIds(productoIds);
+			catalogoDTO.setId(factory.createCatalogoDTOId(catalogo.getId()));
+			catalogoDTO.setNombre(catalogo.getNombre());
+			catalogoDTO.setTiendaId(factory.createCatalogoDTOTiendaId(catalogo.getTienda().getId()));
+			
+			
+			for(CatalogoProducto catalogoProducto : catalogo.getCatalogoProductos()) {
+				catalogoDTO.getProductoIds().getProductoId().add(catalogoProducto.getProducto().getId());
+			}
+			
 			listCatalogoResponse.getCatalogos().add(catalogoDTO);
 		}
 

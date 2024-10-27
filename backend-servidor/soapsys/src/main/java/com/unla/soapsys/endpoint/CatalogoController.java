@@ -3,6 +3,7 @@ package com.unla.soapsys.endpoint;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +31,7 @@ import com.unla.soapsys.helper.Helper;
 import com.unla.soapsys.request.FiltroOrdenesRequest;
 import com.unla.soapsys.response.FiltroOrdenes;
 import com.unla.soapsys.response.Catalogo;
+import com.unla.soapsys.response.CatalogoDTOFronted;
 
 @RestController
 @RequestMapping("/api/catalogos")
@@ -37,22 +39,14 @@ import com.unla.soapsys.response.Catalogo;
 public class CatalogoController {
 	
 	@Autowired
+	@Qualifier("webServiceTemplateCatalogo")
     private WebServiceTemplate webServiceTemplate;
 
-	@PostMapping
-	public ResponseEntity<FiltroOrdenes> addFiltroOrdenes(@RequestBody FiltroOrdenesRequest request) throws Exception {
-		AddFiltroOrdenResponse addFiltroOrdenResponse = (AddFiltroOrdenResponse) webServiceTemplate.marshalSendAndReceive(Helper.crearAddFiltroOrdenesRequest(request));
-		FiltroOrdenes response = Helper.createFiltroOrdenesAtravesDeAddFiltroOrdenesRequest(addFiltroOrdenResponse);
-		return new ResponseEntity<FiltroOrdenes>(response, HttpStatus.CREATED);
-	}
 
-	
 	@GetMapping
-	public ResponseEntity<List<Catalogo>> getAllCatalogos(@RequestParam String username) {
-		ListCatalogoResponse listCatalogoResponse = (ListCatalogoResponse) webServiceTemplate.marshalSendAndReceive(username);
-		
-		
-		//return new ResponseEntity<>(catalogos, HttpStatus.OK);
-		return null;
+	public ResponseEntity<List<CatalogoDTOFronted>> getAllCatalogos(@RequestParam String username) {
+		ListCatalogoResponse listCatalogoResponse = (ListCatalogoResponse) webServiceTemplate.marshalSendAndReceive(CatalogoHelper.getCatalogosRequest(username));
+		List<CatalogoDTOFronted> resp = CatalogoHelper.getCatalogos(listCatalogoResponse);
+		return new ResponseEntity<List<CatalogoDTOFronted>>(resp, HttpStatus.OK);
 	}
 }
