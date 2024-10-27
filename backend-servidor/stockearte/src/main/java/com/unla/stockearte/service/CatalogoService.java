@@ -1,19 +1,27 @@
 package com.unla.stockearte.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.unla.stockearte.helpers.Helper;
+import com.unla.stockearte.dto.CatalogoDTO;
+import com.unla.stockearte.helpers.ContenidoPDF;
 import com.unla.stockearte.helpers.Helper.UnauthorizedException;
+import com.unla.stockearte.helpers.HelperPDF;
 import com.unla.stockearte.model.Catalogo;
+import com.unla.stockearte.model.CatalogoProducto;
 import com.unla.stockearte.model.Producto;
 import com.unla.stockearte.model.Rol;
+import com.unla.stockearte.model.Tienda;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.CatalogoRepository;
+import com.unla.stockearte.repository.ProductoRepository;
+import com.unla.stockearte.repository.TiendaRepository;
 import com.unla.stockearte.repository.UsuarioRepository;
 
 @Service
@@ -24,6 +32,12 @@ public class CatalogoService {
 
 	@Autowired
 	private CatalogoRepository catalogoRepository;
+
+	@Autowired
+	private TiendaRepository tiendaRepository;
+
+	@Autowired
+	private ProductoRepository productoRepository;
 
 	public List<Producto> obtenerProductosPorCatalogo(Long catalogoId) {
 		return catalogoRepository.findProductosByCatalogoId(catalogoId);
@@ -71,10 +85,30 @@ public class CatalogoService {
 		return catalogoRepository.findById(id);
 	}
 
-	public Catalogo createCatalogo(Catalogo catalogo, String username) {
+	public Catalogo createCatalogo(CatalogoDTO catalogoDTO, String username) {
 		if (!isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para crear el catálogo.");
 		}
+
+		Catalogo catalogo = new Catalogo();
+		catalogo.setNombre(catalogoDTO.getNombre());
+
+		Tienda tienda = tiendaRepository.findById(catalogoDTO.getTiendaId())
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada"));
+		catalogo.setTienda(tienda);
+
+		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+		for (Long productoId : catalogoDTO.getProductoIds()) {
+			Producto producto = productoRepository.findById(productoId)
+					.orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
+
+			CatalogoProducto catalogoProducto = new CatalogoProducto();
+			catalogoProducto.setCatalogo(catalogo);
+			catalogoProducto.setProducto(producto);
+			catalogoProductos.add(catalogoProducto);
+		}
+
+		catalogo.setCatalogoProductos(catalogoProductos);
 		return catalogoRepository.save(catalogo);
 	}
 
@@ -101,9 +135,23 @@ public class CatalogoService {
 	public byte[] exportCatalogoPDF(Long id, String username) throws IOException {
 		Catalogo catalogo = getCatalogoById(id, username)
 				.orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
+		Tienda tienda = catalogo.getTienda();
+		List<Producto> productos = catalogo.getProductos();
 
-		String contenido = "Catálogo: " + catalogo.getNombre();
+		// Crear la lista de contenidos para el PDF
+		List<ContenidoPDF> contenidos = new ArrayList<>();
+		contenidos.add(new ContenidoPDF("Catálogo: " + catalogo.getNombre(), null));
+		contenidos
+				.add(new ContenidoPDF("Tienda: " + tienda.getCodigo() + "\nDirección: " + tienda.getDireccion(), null));
 
-		return Helper.generarPDF(contenido);
+		for (Producto producto : productos) {
+			String detallesProducto = String.format("%s, %s. Talle %s", producto.getCodigo(), producto.getNombre(),
+					producto.getTalle());
+
+			contenidos.add(new ContenidoPDF(detallesProducto, producto.getFoto()));
+		}
+
+		return HelperPDF.generarPDF(contenidos);
 	}
+
 }
