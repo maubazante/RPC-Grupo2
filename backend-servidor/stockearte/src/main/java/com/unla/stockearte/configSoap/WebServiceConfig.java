@@ -16,25 +16,40 @@ import org.springframework.xml.xsd.XsdSchema;
 public class WebServiceConfig {
 
 	@Bean
-    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext context) {
-        MessageDispatcherServlet servlet = new MessageDispatcherServlet();
-        servlet.setApplicationContext(context);
-        servlet.setTransformWsdlLocations(true);
-        return new ServletRegistrationBean<>(servlet, "/ws/*");
-    }
+	public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext context) {
+		MessageDispatcherServlet servlet = new MessageDispatcherServlet();
+		servlet.setApplicationContext(context);
+		servlet.setTransformWsdlLocations(true);
+		return new ServletRegistrationBean<>(servlet, "/ws/*");
+	}
 
-    @Bean(name = "filtroOrdenes")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema filtroOrdenesSchema) {
-        DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("FiltroOrdenesPort");
-        wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://example.com/filtroordenes");
-        wsdl11Definition.setSchema(filtroOrdenesSchema);
-        return wsdl11Definition;
-    }
+	@Bean(name = "filtroOrdenes")
+	public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema filtroOrdenesSchema) {
+		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+		wsdl11Definition.setPortTypeName("FiltroOrdenesPort");
+		wsdl11Definition.setLocationUri("/ws");
+		wsdl11Definition.setTargetNamespace("http://example.com/filtroordenes");
+		wsdl11Definition.setSchema(filtroOrdenesSchema);
+		return wsdl11Definition;
+	}
 
-    @Bean
-    public XsdSchema filtroOrdenesdSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("filtroOrdenes.xsd"));
-    }
+	@Bean
+	public XsdSchema filtroOrdenesdSchema() {
+		return new SimpleXsdSchema(new ClassPathResource("filtroOrdenes.xsd"));
+	}
+
+	@Bean(name = "catalogos")
+	public DefaultWsdl11Definition catalogosDefinition(XsdSchema catalogosSchema) {
+		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+		wsdl11Definition.setPortTypeName("catalogosPort");
+		wsdl11Definition.setLocationUri("/ws");
+		wsdl11Definition.setTargetNamespace("http://example.com/catalogos");
+		wsdl11Definition.setSchema(catalogosSchema);
+		return wsdl11Definition;
+	}
+
+	@Bean
+	public XsdSchema catalogosSchema() {
+		return new SimpleXsdSchema(new ClassPathResource("catalogos.xsd"));
+	}
 }
