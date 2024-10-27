@@ -13,6 +13,9 @@ import com.example.filtroordenes.UpdateFiltroOrdenRequest;
 import com.example.filtroordenes.UpdateFiltroOrdenResponse;
 import com.unla.stockearte.model.FiltroOrdenes;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 public class Helper {
 
 	private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -130,5 +133,12 @@ public class Helper {
 		filtroOrdenes.setId(request.getId().getValue());
 		
 		return filtroOrdenes;
+	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public static class UnauthorizedException extends RuntimeException {
+		public UnauthorizedException(String message) {
+			super(message);
+		}
 	}
 }

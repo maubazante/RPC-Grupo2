@@ -139,6 +139,37 @@ CREATE TABLE novedades (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- Tabla para los catálogos
+CREATE TABLE IF NOT EXISTS stockearte.catalogos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,  -- Nombre del catálogo, e.g., "Remeras", "Calzados"
+  fk_tienda_id BIGINT NOT NULL,  -- Referencia a la tienda
+  PRIMARY KEY (id),
+  CONSTRAINT fk_catalogo_tienda
+    FOREIGN KEY (fk_tienda_id)
+    REFERENCES stockearte.tiendas (id)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+-- Tabla de relación catálogo-productos
+CREATE TABLE IF NOT EXISTS stockearte.catalogo_productos (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  fk_catalogo_id BIGINT NOT NULL,
+  fk_producto_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_catalogo_producto_catalogo
+    FOREIGN KEY (fk_catalogo_id)
+    REFERENCES stockearte.catalogos (id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_catalogo_producto_producto
+    FOREIGN KEY (fk_producto_id)
+    REFERENCES stockearte.productos (id)
+    ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
 -- Índices adicionales para optimización de búsqueda
 CREATE INDEX idx_estado ON orden_de_compra (estado);
 
@@ -299,3 +330,16 @@ SET @producto_id = LAST_INSERT_ID();
 INSERT INTO stock (fk_tienda_id, fk_producto_id, stock) 
 VALUES (2, @producto_id, 15);
 
+-- Insertar datos iniciales para la tabla catalogos
+INSERT INTO stockearte.catalogos (nombre, fk_tienda_id)
+VALUES 
+('Verano 2024', (SELECT id FROM stockearte.tiendas WHERE codigo = 'T001')),
+('Otoño 2024', (SELECT id FROM stockearte.tiendas WHERE codigo = 'T002'));
+
+-- Insertar datos de prueba para la tabla catalogo_productos
+INSERT INTO stockearte.catalogo_productos (fk_catalogo_id, fk_producto_id)
+VALUES 
+((SELECT id FROM stockearte.catalogos WHERE nombre = 'Verano 2024'), (SELECT id FROM stockearte.productos WHERE codigo = 'CMD016')), -- Camiseta Deportiva
+((SELECT id FROM stockearte.catalogos WHERE nombre = 'Verano 2024'), (SELECT id FROM stockearte.productos WHERE codigo = 'RMB001')), -- Remera básica
+((SELECT id FROM stockearte.catalogos WHERE nombre = 'Otoño 2024'), (SELECT id FROM stockearte.productos WHERE codigo = 'PTJ002')), -- Pantalón jeans
+((SELECT id FROM stockearte.catalogos WHERE nombre = 'Otoño 2024'), (SELECT id FROM stockearte.productos WHERE codigo = 'CMP003')); -- Campera abrigo

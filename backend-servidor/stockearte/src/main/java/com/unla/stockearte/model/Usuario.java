@@ -76,6 +76,15 @@ public class Usuario {
 		this.rol = rol;
 		this.tienda = tienda;
 	}
+    public Usuario(String username, String password, String nombre, String apellido, Rol rol, Tienda tienda) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.habilitado = true; // o según tu lógica
+        this.rol = rol;
+        this.tienda = tienda;
+    }	
 
 	public Usuario() {
 		super();

@@ -1,6 +1,11 @@
 package com.unla.stockearte.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -9,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.unla.stockearte.model.Rol;
 import com.unla.stockearte.model.Tienda;
@@ -271,5 +277,77 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
 	}
+    public List<String> procesarArchivoCSV(MultipartFile archivo) throws IOException {
+        List<String> errores = new ArrayList<>();
+        List<Usuario> usuariosARegistrar = new ArrayList<>();
 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(archivo.getInputStream()))) {
+            String linea;
+            int numeroLinea = 1;
+
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(";");
+
+                if (datos.length != 5) {
+                    errores.add("Línea " + numeroLinea + ": Formato incorrecto.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                String username = datos[0];
+                String password = datos[1];
+                String nombre = datos[2];
+                String apellido = datos[3];
+                Long codigoTienda;
+
+                // Validar que los campos no estén vacíos
+                if (username.isEmpty() || password.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || datos[4].isEmpty()) {
+                    errores.add("Línea " + numeroLinea + ": Campos vacíos.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                try {
+                    codigoTienda = Long.parseLong(datos[4]);
+                } catch (NumberFormatException e) {
+                    errores.add("Línea " + numeroLinea + ": Código de tienda inválido.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                // Validar duplicidad del usuario
+                if (usuarioRepository.findByUsername(username).isPresent()) {
+                    errores.add("Línea " + numeroLinea + ": Usuario duplicado.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                // Validar existencia y estado de la tienda
+                Tienda tienda = tiendaRepository.findById(codigoTienda).orElse(null);
+                if (tienda == null) {
+                    errores.add("Línea " + numeroLinea + ": Código de tienda no encontrado.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                if (!tienda.isHabilitada()) {
+                    errores.add("Línea " + numeroLinea + ": La tienda está deshabilitada.");
+                    numeroLinea++;
+                    continue;
+                }
+
+                // Crear usuario y agregar a la lista
+                Usuario usuario = new Usuario(username, password, nombre, apellido, Rol.STOREMANAGER, tienda);
+                usuariosARegistrar.add(usuario);
+
+                numeroLinea++;
+            }
+        }
+
+        // Guardar los usuarios válidos en la base de datos
+        usuarioRepository.saveAll(usuariosARegistrar);
+
+        return errores;
+    }
 }
+
