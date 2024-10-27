@@ -1,20 +1,23 @@
 package com.unla.soapsys.response;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
 public class CatalogoProducto {
 
 	private Long id;
 
 	private Catalogo catalogo;
-	
+
 	private Producto producto;
+
+	public CatalogoProducto() {
+		super();
+	}
+
+	public CatalogoProducto(Long id, Catalogo catalogo, Producto producto) {
+		super();
+		this.id = id;
+		this.catalogo = catalogo;
+		this.producto = producto;
+	}
 
 	public Long getId() {
 		return id;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.filtroordenes.AddFiltroOrdenResponse;
-import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
 import com.example.filtroordenes.ListFiltroOrdenesResponse;

@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.catalogos.CatalogoDTO;
+import com.example.catalogos.CatalogoDTO.ProductoIds;
+import com.example.catalogos.CrearCatalogoRequest;
+import com.example.catalogos.CrearCatalogoResponse;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ObjectFactory;
 import com.example.catalogos.ObtenerProductoPorCatalogoRequest;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
 import com.example.catalogos.ProductoDTO;
+import com.unla.soapsys.response.Catalogo;
 import com.unla.soapsys.response.CatalogoDTOFronted;
 import com.unla.soapsys.response.Producto;
 
@@ -63,6 +67,32 @@ public class CatalogoHelper {
 			list.add(newProducto);
 		}
 		return list;
+	}
+	
+	public static CrearCatalogoRequest crearCatalogoRequest(com.unla.soapsys.response.CatalogoDTO catalogo, String username) {
+		ObjectFactory factory = new ObjectFactory();
+		CrearCatalogoRequest request = new CrearCatalogoRequest();
+		CatalogoDTO catalogoDTO = new CatalogoDTO();
+		catalogoDTO.setNombre(catalogo.getNombre());
+		catalogoDTO.setTiendaId(factory.createCatalogoDTOTiendaId(catalogo.getTiendaId()));
+		catalogoDTO.setUserName(username);
+		
+		ProductoIds productoIds = new ProductoIds();
+		for(Long productoId : catalogo.getProductoIds()) {
+			productoIds.getProductoId().add(productoId);
+		}
+		catalogoDTO.setProductoIds(productoIds);
+		
+		
+		request.setCatalogo(catalogoDTO);
+		return request;
+	}
+	
+	public static Catalogo crearCatalogo(CrearCatalogoResponse catalogoResponse) {
+		Catalogo catalogo = new Catalogo();
+		catalogo.setId(catalogoResponse.getCatalogo().getId().getValue());
+		catalogo.setNombre(catalogoResponse.getCatalogo().getNombre());
+		return catalogo;
 	}
 
 }

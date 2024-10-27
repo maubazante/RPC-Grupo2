@@ -8,6 +8,8 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import com.example.catalogos.CrearCatalogoRequest;
+import com.example.catalogos.CrearCatalogoResponse;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ObtenerProductoPorCatalogoRequest;
@@ -40,6 +42,14 @@ public class CatalogoEndpoint {
 		List<Producto> productos = catalogoService.obtenerProductosPorCatalogo(request.getCatalogId().getValue());
 
 		ObtenerProductoPorCatalogoResponse response = CatalogoHelper.productosToObtenerProductoPorCatalogoResponse(productos);
+		return response;
+	}
+	
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "CrearCatalogoRequest")
+	@ResponsePayload
+	public CrearCatalogoResponse crearCatalogo(@RequestPayload CrearCatalogoRequest request) throws Exception {
+		Catalogo catalogo = catalogoService.createCatalogo(CatalogoHelper.catalogoCreateRequestToCatalogo(request), request.getCatalogo().getUserName());
+		CrearCatalogoResponse response = CatalogoHelper.crearCatalogoResponse(catalogo);
 		return response;
 	}
 

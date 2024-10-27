@@ -1,5 +1,6 @@
 package com.unla.soapsys.response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,19 @@ public class Catalogo {
 
 	private Tienda tienda;
 
-	private List<CatalogoProducto> catalogoProductos;
+	private List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+
+	public Catalogo() {
+		super();
+	}
+
+	public Catalogo(Long id, String nombre, Tienda tienda, List<CatalogoProducto> catalogoProductos) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.tienda = tienda;
+		this.catalogoProductos = new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;

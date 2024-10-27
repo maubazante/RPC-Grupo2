@@ -5,53 +5,17 @@ import java.util.List;
 
 import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
+import com.example.catalogos.CrearCatalogoRequest;
+import com.example.catalogos.CrearCatalogoResponse;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
 import com.example.catalogos.ProductoDTO;
-import com.example.filtroordenes.FiltroOrdenesDTO;
-import com.example.filtroordenes.GetFiltroOrdenResponse;
-import com.example.filtroordenes.ObjectFactory;
 import com.unla.stockearte.model.Catalogo;
 import com.unla.stockearte.model.CatalogoProducto;
-import com.unla.stockearte.model.FiltroOrdenes;
 import com.unla.stockearte.model.Producto;
 
 public class CatalogoHelper {
 
-	/**
-	 * Helper para crear un FiltroOrdenesDTO a partir de un objeto FiltroOrdenes
-	 * 
-	 * @param entity {@code FiltroOrdenes}
-	 * @return {@code FiltroOrdenesDTO}
-	 */
-	public static FiltroOrdenesDTO filtroOrdenesToSoapDTO(FiltroOrdenes entity) {
-		ObjectFactory factory = new ObjectFactory();
-		FiltroOrdenesDTO filtroOrdenesDTO = new FiltroOrdenesDTO();
-		filtroOrdenesDTO.setFiltroEstado(factory.createFiltroOrdenesDTOFiltroEstado(entity.getFiltroEstado()));
-		filtroOrdenesDTO.setFiltroFecha(factory.createFiltroOrdenesDTOFiltroFecha(entity.getFiltroFecha()));
-		filtroOrdenesDTO.setFiltroProducto(factory.createFiltroOrdenesDTOFiltroProducto(entity.getFiltroProducto()));
-		filtroOrdenesDTO.setFiltroTienda(factory.createFiltroOrdenesDTOFiltroTienda(entity.getFiltroTienda()));
-		filtroOrdenesDTO.setFkUsuariosId(factory.createFiltroOrdenesDTOFkUsuariosId(entity.getFkUsuariosId()));
-		filtroOrdenesDTO.setId(factory.createFiltroOrdenesDTOId(entity.getId()));
-		filtroOrdenesDTO.setNombre(entity.getNombre());
-
-		return filtroOrdenesDTO;
-	}
-
-	/**
-	 * Helper para crear un GetFiltroOrdenResponse a partir de un FiltroOrdenes
-	 * 
-	 * @param filtroOrden {@code FiltroOrdenes}
-	 * @return {@code GetFiltroOrdenResponse}
-	 */
-	public static GetFiltroOrdenResponse crearGetFiltroResponse(FiltroOrdenes filtroOrden) {
-		ObjectFactory factory = new ObjectFactory();
-		GetFiltroOrdenResponse getFiltroOrdenResponse = new GetFiltroOrdenResponse();
-		FiltroOrdenesDTO filtroOrdenesDTO = filtroOrdenesToSoapDTO(filtroOrden);
-		getFiltroOrdenResponse.setFiltroOrdenes(factory.createGetFiltroOrdenResponseFiltroOrdenes(filtroOrdenesDTO));
-
-		return getFiltroOrdenResponse;
-	}
 
 	public static ListCatalogoResponse getCatalogosResponse(List<Catalogo> catalogos) {
 		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
@@ -94,6 +58,26 @@ public class CatalogoHelper {
 			obtenerProductoPorCatalogoResponse.getProductos().add(productoDTO);
 		}
 		return obtenerProductoPorCatalogoResponse;
+	}
+	
+	public static com.unla.stockearte.dto.CatalogoDTO catalogoCreateRequestToCatalogo(CrearCatalogoRequest request) {
+		com.unla.stockearte.dto.CatalogoDTO catalogo = new com.unla.stockearte.dto.CatalogoDTO();
+		catalogo.setNombre(request.getCatalogo().getNombre());
+		catalogo.setTiendaId(request.getCatalogo().getTiendaId().getValue());
+		catalogo.setProductoIds(request.getCatalogo().getProductoIds().getProductoId());
+		return catalogo;
+	}
+	
+	public static CrearCatalogoResponse crearCatalogoResponse(Catalogo catalogo) {
+		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
+		CrearCatalogoResponse catagaloResponse = new CrearCatalogoResponse();
+		CatalogoDTO catalogoDTO = new CatalogoDTO();
+		catalogoDTO.setNombre(catalogo.getNombre());
+		catalogoDTO.setTiendaId(factory.createCatalogoDTOTiendaId(catalogo.getTienda().getId()));
+		catalogoDTO.setId(factory.createCatalogoDTOId(catalogo.getId()));
+		
+		catagaloResponse.setCatalogo(catalogoDTO);
+		return catagaloResponse;
 	}
 
 }
