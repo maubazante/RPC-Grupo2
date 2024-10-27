@@ -1,12 +1,18 @@
 package com.unla.stockearte.model;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +29,9 @@ public class Catalogo {
 	@ManyToOne
 	@JoinColumn(name = "fk_tienda_id", nullable = false)
 	private Tienda tienda;
+
+	@OneToMany(mappedBy = "catalogo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<CatalogoProducto> catalogoProductos;
 
 	public Long getId() {
 		return id;
@@ -48,9 +57,18 @@ public class Catalogo {
 		this.tienda = tienda;
 	}
 
+	public List<Producto> getProductos() {
+		return catalogoProductos.stream().map(CatalogoProducto::getProducto).collect(Collectors.toList());
+	}
+
+	public void setCatalogoProductos(List<CatalogoProducto> catalogoProductos) {
+		this.catalogoProductos = catalogoProductos;
+	}
+
 	@Override
 	public String toString() {
-		return "Catalogo [id=" + id + ", nombre=" + nombre + ", tienda=" + tienda + "]";
+		return "Catalogo [id=" + id + ", nombre=" + nombre + ", tienda=" + tienda + ", catalogoProductos="
+				+ catalogoProductos + "]";
 	}
 
 }
