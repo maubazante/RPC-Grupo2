@@ -3,6 +3,8 @@ package com.unla.stockearte.helpers;
 import java.security.SecureRandom;
 import java.util.List;
 
+import com.example.filtroordenes.AddFiltroOrdenResponse;
+import com.example.filtroordenes.AddFiltroOrdenesRequest;
 import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
 import com.example.filtroordenes.FiltroOrdenesList;
@@ -133,6 +135,37 @@ public class Helper {
 		filtroOrdenes.setId(request.getId().getValue());
 		
 		return filtroOrdenes;
+	}
+	
+	public static FiltroOrdenes crearFiltroOrdenesATravesAddFiltroRequest(AddFiltroOrdenesRequest request) {
+		FiltroOrdenes filtroOrdenes = new FiltroOrdenes();
+		filtroOrdenes.setFiltroEstado(request.getFiltroEstado().getValue());
+		filtroOrdenes.setFiltroFecha(request.getFiltroFecha().getValue());
+		filtroOrdenes.setFiltroProducto(request.getFiltroProducto().getValue());
+		filtroOrdenes.setFiltroTienda(request.getFiltroTienda().getValue());
+		filtroOrdenes.setFkUsuariosId(request.getUserId().getValue());
+		filtroOrdenes.setId(request.getId().getValue());
+		filtroOrdenes.setNombre(request.getNombre());
+		
+		return filtroOrdenes;
+	}
+	
+	public static AddFiltroOrdenResponse crearAddFiltroOrdenResponse(FiltroOrdenes filtroOrdenes) {
+		AddFiltroOrdenResponse addFiltroOrdenResponse = new AddFiltroOrdenResponse();
+		
+		ObjectFactory factory = new ObjectFactory();
+		FiltroOrdenesDTO filtroOrdenesDTO = new FiltroOrdenesDTO();
+		filtroOrdenesDTO.setFiltroEstado(factory.createFiltroOrdenesDTOFiltroEstado(filtroOrdenes.getFiltroEstado()));
+		filtroOrdenesDTO.setFiltroFecha(factory.createFiltroOrdenesDTOFiltroFecha(filtroOrdenes.getFiltroFecha()));
+		filtroOrdenesDTO.setFiltroProducto(factory.createFiltroOrdenesDTOFiltroProducto(filtroOrdenes.getFiltroProducto()));
+		filtroOrdenesDTO.setFiltroTienda(factory.createFiltroOrdenesDTOFiltroTienda(filtroOrdenes.getFiltroTienda()));
+		filtroOrdenesDTO.setFkUsuariosId(factory.createFiltroOrdenesDTOFkUsuariosId(filtroOrdenes.getFkUsuariosId()));
+		filtroOrdenesDTO.setId(factory.createFiltroOrdenesDTOId(filtroOrdenes.getId()));
+		filtroOrdenesDTO.setNombre(filtroOrdenes.getNombre());
+		
+		addFiltroOrdenResponse.setFiltroOrdenes(factory.createAddFiltroOrdenResponseFiltroOrdenes(filtroOrdenesDTO));
+		
+		return addFiltroOrdenResponse;
 	}
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)

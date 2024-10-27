@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.filtroordenes.FiltroOrdenesRequest;
 import com.unla.stockearte.model.FiltroOrdenes;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.FiltroOrdenesRepository;
@@ -27,18 +26,18 @@ public class FiltroOrdenesService {
 	
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
-	public FiltroOrdenes crearFiltroOrdenes(FiltroOrdenesRequest filtro) throws Exception {
+	public FiltroOrdenes crearFiltroOrdenes(FiltroOrdenes filtro) throws Exception {
 		try {
 			FiltroOrdenes entity = new FiltroOrdenes();
 			entity.setNombre(filtro.getNombre());
-			entity.setFiltroProducto(filtro.getFiltroProducto().getValue());
-			entity.setFiltroFecha(filtro.getFiltroFecha().getValue());
-			entity.setFiltroEstado(filtro.getFiltroEstado().getValue());
-			entity.setFiltroTienda(filtro.getFiltroTienda().getValue());
+			entity.setFiltroProducto(filtro.getFiltroProducto());
+			entity.setFiltroFecha(filtro.getFiltroFecha());
+			entity.setFiltroEstado(filtro.getFiltroEstado());
+			entity.setFiltroTienda(filtro.getFiltroTienda());
 			
-			Optional<Usuario> user = usuarioRepository.findById(filtro.getUserId().getValue());
+			Optional<Usuario> user = usuarioRepository.findById(filtro.getFkUsuariosId());
 			if(user.isPresent()) {
-				entity.setFkUsuariosId(filtro.getUserId().getValue());
+				entity.setFkUsuariosId(filtro.getFkUsuariosId());
 				return filtroOrdenesRepository.save(entity);
 			}else {
 				throw new Exception("Se necesita un usuario para asignarle un filtro");				

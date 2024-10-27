@@ -9,10 +9,10 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import com.example.filtroordenes.FiltroOrdenesDTO;
+import com.example.filtroordenes.AddFiltroOrdenResponse;
+import com.example.filtroordenes.AddFiltroOrdenesRequest;
 import com.example.filtroordenes.FiltroOrdenesDeleteRequest;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
-import com.example.filtroordenes.FiltroOrdenesRequest;
 import com.example.filtroordenes.GetFiltroOrdenRequest;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
 import com.example.filtroordenes.ListFiltroOrdenesRequest;
@@ -32,11 +32,11 @@ public class FiltroOrdenesEndpoint {
 	@Qualifier(FiltroOrdenesService.BEAN_NAME)
 	FiltroOrdenesService filtroService;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "FiltroOrdenesRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "AddFiltroOrdenesRequest")
     @ResponsePayload
-    public FiltroOrdenesDTO addFiltroOrdenes(@RequestPayload FiltroOrdenesRequest request) throws Exception {
-    	FiltroOrdenesDTO filtroOrden =  Helper.filtroOrdenesToSoapDTO(filtroService.crearFiltroOrdenes(request));
-    	return filtroOrden;
+    public AddFiltroOrdenResponse addFiltroOrdenes(@RequestPayload AddFiltroOrdenesRequest request) throws Exception {
+    	AddFiltroOrdenResponse response = Helper.crearAddFiltroOrdenResponse(filtroService.crearFiltroOrdenes(Helper.crearFiltroOrdenesATravesAddFiltroRequest(request)));
+    	return response;
     }
     
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "FiltroOrdenesDeleteRequest")

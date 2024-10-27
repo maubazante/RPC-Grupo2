@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
+import com.example.filtroordenes.AddFiltroOrdenResponse;
 import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
@@ -35,8 +36,8 @@ public class StockearteController {
 
 	@PostMapping
 	public ResponseEntity<FiltroOrdenes> addFiltroOrdenes(@RequestBody FiltroOrdenesRequest request) throws Exception {
-		FiltroOrdenesDTO filtroOrden = (FiltroOrdenesDTO) webServiceTemplate.marshalSendAndReceive(Helper.filtroOrdenesRequestToSoapRequest(request));
-		FiltroOrdenes response = Helper.filtroOrdenesDTOToFiltroOrdenes(filtroOrden);
+		AddFiltroOrdenResponse addFiltroOrdenResponse = (AddFiltroOrdenResponse) webServiceTemplate.marshalSendAndReceive(Helper.crearAddFiltroOrdenesRequest(request));
+		FiltroOrdenes response = Helper.createFiltroOrdenesAtravesDeAddFiltroOrdenesRequest(addFiltroOrdenResponse);
 		return new ResponseEntity<FiltroOrdenes>(response, HttpStatus.CREATED);
 	}
 
