@@ -791,7 +791,42 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Catalogo Actualizado\",\r\n    \"tienda\": {\r\n        \"id\": 1\r\n    }\r\n}\r\n",
+							"raw": "{\r\n    \"nombre\": \"Nuevo Nombre del Catálogo\",\r\n    \"productoIds\": [1, 2]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1?username=andresUsername",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos",
+								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Catalogo Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nuevo Nombre del Catálogo\",\r\n    \"productoIds\": [1, 2]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
