@@ -1,96 +1,63 @@
 <div class="table-container">
-    <div class="content-container">
-      <div class="add-search">
-        <button mat-button *ngIf="isAdmin" (click)="createCatalog()"><mat-icon>add</mat-icon>Agregar catálogo</button>
-      <mat-form-field class="search-field" appearance="outline" [style.width.px]=500>
+  <div class="content-container">
+    <div class="add-search">
+      <button mat-button (click)="createCatalog()">
+        <mat-icon>add</mat-icon> Agregar catálogo
+      </button>
+      
+      <mat-form-field class="search-field" appearance="outline" style="width: 500px;">
         <mat-icon matPrefix>search</mat-icon>
-        <input matInput placeholder="Buscar" (input)="onSearchChange($event)"  />
+        <input matInput placeholder="Buscar" (input)="onSearchChange($event)" />
         <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-  
-      </div>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
-  
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> ID </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.id}} </td>
-        </ng-container>
-  
-        <!-- Nombre Column -->
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef> Nombre </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.nombre}} </td>
-        </ng-container>
-  
-        <!-- Código Column -->
-        <ng-container matColumnDef="codigo">
-          <th mat-header-cell *matHeaderCellDef> Código </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.codigo}} </td>
-        </ng-container>
-  
-        <!-- Color Column -->
-        <ng-container matColumnDef="color">
-          <th mat-header-cell *matHeaderCellDef> Color </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.color}} </td>
-        </ng-container>
-  
-        <!-- Talle Column -->
-        <ng-container matColumnDef="talle">
-          <th mat-header-cell *matHeaderCellDef> Talle </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.talle}} </td>
-        </ng-container>
-  
-        <!-- Habilitado Column -->
-        <ng-container matColumnDef="habilitado">
-          <th mat-header-cell *matHeaderCellDef> Habilitado </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.habilitado ? 'Sí' : 'No'}} </td>
-        </ng-container>
-  
-        <!-- Cantidad Column -->
-        <ng-container matColumnDef="cantidad">
-          <th mat-header-cell *matHeaderCellDef> Cantidad </th>
-          <td mat-cell *matCellDef="let producto"> {{producto.cantidad == 0 ? 'Sin stock' : producto.cantidad}} </td>
-        </ng-container>
-  
-        <!-- Foto Column -->
-        <ng-container matColumnDef="foto">
-          <th mat-header-cell *matHeaderCellDef class="foto-header">Foto</th>
-          <td mat-cell *matCellDef="let producto">
-            <img [src]="producto.foto" alt="{{producto.nombre}}" width="50" height="50" class="imagen"
-              *ngIf="producto.foto; else noImage" />
-            <ng-template #noImage>
-              <span>No hay imagen</span>
-            </ng-template>
-          </td>
-        </ng-container>
-  
-        <!-- Edit Column -->
-        <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let producto">
-            <button mat-icon-button >
-              <mat-icon>edit</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-  
-        <!-- Erase Column -->
-        <ng-container matColumnDef="erase">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let producto">
-            <button mat-icon-button >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-  
-        <!-- Header Row -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <!-- Data Rows -->
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
     </div>
+
+    <!-- Tabla de catálogos -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- Columnas -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let catalog"> {{ catalog.id }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let catalog"> {{ catalog.nombre }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="export">
+        <th mat-header-cell *matHeaderCellDef> Exportar </th>
+        <td mat-cell *matCellDef="let catalog">
+          <button mat-icon-button (click)="exportCatalogToPDF(catalog.id)">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Acciones de edición y eliminación -->
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let catalog">
+          <button mat-icon-button (click)="editCatalog(catalog)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="erase">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let catalog">
+          <button mat-icon-button (click)="deleteCatalog(catalog.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header Row y Data Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>
+</div>

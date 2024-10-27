@@ -4,7 +4,7 @@
       <!-- Selector de perfil de filtro -->
       <mat-form-field appearance="outline">
         <mat-label>Perfil de Filtro</mat-label>
-        <mat-select [(ngModel)]="selectedFiltro" (selectionChange)="applyFiltro">
+        <mat-select [(ngModel)]="selectedFiltro" (selectionChange)="applyFiltro()">
           <mat-option *ngFor="let profile of filtros" [value]="profile">{{ profile.nombre }}</mat-option>
           <mat-option value="new">+ Nuevo</mat-option>
         </mat-select>

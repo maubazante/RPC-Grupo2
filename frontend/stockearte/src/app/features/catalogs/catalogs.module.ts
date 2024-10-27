@@ -13,9 +13,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
+import { CatalogsRoutingModule } from './catalogs-routing.module';
 import { CatalogsFormComponent } from './catalogs-form/catalogs-form.component';
 import { CatalogsListComponent } from './catalogs-list/catalogs-list.component';
-import { CatalogsRoutingModule } from './catalogs-routing.module';
+import { MatListModule } from '@angular/material/list';
 
 
 
@@ -36,6 +38,7 @@ import { CatalogsRoutingModule } from './catalogs-routing.module';
     MatInputModule,
     MatTooltipModule,
     MatSlideToggleModule,
+    MatListModule,
     MatIconModule,
     FormsModule
   ],
