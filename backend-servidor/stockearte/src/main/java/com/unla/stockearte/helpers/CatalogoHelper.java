@@ -48,12 +48,12 @@ public class CatalogoHelper {
 	}
 
 	public static ListCatalogoResponse getCatalogosResponse(List<Catalogo> catalogos) {
-		ObjectFactory factory = new ObjectFactory();
+		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
 		ListCatalogoResponse listCatalogoResponse = new ListCatalogoResponse();
 
 		for (Catalogo c : catalogos) {
 			CatalogoDTO catalogoDTO = new CatalogoDTO();
-			/// catalogoDTO.setId(c.getId());
+			catalogoDTO.setId(factory.createCatalogoDTOId(c.getId()));
 		}
 		// return getFiltroOrdenResponse;
 		return null;
