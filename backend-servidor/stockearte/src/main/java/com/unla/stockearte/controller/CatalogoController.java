@@ -1,6 +1,8 @@
 package com.unla.stockearte.controller;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +73,20 @@ public class CatalogoController {
 	public ResponseEntity<?> exportCatalogoPDF(@PathVariable Long id, @RequestParam String username) {
 		try {
 			byte[] pdfBytes = catalogoService.exportCatalogoPDF(id, username);
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+
+			// Convertir los bytes a Base64
+			String base64PDF = Base64.getEncoder().encodeToString(pdfBytes);
+
+			/*
+			 * Retorno en MediaType return
+			 * ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+			 *
+			 */
+
+			// Crear la respuesta como un objeto JSON que contenga el PDF en Base64
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+					.body(Collections.singletonMap("pdfBase64", base64PDF));
+
 		} catch (IOException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al generar el PDF: " + e.getMessage());
