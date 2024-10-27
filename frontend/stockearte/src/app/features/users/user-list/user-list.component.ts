@@ -122,19 +122,19 @@ export class UserListComponent implements OnDestroy {
   }
 
   deleteUser(id: string): void {
-    if (confirm('Eliminar no funcionará esta entrega')) {
       const sub = this.usersService.deleteUser(id).subscribe({
         next: () => {
-          // this.notyf.success('Usuario eliminado con éxito');
-          // this.loadUsers();
+          this.notyf.success('Usuario eliminado con éxito');
         },
         error: (err) => {
           this.notyf.error('Error al eliminar usuario');
           console.error(err);
+        },
+        complete: () => {
+          this.loadUsers();
         }
       });
       this.subscriptions.push(sub);
-    }
   }
 
   filterUsers(searchTerm: string): void {

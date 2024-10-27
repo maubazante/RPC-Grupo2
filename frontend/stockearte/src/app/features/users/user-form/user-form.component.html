@@ -66,9 +66,20 @@
       </mat-select>
     </mat-form-field>
   </form>
-  <div class="csv">
-    <button mat-flat-button><mat-icon>fiber_new</mat-icon>Cargar mediante CSV</button>
+
+  <div class="csv" *ngIf="!isEdit">
+    <input
+      #fileInput
+      type="file"
+      accept=".csv"
+      (change)="onFileSelected($event)"
+      hidden
+    />
+    <button mat-flat-button (click)="fileInput.click()">
+      <mat-icon>fiber_new</mat-icon> Cargar mediante CSV
+    </button>
   </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

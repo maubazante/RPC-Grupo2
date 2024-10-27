@@ -50,4 +50,9 @@ export class UsersService {
   registerUsuario(request: IRegisterRequest): Observable<IRegisterResponse> {
     return this.http.post<IRegisterResponse>(`${environment.clientURL}/createUsuario`, request);
   }
+
+  cargarUsuario(request: any){
+    return this.http.post(`${environment.controllerURL}/cargar-usuarios`, request);
+  }
+
 }
