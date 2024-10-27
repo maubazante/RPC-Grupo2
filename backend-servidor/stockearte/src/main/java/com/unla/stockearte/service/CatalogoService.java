@@ -163,6 +163,8 @@ public class CatalogoService {
 
 		catalogoExistente.setNombre(catalogoDTO.getNombre());
 
+		catalogoExistente.getProductos().clear();
+
 		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
 		for (Long productoId : catalogoDTO.getProductoIds()) {
 			Producto producto = productoRepository.findById(productoId)
