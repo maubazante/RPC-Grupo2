@@ -10,3 +10,11 @@ h2 {
 mat-form-field {
     display: flex;
 }
+
+.csv {
+    padding-top: 0.1em;
+}
+
+mat-dialog-content {
+    overflow: hidden;
+}

@@ -12,9 +12,10 @@ export class NavbarComponent implements OnInit {
   
   isAdmin: boolean = false;
   constructor(private authService: AuthService) {
+    this.isAdmin = this.authService.isAdmin();
   }
   ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
+    
   }
 
   logout = () => { this.authService.logout() }
