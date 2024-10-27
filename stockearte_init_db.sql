@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS stockearte.catalogos (
 -- Tabla de relación catálogo-productos
 CREATE TABLE IF NOT EXISTS stockearte.catalogo_productos (
   id BIGINT NOT NULL AUTO_INCREMENT,
-  fk_catalogo_id BIGINT NOT NULL,  -- Referencia al catálogo
-  fk_producto_id BIGINT NOT NULL,  -- Referencia al producto
+  fk_catalogo_id BIGINT NOT NULL,
+  fk_producto_id BIGINT NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_catalogo_producto_catalogo
     FOREIGN KEY (fk_catalogo_id)
