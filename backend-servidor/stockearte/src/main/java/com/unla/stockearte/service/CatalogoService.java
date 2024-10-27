@@ -42,6 +42,8 @@ public class CatalogoService {
 	@Autowired
 	private ProductoRepository productoRepository;
 
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public List<Producto> obtenerProductosPorCatalogo(Long catalogoId) {
 		return catalogoRepository.findProductosByCatalogoId(catalogoId);
 	}

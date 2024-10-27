@@ -20,6 +20,24 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="ObtenerProductoPorCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogId" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ObtenerProductoPorCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="productos" type="tns:ProductoDTO"
+					minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:complexType name="ListaLongs">
 		<xs:sequence>
 			<xs:element name="id" type="xs:long" maxOccurs="unbounded"
@@ -42,6 +60,21 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProductoDTO">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0"
+				nillable="true" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="codigo" type="xs:string" />
+			<xs:element name="talle" type="xs:string" />
+			<xs:element name="foto" type="xs:string" />
+			<xs:element name="color" type="xs:string" />
+			<xs:element name="cantidad" type="xs:integer" minOccurs="0"
+				nillable="true" />
+			<xs:element name="habilitado" type="xs:boolean" />
 		</xs:sequence>
 	</xs:complexType>
 
