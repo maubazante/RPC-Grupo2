@@ -681,7 +681,7 @@
 					"response": []
 				},
 				{
-					"name": "Traer catalogo por id",
+					"name": "Traer productos por catalogo",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -698,7 +698,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/1?username=andresUsername",
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/4/productos",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -706,13 +706,8 @@
 							"path": [
 								"api",
 								"catalogos",
-								"1"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "andresUsername"
-								}
+								"4",
+								"productos"
 							]
 						}
 					},
@@ -725,7 +720,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Nuevo Catalogo 1\",\r\n    \"tienda\": {\r\n        \"id\": 1\r\n    }\r\n}\r\n",
+							"raw": "{\r\n    \"nombre\": \"Catálogo de Verano\",\r\n    \"tiendaId\": 1,\r\n    \"productoIds\": [1, 2, 3]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -741,6 +736,46 @@
 							"path": [
 								"api",
 								"catalogos"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "andresUsername"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exportar Catalogo en PDF",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nuevo Catalogo 1\",\r\n    \"tienda\": {\r\n        \"id\": 1\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}:{{portStockearte}}/api/catalogos/exportar/pdf/1?username=andresUsername",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "{{portStockearte}}",
+							"path": [
+								"api",
+								"catalogos",
+								"exportar",
+								"pdf",
+								"1"
 							],
 							"query": [
 								{
