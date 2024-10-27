@@ -3,6 +3,7 @@ package com.unla.stockearte.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -43,58 +44,88 @@ public class CatalogoService {
 		return catalogoRepository.findProductosByCatalogoId(catalogoId);
 	}
 
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	// TODO FILTRAR los catalogos segun la tienda del usuario o si es casa central
-	// traer todos!!!
-	public List<Catalogo> getAllCatalogos(String username, Long tiendaId) {
-		if (!isAuthorizedUser(username)) {
+	public List<Catalogo> getAllCatalogos(String username) {
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
+
+		// Verificar permisos del usuario
+		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para ver los catálogos.");
 		}
 
+		Tienda tienda = usuario.getTienda();
 		List<Catalogo> catalogos;
 
-		if (tiendaId != null) {
-			catalogos = catalogoRepository.findByTienda_Id(tiendaId);
-		} else {
+		// Si es casa central, traer todos los catálogos, sino solo los de su tienda
+		if (tienda != null && tienda.getEsCasaCentral()) {
 			catalogos = catalogoRepository.findAll();
+		} else {
+			Long tiendaId = tienda != null ? tienda.getId() : null;
+			catalogos = catalogoRepository.findByTienda_Id(tiendaId);
 		}
 
-		// Aseguramos que los productos se carguen para cada catálogo
-		catalogos.forEach(catalogo -> {
-			catalogo.getProductos().size();
-		});
+		catalogos.forEach(catalogo -> catalogo.getProductos().size());
 
 		return catalogos;
 	}
 
 	public Optional<Catalogo> getCatalogoById(Long id, String username) {
-		if (!isAuthorizedUser(username)) {
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
+
+		// Verificar permisos del usuario
+		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para ver el catálogo.");
 		}
-		return catalogoRepository.findById(id);
+
+		Tienda tienda = usuario.getTienda();
+
+		// Buscar el catálogo
+		Optional<Catalogo> catalogoOpt = catalogoRepository.findById(id);
+
+		// Verificar si el catálogo existe
+		if (!catalogoOpt.isPresent()) {
+			throw new NoSuchElementException("Catálogo no encontrado.");
+		}
+
+		Catalogo catalogo = catalogoOpt.get();
+
+		// Verificar si el usuario tiene acceso al catálogo
+		if (tienda != null && !tienda.getEsCasaCentral() && !catalogo.getTienda().getId().equals(tienda.getId())) {
+			throw new UnauthorizedException("El usuario no tiene permisos para ver este catálogo.");
+		}
+
+		// Cargar productos para el catálogo
+		catalogo.getProductos().size();
+
+		return catalogoOpt;
 	}
 
 	public Catalogo createCatalogo(CatalogoDTO catalogoDTO, String username) {
-		if (!isAuthorizedUser(username)) {
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
+
+		// Verificar permisos del usuario
+		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para crear el catálogo.");
+		}
+
+		// Obtener la tienda del usuario
+		Tienda tiendaUsuario = usuario.getTienda();
+
+		// Verificar si el usuario puede crear un catálogo en la tienda
+		Tienda tienda = tiendaRepository.findById(catalogoDTO.getTiendaId())
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada"));
+
+		// Permitir la creación si el usuario pertenece a la casa central o la tienda es
+		// la misma
+		if (tiendaUsuario != null && !tiendaUsuario.getEsCasaCentral()
+				&& !tiendaUsuario.getId().equals(tienda.getId())) {
+			throw new UnauthorizedException("El usuario no tiene permisos para crear un catálogo en esta tienda.");
 		}
 
 		Catalogo catalogo = new Catalogo();
 		catalogo.setNombre(catalogoDTO.getNombre());
-
-		Tienda tienda = tiendaRepository.findById(catalogoDTO.getTiendaId())
-				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada"));
 		catalogo.setTienda(tienda);
 
 		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
@@ -113,16 +144,45 @@ public class CatalogoService {
 	}
 
 	public Catalogo updateCatalogo(Long id, Catalogo catalogo, String username) {
-		if (!isAuthorizedUser(username)) {
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
+
+		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para actualizar el catálogo.");
 		}
-		return catalogoRepository.save(catalogo);
+
+		Catalogo catalogoExistente = catalogoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Catálogo no encontrado"));
+
+		Tienda tiendaUsuario = usuario.getTienda();
+
+		if (tiendaUsuario != null && !tiendaUsuario.getEsCasaCentral()
+				&& !catalogoExistente.getTienda().getId().equals(tiendaUsuario.getId())) {
+			throw new UnauthorizedException("El usuario no tiene permisos para actualizar este catálogo.");
+		}
+
+		catalogoExistente.setNombre(catalogo.getNombre());
+		return catalogoRepository.save(catalogoExistente);
 	}
 
 	public void deleteCatalogo(Long id, String username) {
-		if (!isAuthorizedUser(username)) {
+		Usuario usuario = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
+
+		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para eliminar el catálogo.");
 		}
+
+		Catalogo catalogoExistente = catalogoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Catálogo no encontrado"));
+
+		Tienda tiendaUsuario = usuario.getTienda();
+
+		if (tiendaUsuario != null && !tiendaUsuario.getEsCasaCentral()
+				&& !catalogoExistente.getTienda().getId().equals(tiendaUsuario.getId())) {
+			throw new UnauthorizedException("El usuario no tiene permisos para eliminar este catálogo.");
+		}
+
 		catalogoRepository.deleteById(id);
 	}
 
