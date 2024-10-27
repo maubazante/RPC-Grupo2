@@ -30,9 +30,8 @@ public class CatalogoController {
 	private CatalogoService catalogoService;
 
 	@GetMapping
-	public ResponseEntity<List<Catalogo>> getAllCatalogos(@RequestParam String username,
-			@RequestParam(required = false) Long tiendaId) {
-		List<Catalogo> catalogos = catalogoService.getAllCatalogos(username, tiendaId);
+	public ResponseEntity<List<Catalogo>> getAllCatalogos(@RequestParam String username) {
+		List<Catalogo> catalogos = catalogoService.getAllCatalogos(username);
 		return new ResponseEntity<>(catalogos, HttpStatus.OK);
 	}
 
