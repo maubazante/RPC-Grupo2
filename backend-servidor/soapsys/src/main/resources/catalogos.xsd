@@ -31,15 +31,20 @@
 
     <xs:complexType name="TiendaDTO">
         <xs:sequence>
-            <xs:element name="id" type="xs:int"/>
-            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="id" type="xs:long" minOccurs="0" nillable="true"/>
+	        <xs:element name="codigo" type="xs:string"/>
+	        <xs:element name="direccion" type="xs:string"/>
+	        <xs:element name="ciudad" type="xs:string"/>
+	        <xs:element name="provincia" type="xs:string"/>
+	        <xs:element name="habilitada" type="xs:boolean" minOccurs="0"/>
+	        <xs:element name="esCasaCentral" type="xs:boolean" minOccurs="0"/>
 
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="CatalogoProductoDTO">
         <xs:sequence>
-            <xs:element name="id" type="xs:int"/>
+            <xs:element name="id" type="xs:long" minOccurs="0" nillable="true"/>
             <xs:element name="productoId" type="xs:int"/>
 
         </xs:sequence>

@@ -124,4 +124,8 @@ public class Tienda {
 		this.productos = productos;
 	}
 
+	public Boolean getHabilitada() {
+		return habilitada;
+	}
+
 }

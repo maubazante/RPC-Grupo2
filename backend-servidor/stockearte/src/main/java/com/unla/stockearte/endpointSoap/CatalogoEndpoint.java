@@ -10,6 +10,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
+import com.unla.stockearte.helpers.CatalogoHelper;
 import com.unla.stockearte.model.Catalogo;
 import com.unla.stockearte.service.CatalogoService;
 
@@ -26,9 +27,8 @@ public class CatalogoEndpoint {
 	public ListCatalogoResponse getAllCatalogos(@RequestPayload GetAllCatalogosRequest request) throws Exception {
 		List<Catalogo> catalogos = catalogoService.getAllCatalogos(request.getUsername());
 
-		// ListCatalogoResponse response = Helper.getCatalogosResponse(catalogos);
-		// return response;
-		return null;
+		ListCatalogoResponse response = CatalogoHelper.getCatalogosResponse(catalogos);
+		return response;
 	}
 
 }

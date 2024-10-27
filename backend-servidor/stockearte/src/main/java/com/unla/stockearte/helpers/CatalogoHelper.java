@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.ListCatalogoResponse;
+import com.example.catalogos.TiendaDTO;
 import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
 import com.example.filtroordenes.ObjectFactory;
@@ -54,9 +55,21 @@ public class CatalogoHelper {
 		for (Catalogo c : catalogos) {
 			CatalogoDTO catalogoDTO = new CatalogoDTO();
 			catalogoDTO.setId(factory.createCatalogoDTOId(c.getId()));
+			catalogoDTO.setNombre(c.getNombre());
+			TiendaDTO tienda = new TiendaDTO();
+			tienda.setId(factory.createTiendaDTOId(c.getTienda().getId()));
+			tienda.setCiudad(c.getTienda().getCiudad());
+			tienda.setCodigo(c.getTienda().getCodigo());
+			tienda.setDireccion(c.getTienda().getDireccion());
+			tienda.setEsCasaCentral(c.getTienda().getEsCasaCentral());
+			tienda.setHabilitada(c.getTienda().getHabilitada());
+			tienda.setProvincia(c.getTienda().getProvincia());
+
+			catalogoDTO.setTienda(tienda);
+			listCatalogoResponse.getCatalogos().add(catalogoDTO);
 		}
-		// return getFiltroOrdenResponse;
-		return null;
+
+		return listCatalogoResponse;
 	}
 
 }
