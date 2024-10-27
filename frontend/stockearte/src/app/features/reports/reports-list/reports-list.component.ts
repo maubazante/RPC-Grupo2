@@ -34,6 +34,7 @@ export class ReportsListComponent implements OnInit {
   loadFiltros(): void {
     // Lógica para cargar perfiles de filtros guardados
     this.reportsService.obtenerFiltros(this.authService.getUserId()).subscribe((profiles: any) => {
+      console.log(profiles);
       this.filtros = profiles;
     });
   }

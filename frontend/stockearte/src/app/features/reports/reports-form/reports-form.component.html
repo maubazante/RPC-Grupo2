@@ -1,1 +1,21 @@
-<p>reports-form works!</p>
+<h2>Crear o Modificar Filtro</h2>
+
+<form [formGroup]="filtroForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre del Filtro</mat-label>
+    <input matInput placeholder="Ingrese un nombre para el filtro" formControlName="nombreFiltro" required>
+  </mat-form-field>
+
+  <div formGroupName="camposFiltrar">
+    <h3>Seleccione los Campos a Filtrar</h3>
+    <mat-checkbox formControlName="codigoProducto">Código de Producto</mat-checkbox>
+    <mat-checkbox formControlName="rangoFechas">Rango de Fechas</mat-checkbox>
+    <mat-checkbox formControlName="estado">Estado</mat-checkbox>
+    <mat-checkbox *ngIf="isAdmin" formControlName="tienda">Tienda</mat-checkbox>
+  </div>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" type="submit">Guardar</button>
+    <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancelar</button>
+  </div>
+</form>

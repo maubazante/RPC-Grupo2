@@ -12,19 +12,19 @@ export class ReportsService {
     constructor(private http: HttpClient) { }
 
     agregarFiltro(filtro: Filtro) {
-        return this.http.post(`${environment.clientURL}/api/filtroOrdenCompra`, filtro, { headers: this.headers });
+        return this.http.post(`${environment.soapSysURL}/api/filtroOrdenCompra`, filtro, { headers: this.headers });
     }
 
     modificarFiltro(id: number, filtro: Filtro) {
-        return this.http.put(`${environment.clientURL}/api/filtroOrdenCompra/${id}`, filtro, { headers: this.headers });
+        return this.http.put(`${environment.soapSysURL}/api/filtroOrdenCompra/${id}`, filtro, { headers: this.headers });
     }
 
     eliminarFiltro(id: number) {
-        return this.http.delete(`${environment.clientURL}/api/filtroOrdenCompra`, { headers: this.headers });
+        return this.http.delete(`${environment.soapSysURL}/api/filtroOrdenCompra`, { headers: this.headers });
     }
 
     obtenerFiltros(userId: string | null) {
-        return this.http.get(`${environment.clientURL}/api/filtroOrdenCompra/${userId}`, { headers: this.headers });
+        return this.http.get(`${environment.soapSysURL}/api/filtroOrdenCompra/list/${userId}`, { headers: this.headers });
     }
 
     getReports() {
