@@ -1,9 +1,14 @@
 package com.unla.soapsys.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.filtroordenes.GetFiltroOrdenRequest;
 import com.example.filtroordenes.ObjectFactory;
+import com.unla.soapsys.response.Catalogo;
 
 public class CatalogoHelper {
 
@@ -22,12 +27,16 @@ public class CatalogoHelper {
 		return listCatalogoRequest;
 	}
 	
-	/*
+	
 	public static List<Catalogo> getCatalogos(ListCatalogoResponse listCatalogoResponse) {
-		// TODO armar lista, con todo mapeado
-		//return listCatalogoRequest;
+		List<Catalogo> listCatalogo = new ArrayList<>();
+		
+		for(CatalogoDTO catalogoDTO: listCatalogoResponse.getCatalogos()) {
+			
+		}
+		
 		return null;
 	}
-	*/
+	
 	
 }

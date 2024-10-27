@@ -65,6 +65,10 @@ public class Catalogo {
 		this.catalogoProductos = catalogoProductos;
 	}
 
+	public List<CatalogoProducto> getCatalogoProductos() {
+		return catalogoProductos;
+	}
+
 	@Override
 	public String toString() {
 		return "Catalogo [id=" + id + ", nombre=" + nombre + ", tienda=" + tienda + ", catalogoProductos="
