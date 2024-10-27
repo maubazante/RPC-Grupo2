@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.unla.stockearte.dto.CatalogoDTO;
 import com.unla.stockearte.helpers.ContenidoPDF;
@@ -44,6 +46,8 @@ public class CatalogoService {
 		return catalogoRepository.findProductosByCatalogoId(catalogoId);
 	}
 
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public List<Catalogo> getAllCatalogos(String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));

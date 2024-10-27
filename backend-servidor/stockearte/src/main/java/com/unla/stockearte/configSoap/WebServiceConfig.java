@@ -1,5 +1,6 @@
 package com.unla.stockearte.configSoap;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ public class WebServiceConfig {
 	}
 
 	@Bean(name = "filtroOrdenes")
-	public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema filtroOrdenesSchema) {
+	public DefaultWsdl11Definition defaultWsdl11Definition(@Qualifier("filtroOrdenesdSchema") XsdSchema filtroOrdenesSchema) {
 		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
 		wsdl11Definition.setPortTypeName("FiltroOrdenesPort");
 		wsdl11Definition.setLocationUri("/ws");
@@ -39,7 +40,7 @@ public class WebServiceConfig {
 	}
 
 	@Bean(name = "catalogos")
-	public DefaultWsdl11Definition catalogosDefinition(XsdSchema catalogosSchema) {
+	public DefaultWsdl11Definition catalogosDefinition(@Qualifier("catalogosSchema") XsdSchema catalogosSchema) {
 		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
 		wsdl11Definition.setPortTypeName("catalogosPort");
 		wsdl11Definition.setLocationUri("/ws");

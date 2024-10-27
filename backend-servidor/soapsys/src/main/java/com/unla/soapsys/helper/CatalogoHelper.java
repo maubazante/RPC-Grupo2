@@ -9,10 +9,10 @@ import com.example.catalogos.ListCatalogoResponse;
 import com.example.filtroordenes.GetFiltroOrdenRequest;
 import com.example.filtroordenes.ObjectFactory;
 import com.unla.soapsys.response.Catalogo;
+import com.unla.soapsys.response.CatalogoDTOFronted;
 
 public class CatalogoHelper {
 
-	
 	public static GetFiltroOrdenRequest crearGetFiltroOrdenRequest(Long id) {
 		ObjectFactory factory = new ObjectFactory();
 		GetFiltroOrdenRequest getFiltroOrdenRequest = new GetFiltroOrdenRequest();
@@ -20,23 +20,27 @@ public class CatalogoHelper {
 
 		return getFiltroOrdenRequest;
 	}
-	
+
 	public static GetAllCatalogosRequest getCatalogosRequest(String username) {
-		GetAllCatalogosRequest listCatalogoRequest = new GetAllCatalogosRequest();
-		listCatalogoRequest.setUsername(username);
-		return listCatalogoRequest;
+		GetAllCatalogosRequest getAllCatalogosRequest = new GetAllCatalogosRequest();
+		getAllCatalogosRequest.setUsername(username);
+		return getAllCatalogosRequest;
 	}
-	
-	
-	public static List<Catalogo> getCatalogos(ListCatalogoResponse listCatalogoResponse) {
-		List<Catalogo> listCatalogo = new ArrayList<>();
-		
-		for(CatalogoDTO catalogoDTO: listCatalogoResponse.getCatalogos()) {
-			
+
+	public static List<CatalogoDTOFronted> getCatalogos(ListCatalogoResponse listCatalogoResponse) {
+		List<CatalogoDTOFronted> catalogoDTOFronted = new ArrayList<>();
+
+		for (CatalogoDTO catalogo : listCatalogoResponse.getCatalogos()) {
+			CatalogoDTOFronted catalogoFronted = new CatalogoDTOFronted();
+			catalogoFronted.setNombre(catalogo.getNombre());
+			catalogoFronted.setIdTienda(catalogo.getTiendaId().getValue());
+			catalogoFronted.setId(catalogo.getId().getValue());
+			catalogoFronted.setProductosIds(catalogo.getProductoIds().getProductoId());
+
+			catalogoDTOFronted.add(catalogoFronted);
 		}
-		
-		return null;
+
+		return catalogoDTOFronted;
 	}
-	
-	
+
 }
