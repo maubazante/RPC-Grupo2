@@ -23,8 +23,8 @@ export class ReportsService {
         return this.http.delete(`${environment.clientURL}/api/filtroOrdenCompra`, { headers: this.headers });
     }
 
-    obtenerFiltros(userId: number) {
-        return this.http.get(`${environment.clientURL}/api/filtroOrdenCompra`, { headers: this.headers });
+    obtenerFiltros(userId: string | null) {
+        return this.http.get(`${environment.clientURL}/api/filtroOrdenCompra/${userId}`, { headers: this.headers });
     }
 
     getReports() {
