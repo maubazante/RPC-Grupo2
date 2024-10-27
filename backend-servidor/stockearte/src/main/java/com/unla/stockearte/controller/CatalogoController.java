@@ -50,9 +50,9 @@ public class CatalogoController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Catalogo> updateCatalogo(@PathVariable Long id, @RequestBody Catalogo catalogo,
+	public ResponseEntity<Catalogo> updateCatalogo(@PathVariable Long id, @RequestBody CatalogoDTO catalogoDTO,
 			@RequestParam String username) {
-		Catalogo updatedCatalogo = catalogoService.updateCatalogo(id, catalogo, username);
+		Catalogo updatedCatalogo = catalogoService.updateCatalogo(id, catalogoDTO, username);
 		return new ResponseEntity<>(updatedCatalogo, HttpStatus.OK);
 	}
 
