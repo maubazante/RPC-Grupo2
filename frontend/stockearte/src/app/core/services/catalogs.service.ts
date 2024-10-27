@@ -33,8 +33,8 @@ export class CatalogosService {
     return this.http.delete<void>(`${BASE_URL}/${id}`, { headers: this.headers });
   }
 
-  exportCatalogoToPDF(id: number): Observable<Blob> {
-    return this.http.get(`${BASE_URL}/${id}/export`, {
+  exportCatalogoToPDF(id: number, username: string | null): Observable<Blob> {
+    return this.http.get(`${BASE_URL}/exportar/pdf/${id}?username=${username}`, {
       responseType: 'blob'
     });
   }

@@ -4,6 +4,7 @@ import { CatalogosService } from '../../../core/services/catalogs.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CatalogsFormComponent } from '../catalogs-form/catalogs-form.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Notyf } from 'notyf';
 
 @Component({
   selector: 'app-catalogs-list',
@@ -14,6 +15,7 @@ export class CatalogsListComponent implements OnInit {
   dataSource: Catalogo[] = [];
   displayedColumns: string[] = ['id', 'nombre', 'export', 'edit', 'erase'];
   searchTerm: string = '';
+  notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
 
   constructor(private catalogosService: CatalogosService, private authService: AuthService, private dialog: MatDialog) {}
 
@@ -58,16 +60,31 @@ export class CatalogsListComponent implements OnInit {
   }
 
   exportCatalogToPDF(id: number): void {
-    this.catalogosService.exportCatalogoToPDF(id).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `catalogo_${id}.pdf`;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    this.notyf.success('Cargando PDF...')
+    this.catalogosService.exportCatalogoToPDF(id, this.authService.getUsername()).subscribe((blob) => {
+      blob.text().then((text) => {
+        const jsonResponse = JSON.parse(text);
+  
+        if (jsonResponse && jsonResponse.pdfBase64) {
+          // Decodifica el base64 y crea un Blob en formato PDF
+          const byteCharacters = atob(jsonResponse.pdfBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
+  
+          const url = URL.createObjectURL(pdfBlob);
+          window.open(url);
+        } else {
+          this.notyf.error('Fijate vos que hiciste mal')
+          console.error('El JSON no contiene un campo "pdfBase64".');
+        }
+      });
     });
   }
-
+  
   onSearchChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchTerm = input.value;
