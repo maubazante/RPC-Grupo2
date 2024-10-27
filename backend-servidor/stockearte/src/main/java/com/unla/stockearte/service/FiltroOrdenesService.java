@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.unla.stockearte.dto.FiltroOrdenesRequest;
+import com.example.filtroordenes.FiltroOrdenesRequest;
 import com.unla.stockearte.model.FiltroOrdenes;
 import com.unla.stockearte.model.Usuario;
 import com.unla.stockearte.repository.FiltroOrdenesRepository;
@@ -31,14 +31,14 @@ public class FiltroOrdenesService {
 		try {
 			FiltroOrdenes entity = new FiltroOrdenes();
 			entity.setNombre(filtro.getNombre());
-			entity.setFiltroProducto(filtro.getFiltroProducto());
-			entity.setFiltroFecha(filtro.getFiltroFecha());
-			entity.setFiltroEstado(filtro.getFiltroEstado());
-			entity.setFiltroTienda(filtro.getFiltroTienda());
+			entity.setFiltroProducto(filtro.getFiltroProducto().getValue());
+			entity.setFiltroFecha(filtro.getFiltroFecha().getValue());
+			entity.setFiltroEstado(filtro.getFiltroEstado().getValue());
+			entity.setFiltroTienda(filtro.getFiltroTienda().getValue());
 			
-			Optional<Usuario> user = usuarioRepository.findById(filtro.getUserId());
+			Optional<Usuario> user = usuarioRepository.findById(filtro.getUserId().getValue());
 			if(user.isPresent()) {
-				entity.setFkUsuariosId(filtro.getUserId());
+				entity.setFkUsuariosId(filtro.getUserId().getValue());
 				return filtroOrdenesRepository.save(entity);
 			}else {
 				throw new Exception("Se necesita un usuario para asignarle un filtro");				
@@ -50,7 +50,7 @@ public class FiltroOrdenesService {
 	
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
 	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
-	public FiltroOrdenes modificarFiltroOrdenes(FiltroOrdenesRequest filtro) throws Exception{
+	public FiltroOrdenes modificarFiltroOrdenes(FiltroOrdenes filtro) throws Exception{
 		try {
 			FiltroOrdenes entity = new FiltroOrdenes();
 			entity.setNombre(filtro.getNombre());
@@ -60,9 +60,9 @@ public class FiltroOrdenesService {
 			entity.setFiltroTienda(filtro.getFiltroTienda());
 			entity.setId(filtro.getId());
 			
-			Optional<Usuario> user = usuarioRepository.findById(filtro.getUserId());
+			Optional<Usuario> user = usuarioRepository.findById(filtro.getFkUsuariosId());
 			if(user.isPresent()) {
-				entity.setFkUsuariosId(filtro.getUserId());
+				entity.setFkUsuariosId(filtro.getFkUsuariosId());
 				return filtroOrdenesRepository.save(entity);
 			}else {
 				throw new Exception("Se necesita un usuario para modificar un filtro");				

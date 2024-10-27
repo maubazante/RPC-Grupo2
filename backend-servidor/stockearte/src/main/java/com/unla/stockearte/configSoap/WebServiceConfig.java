@@ -1,4 +1,4 @@
-package com.unla.soapsys.config;
+package com.unla.stockearte.configSoap;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +15,7 @@ import org.springframework.xml.xsd.XsdSchema;
 @Configuration
 public class WebServiceConfig {
 
-    @Bean
+	@Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext context) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(context);
@@ -23,18 +23,18 @@ public class WebServiceConfig {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "filtroordenes")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema helloWorldSchema) {
+    @Bean(name = "filtroOrdenes")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema filtroOrdenesSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("FiltroOrdenesPort");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://example.com/helloworld");
-        wsdl11Definition.setSchema(helloWorldSchema);
+        wsdl11Definition.setTargetNamespace("http://example.com/filtroordenes");
+        wsdl11Definition.setSchema(filtroOrdenesSchema);
         return wsdl11Definition;
     }
 
     @Bean
-    public XsdSchema helloWorldSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("helloworld.xsd"));
+    public XsdSchema filtroOrdenesdSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("filtroOrdenes.xsd"));
     }
 }
