@@ -1,11 +1,23 @@
 package com.unla.stockearte.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoDTO {
 	private String nombre;
 	private Long tiendaId;
-	private List<Long> productoIds;
+	private List<Long> productoIds = new ArrayList<>();
+
+	public CatalogoDTO() {
+		super();
+	}
+
+	public CatalogoDTO(String nombre, Long tiendaId, List<Long> productoIds) {
+		super();
+		this.nombre = nombre;
+		this.tiendaId = tiendaId;
+		this.productoIds = productoIds;
+	}
 
 	// Getters y Setters
 	public String getNombre() {

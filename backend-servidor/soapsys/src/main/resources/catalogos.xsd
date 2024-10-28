@@ -54,6 +54,40 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="ModificarCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ModificarCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ExportarCatalogoPdfRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogId" type="xs:long" minOccurs="0"
+					nillable="true" />
+				<xs:element name="username" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ExportarCatalogoPdfResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="pdfBytes" type="xs:base64Binary" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 
 	<xs:complexType name="ListaLongs">
 		<xs:sequence>

@@ -3,12 +3,19 @@ package com.unla.soapsys.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
+import com.example.catalogos.ModificarCatalogoRequest;
+import com.example.catalogos.ModificarCatalogoResponse;
 import com.example.catalogos.ObjectFactory;
 import com.example.catalogos.ObtenerProductoPorCatalogoRequest;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
@@ -93,6 +100,44 @@ public class CatalogoHelper {
 		catalogo.setId(catalogoResponse.getCatalogo().getId().getValue());
 		catalogo.setNombre(catalogoResponse.getCatalogo().getNombre());
 		return catalogo;
+	}
+	
+	public static ModificarCatalogoRequest crearModificarCatalogoRequest(Long id,com.unla.soapsys.response.CatalogoDTO catalogoDTO,
+			String username) {
+		ObjectFactory factory = new ObjectFactory();
+		ModificarCatalogoRequest modificarCatalogoRequest = new ModificarCatalogoRequest();
+		CatalogoDTO catalogo = new CatalogoDTO();
+		catalogo.setId(factory.createCatalogoDTOId(id));
+		catalogo.setNombre(catalogoDTO.getNombre());
+		catalogo.setUserName(username);
+		catalogo.setTiendaId(factory.createCatalogoDTOTiendaId(catalogoDTO.getTiendaId()));
+		
+		
+		ProductoIds produtoIds = new ProductoIds();
+		for(Long productoId : catalogoDTO.getProductoIds()) {
+			produtoIds.getProductoId().add(productoId);
+		}
+		
+		catalogo.setProductoIds(produtoIds);
+		modificarCatalogoRequest.setCatalogo(catalogo);
+		
+		return modificarCatalogoRequest;
+	}
+	
+	public static Catalogo updatedCatalogo(ModificarCatalogoResponse modificarCatalogoResponse) {
+		Catalogo catalogo = new Catalogo();
+		catalogo.setId(modificarCatalogoResponse.getCatalogo().getId().getValue());
+		catalogo.setNombre(modificarCatalogoResponse.getCatalogo().getNombre());
+		return catalogo;
+	}
+
+	public static ExportarCatalogoPdfRequest crearExportarCatalogoPdfRequest(Long id, String username) {
+		ObjectFactory factory = new ObjectFactory();
+		ExportarCatalogoPdfRequest exportarRequest = new ExportarCatalogoPdfRequest();
+		exportarRequest.setUsername(username);
+		exportarRequest.setCatalogId(factory.createExportarCatalogoPdfRequestCatalogId(id));
+		
+		return exportarRequest;
 	}
 
 }
