@@ -1,38 +1,90 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Notyf } from 'notyf';
+import { ReportsService } from '../../../core/services/reports.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-reports-form',
   templateUrl: './reports-form.component.html',
-  styleUrl: './reports-form.component.css'
+  styleUrls: ['./reports-form.component.css']
 })
-export class ReportsFormComponent {
+export class ReportsFormComponent implements OnInit {
   filtroForm: FormGroup;
-  filtrosExistentes: any = []; // Array que debe llenarse con los filtros existentes desde el backend
-  isAdmin = true; // Ajusta esto según el perfil de usuario actual
+  isEdit: boolean = false;
+  isAdmin: boolean = true;
+  notyf = new Notyf();
 
-  constructor(private fb: FormBuilder) {  
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<ReportsFormComponent>,
+    private reportsService: ReportsService,
+    private authService: AuthService,
+    @Inject(MAT_DIALOG_DATA) public data: any // recibir información para edición
+  ) {
     this.filtroForm = this.fb.group({
-      nombreFiltro: new FormControl(''),
-      camposFiltrar: this.fb.group({
-        codigoProducto: new FormControl(false),
-        rangoFechas: new FormControl(false),
-        estado: new FormControl(false),
-        tienda: new FormControl(false)
-      })
+      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      filtroEstado: [false],
+      filtroFecha: [false],
+      filtroProducto: [false],
+      filtroTienda: [false],
+      id: [null],
+      fkUsuariosId: Number(this.authService.getUserId()),
+      userId: Number(this.authService.getUserId())
     });
   }
 
   ngOnInit(): void {
-  }
-
-  onSubmit() {
-    if (this.filtroForm.valid) {
-      console.log(this.filtroForm.value);
+    this.isEdit = this.data.selectedProfile ? true : false;
+    if (this.isEdit && this.data.selectedProfile) {
+      this.filtroForm.patchValue(this.data.selectedProfile);
     }
   }
 
-  onCancel() {
-    this.filtroForm.reset();
+  onSave(): void {
+    if (this.filtroForm.valid) {
+      const filtroData = this.filtroForm.value;
+      this.isEdit ? this.modificarFiltro(filtroData) : this.agregarFiltro(filtroData)
+    } else {
+      this.notyf.error('Complete todos los campos requeridos');
+    }
+  }
+
+  agregarFiltro(filtroData: any) {
+    this.reportsService.agregarFiltro(filtroData).subscribe({
+      next: (response) => {
+        this.notyf.success('Filtro guardado exitosamente');
+        this.dialogRef.close(filtroData);
+      },
+      error: () => this.notyf.error('Error al guardar el filtro'),
+      complete: () => console.log('Agregar filtro completado')
+    });
+  }
+  
+  modificarFiltro(filtroData: any) {
+    this.reportsService.modificarFiltro(filtroData.id, filtroData).subscribe({
+      next: (response) => {
+        this.notyf.success('Filtro guardado exitosamente');
+        this.dialogRef.close(filtroData);
+      },
+      error: () => this.notyf.error('Error al guardar el filtro'),
+      complete: () => console.log('Modificar filtro completado')
+    });
+  }
+
+  borrarFiltro() {
+    this.reportsService.eliminarFiltro(this.data.selectedProfile.id).subscribe({
+      next: (response) => {
+        this.notyf.success('Filtro eliminado exitosamente');
+        this.dialogRef.close();
+      },
+      error: () => this.notyf.error('Error al eliminar el filtro'),
+      complete: () => console.log('Eliminar filtro completado')
+    });
+  }
+  
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }

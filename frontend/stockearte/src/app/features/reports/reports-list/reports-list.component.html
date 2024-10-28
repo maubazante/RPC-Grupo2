@@ -6,9 +6,58 @@
         <mat-label>Perfil de Filtro</mat-label>
         <mat-select [(ngModel)]="selectedFiltro" (selectionChange)="applyFiltro()">
           <mat-option *ngFor="let profile of filtros" [value]="profile">{{ profile.nombre }}</mat-option>
-          <mat-option value="new">+ Nuevo</mat-option>
+          <mat-option value="">Ninguno</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <!-- Mostrar filtros activos -->
+      <div class="active-filters">
+        <ng-container *ngIf="activeFilters.filtroProducto">
+          <mat-form-field appearance="outline">
+            <mat-label>Código de producto</mat-label>
+            <select matNativeControl>
+              <option value="SOLICITADA">C001</option>
+              <option value="ACEPTADA">C002</option>
+              <option value="RECHAZADA">C003</option>
+              <option value="RECIBIDA">C004</option>
+            </select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngIf="activeFilters.filtroFecha">
+          <mat-form-field appearance="outline">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Fecha desde">
+              <input matEndDate placeholder="Fecha hasta">
+            </mat-date-range-input>
+            <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngIf="activeFilters.filtroEstado">
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <select matNativeControl>
+              <option value="SOLICITADA">SOLICITADA</option>
+              <option value="ACEPTADA">ACEPTADA</option>
+              <option value="RECHAZADA">RECHAZADA</option>
+              <option value="RECIBIDA">RECIBIDA</option>
+            </select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngIf="activeFilters.filtroTienda">
+          <mat-form-field appearance="outline">
+            <mat-label>Tienda</mat-label>
+            <select matNativeControl>
+              <option value="SOLICITADA">T001</option>
+              <option value="ACEPTADA">T002</option>
+              <option value="RECHAZADA">T003</option>
+              <option value="RECIBIDA">T004</option>
+            </select>
+          </mat-form-field>
+        </ng-container>
+      </div>
       
       <!-- Botón para abrir el modal de filtros -->
       <button mat-button (click)="openFilterModal()">
@@ -18,8 +67,6 @@
 
     <!-- Tabla de reportes -->
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <!-- Columnas (ID, Código de Producto, Tienda, Fecha de Solicitud, Estado) -->
-      <!-- Configuración básica como en el archivo ya cargado -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let report"> {{ report.id }} </td>

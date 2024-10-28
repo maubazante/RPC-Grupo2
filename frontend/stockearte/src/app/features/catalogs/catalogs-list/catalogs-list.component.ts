@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { CatalogsFormComponent } from '../catalogs-form/catalogs-form.component';
 import { Subscription } from 'rxjs';
 import { CatalogosService } from '../../../core/services/catalogs.service';
-import { Catalogo } from '../../../shared/types/Catalogo';
+import { Catalogo, CatalogoSOAP } from '../../../shared/types/Catalogo';
 import { AuthService } from '../../../core/services/auth.service';
 import { Notyf } from 'notyf';
+import { ProductsService } from '../../../core/services/products.service';
 
 @Component({
   selector: 'app-catalogs-list',
@@ -19,7 +20,9 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   private subscriptions = new Subscription();
 
-  constructor(private catalogsService: CatalogosService, private dialog: MatDialog, private authService: AuthService) {}
+  constructor(private catalogsService: CatalogosService, 
+    private dialog: MatDialog, 
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadCatalogs();
@@ -62,7 +65,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     this.subscriptions.add(dialogSubscription);
   }
 
-  editCatalog(catalog: Catalogo): void {
+  editCatalog(catalog: CatalogoSOAP): void {
     const dialogRef = this.dialog.open(CatalogsFormComponent, {
       width: '500px',
       data: { catalog }

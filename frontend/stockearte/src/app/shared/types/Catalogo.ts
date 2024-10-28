@@ -7,7 +7,6 @@ export interface Catalogo {
     productos: CatalogoProducto[]; // Relación con la lista de productos en el catálogo
   }
 
-  
   export interface CatalogoProducto {
     id: number;
     nombre: string;
@@ -17,5 +16,13 @@ export interface Catalogo {
     cantidad: number;
     habilitado: boolean;
     catalogoId: number; // Relación con el ID del catálogo al que pertenece el producto
+  }
+  
+
+  export interface CatalogoSOAP {
+    idTienda: number
+    id: number
+    nombre: string
+    productosIds: number[]
   }
   

@@ -34,3 +34,11 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .active-filters{
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 5px;
+  }
