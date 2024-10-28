@@ -1,7 +1,12 @@
 package com.unla.stockearte.helpers;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.example.filtroordenes.AddFiltroOrdenResponse;
 import com.example.filtroordenes.AddFiltroOrdenesRequest;
@@ -9,14 +14,16 @@ import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
 import com.example.filtroordenes.FiltroOrdenesList;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
+import com.example.filtroordenes.InformeOrdenCompraResponse;
 import com.example.filtroordenes.ListFiltroOrdenesResponse;
 import com.example.filtroordenes.ObjectFactory;
+import com.example.filtroordenes.ProductoInfo;
+import com.example.filtroordenes.TiendaProductoInfo;
 import com.example.filtroordenes.UpdateFiltroOrdenRequest;
 import com.example.filtroordenes.UpdateFiltroOrdenResponse;
 import com.unla.stockearte.model.FiltroOrdenes;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.unla.stockearte.model.OrdenDeCompra;
+import com.unla.stockearte.model.Stock;
 
 public class Helper {
 
@@ -166,6 +173,38 @@ public class Helper {
 		addFiltroOrdenResponse.setFiltroOrdenes(factory.createAddFiltroOrdenResponseFiltroOrdenes(filtroOrdenesDTO));
 		
 		return addFiltroOrdenResponse;
+	}
+	
+	public static InformeOrdenCompraResponse crearInformeOrdenCompraResponse(List<OrdenDeCompra> ordenes) {
+		ObjectFactory factory = new ObjectFactory();
+		InformeOrdenCompraResponse informe = new InformeOrdenCompraResponse();
+		List<com.example.filtroordenes.OrdenDeCompra> ordenesInforme = new ArrayList();
+		for(OrdenDeCompra orden : ordenes) {
+			com.example.filtroordenes.OrdenDeCompra nuevaOrden = new com.example.filtroordenes.OrdenDeCompra();
+			nuevaOrden.setId(factory.createOrdenDeCompraId(orden.getId()));
+			nuevaOrden.setFechaSolicitud(orden.getFechaSolicitud().toString());
+			nuevaOrden.setEstado(orden.getEstado().toString());
+			
+			TiendaProductoInfo tiendaProductoInfo = new TiendaProductoInfo();
+			tiendaProductoInfo.setId(factory.createTiendaProductoInfoId(orden.getTienda().getId()));
+			tiendaProductoInfo.setNombre(orden.getTienda().getCodigo());
+			
+		
+			for(Stock stock : orden.getTienda().getProductos()) {
+				ProductoInfo producto = new ProductoInfo();
+				
+				producto.setId(factory.createProductoInfoId(stock.getProducto().getId()));
+				producto.setCodigo(stock.getProducto().getCodigo());
+				producto.setCantidad(factory.createProductoInfoCantidad(new BigInteger(stock.getProducto().getCantidad().toString())));
+				
+				tiendaProductoInfo.getProductoList().add(producto);
+			}
+			
+			nuevaOrden.setTienda(tiendaProductoInfo);
+		}
+		informe.getListOrdenes().addAll(ordenesInforme);
+		
+		return informe;
 	}
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)

@@ -142,5 +142,50 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:element name="InformeOrdenCompraRequest">
+		<xs:complexType>
+			<xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="InformeOrdenCompraResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="listOrdenes"
+				type="tns:OrdenDeCompra" maxOccurs="unbounded" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="OrdenDeCompra">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0" nillable="true"/>
+			<xs:element name="fechaSolicitud" type="xs:string" />
+			<xs:element name="estado" type="xs:string" />
+			<xs:element name="tienda"
+				type="tns:TiendaProductoInfo" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="TiendaProductoInfo">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0" nillable="true" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="productoList"
+				type="tns:ProductoInfo" maxOccurs="unbounded" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ProductoInfo">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0" nillable="true" />
+			<xs:element name="cantidad" type="xs:integer" minOccurs="0" nillable="true" />
+			<xs:element name="codigo" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	
 
 </xs:schema>

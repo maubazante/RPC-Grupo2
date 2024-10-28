@@ -1,5 +1,6 @@
 package com.unla.soapsys.helper;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +9,20 @@ import com.example.filtroordenes.AddFiltroOrdenesRequest;
 import com.example.filtroordenes.FiltroOrdenesDTO;
 import com.example.filtroordenes.FiltroOrdenesDeleteRequest;
 import com.example.filtroordenes.GetFiltroOrdenRequest;
+import com.example.filtroordenes.InformeOrdenCompraResponse;
 import com.example.filtroordenes.ListFiltroOrdenesRequest;
 import com.example.filtroordenes.ListFiltroOrdenesResponse;
 import com.example.filtroordenes.ObjectFactory;
+import com.example.filtroordenes.OrdenDeCompra;
+import com.example.filtroordenes.ProductoInfo;
 import com.example.filtroordenes.UpdateFiltroOrdenRequest;
 import com.example.filtroordenes.UpdateFiltroOrdenResponse;
 import com.unla.soapsys.request.FiltroOrdenesRequest;
+import com.unla.soapsys.response.EstadoOrden;
 import com.unla.soapsys.response.FiltroOrdenes;
+import com.unla.soapsys.response.InformeOrdenCompraDTO;
+import com.unla.soapsys.response.Producto;
+import com.unla.soapsys.response.Tienda;
 
 public class Helper {
 
@@ -137,6 +145,35 @@ public class Helper {
 		filtro.setNombre(response.getFiltroOrdenes().getValue().getNombre());
 		
 		return filtro;
+	}
+	
+	public static List<InformeOrdenCompraDTO> crearInformesOrdenCompraDTO(InformeOrdenCompraResponse informe){
+		List<InformeOrdenCompraDTO> list = new ArrayList<>();
+		
+		for(OrdenDeCompra orden : informe.getListOrdenes()) {
+			InformeOrdenCompraDTO informeOrden = new InformeOrdenCompraDTO();
+			
+			informeOrden.setEstado(EstadoOrden.valueOf(orden.getEstado()));
+			informeOrden.setId(orden.getId().getValue());
+			informeOrden.setFechaSolicitud(orden.getFechaSolicitud());
+			
+			Tienda tienda = new Tienda();
+			tienda.setId(informeOrden.getTienda().getId());
+			tienda.setCodigo(informeOrden.getTienda().getCodigo());
+			
+			for(ProductoInfo producto : orden.getTienda().getProductoList()) {
+				Producto productoAgregar = new Producto();
+				
+				productoAgregar.setId(producto.getId().getValue());
+				productoAgregar.setCantidad(producto.getCantidad().getValue().intValue());
+				productoAgregar.setCodigo(producto.getCodigo());
+				informeOrden.getProducto().add(productoAgregar);
+			}
+			
+			list.add(informeOrden);
+		}
+		
+		return list;
 	}
 	
 }
