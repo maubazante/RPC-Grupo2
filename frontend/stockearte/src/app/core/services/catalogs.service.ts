@@ -24,7 +24,7 @@ export class CatalogosService {
 
   createCatalogo(catalogoCatalogo: Catalogo, username: string | null): Observable<Catalogo> {
     console.log(catalogoCatalogo);
-    return this.http.post<Catalogo>(`${environment.soapSysURL}${BASE_URL}?username=${username}`, catalogoCatalogo, { headers: this.headers });
+    return this.http.post<Catalogo>(`${environment.controllerURL}${BASE_URL}?username=${username}`, catalogoCatalogo, { headers: this.headers });
   }
 
   updateCatalogo(id: number, catalogoCatalogo: CatalogoSOAP): Observable<Catalogo> {

@@ -10,59 +10,55 @@
         </mat-select>
       </mat-form-field>
 
-      <!-- Mostrar filtros activos -->
+      <!-- Filtros activos -->
       <form [formGroup]="filtroForm">
         <div class="active-filters">
+          
+          <!-- Filtro por Código de Producto -->
+          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroProducto']">
+            <mat-label>Código de Producto</mat-label>
+            <mat-select formControlName="productoId">
+              <mat-option [value]="null">Sin producto</mat-option>
+              <mat-option *ngFor="let product of products" [value]="product.codigo">{{ product.codigo }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <ng-container *ngIf="activeFilters.filtroProducto">
-            <mat-form-field appearance="outline">
-              <mat-label>Código de producto</mat-label>
-              <mat-select formControlName="productoId">
-                <mat-option [value]="null">Sin producto</mat-option>
-                <mat-option *ngFor="let product of products" [value]="product.id">{{ product.codigo }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </ng-container>
+          <!-- Filtro por Rango de Fechas -->
+          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroFecha']">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Fecha desde" formControlName="fechaDesde">
+              <input matEndDate placeholder="Fecha hasta" formControlName="fechaHasta">
+            </mat-date-range-input>
+            <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
 
-          <ng-container *ngIf="activeFilters.filtroFecha">
-            <mat-form-field appearance="outline">
-              <mat-label>Rango de Fechas</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate placeholder="Fecha desde">
-                <input matEndDate placeholder="Fecha hasta">
-              </mat-date-range-input>
-              <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-          </ng-container>
+          <!-- Filtro por Estado -->
+          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroEstado']">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado">
+              <mat-option value="SOLICITADA">SOLICITADA</mat-option>
+              <mat-option value="ACEPTADA">ACEPTADA</mat-option>
+              <mat-option value="RECHAZADA">RECHAZADA</mat-option>
+              <mat-option value="RECIBIDA">RECIBIDA</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <ng-container *ngIf="activeFilters.filtroEstado">
-            <mat-form-field appearance="outline">
-              <mat-label>Estado</mat-label>
-              <select matNativeControl>
-                <option value="SOLICITADA">SOLICITADA</option>
-                <option value="ACEPTADA">ACEPTADA</option>
-                <option value="RECHAZADA">RECHAZADA</option>
-                <option value="RECIBIDA">RECIBIDA</option>
-              </select>
-            </mat-form-field>
-          </ng-container>
-
-          <ng-container *ngIf="activeFilters.filtroTienda">
-            <mat-form-field appearance="outline">
-              <mat-label>Tienda</mat-label>
-              <mat-select formControlName="tiendaId">
-                <mat-option [value]="null">Sin tienda</mat-option>
-                <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">{{ tienda.codigo }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </ng-container>
+          <!-- Filtro por Tienda -->
+          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroTienda'] && this.isAdmin">
+            <mat-label>Tienda</mat-label>
+            <mat-select formControlName="tiendaId">
+              <mat-option [value]="null">Sin tienda</mat-option>
+              <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">{{ tienda.codigo }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
         </div>
       </form>
 
-      <!-- Botón para abrir el modal de filtros -->
+      <!-- Botón para abrir el modal de filtros (opcional) -->
       <button mat-button (click)="openFilterModal()">
         <mat-icon>filter_list</mat-icon> Filtros
       </button>
@@ -70,6 +66,7 @@
 
     <!-- Tabla de reportes -->
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- Definición de columnas -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let report"> {{ report.id }} </td>
@@ -87,7 +84,7 @@
 
       <ng-container matColumnDef="fechaSolicitud">
         <th mat-header-cell *matHeaderCellDef> Fecha de Solicitud </th>
-        <td mat-cell *matCellDef="let report"> {{ report.fechaSolicitud | date }} </td>
+        <td mat-cell *matCellDef="let report"> {{ report.fechaSolicitud | date: 'dd/MM/yyyy' }} </td>
       </ng-container>
 
       <ng-container matColumnDef="estado">
