@@ -217,7 +217,9 @@ public class CatalogoService {
 		return usuario.isPresent()
 				&& (usuario.get().getRol() == Rol.ADMIN || usuario.get().getRol() == Rol.STOREMANAGER);
 	}
-
+	
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public byte[] exportCatalogoPDF(Long id, String username) throws IOException {
 		Catalogo catalogo = getCatalogoById(id, username)
 				.orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
