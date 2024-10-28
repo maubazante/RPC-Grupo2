@@ -11,6 +11,7 @@ import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ModificarCatalogoRequest;
@@ -128,6 +129,15 @@ public class CatalogoHelper {
 		catalogo.setId(modificarCatalogoResponse.getCatalogo().getId().getValue());
 		catalogo.setNombre(modificarCatalogoResponse.getCatalogo().getNombre());
 		return catalogo;
+	}
+
+	public static ExportarCatalogoPdfRequest crearExportarCatalogoPdfRequest(Long id, String username) {
+		ObjectFactory factory = new ObjectFactory();
+		ExportarCatalogoPdfRequest exportarRequest = new ExportarCatalogoPdfRequest();
+		exportarRequest.setUsername(username);
+		exportarRequest.setCatalogId(factory.createExportarCatalogoPdfRequestCatalogId(id));
+		
+		return exportarRequest;
 	}
 
 }

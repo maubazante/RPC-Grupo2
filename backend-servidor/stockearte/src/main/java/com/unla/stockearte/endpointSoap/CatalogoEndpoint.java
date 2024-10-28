@@ -10,6 +10,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.ExportarCatalogoPdfRequest;
+import com.example.catalogos.ExportarCatalogoPdfResponse;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ModificarCatalogoRequest;
@@ -60,6 +62,16 @@ public class CatalogoEndpoint {
 	public ModificarCatalogoResponse modificarCatalogo(@RequestPayload ModificarCatalogoRequest request) throws Exception{
 		Catalogo catalogo = catalogoService.updateCatalogo(request.getCatalogo().getId().getValue(),CatalogoHelper.createCatalogoDTO(request.getCatalogo()), request.getCatalogo().getUserName());
 		ModificarCatalogoResponse response = CatalogoHelper.crearModificarCatalogoResponse(catalogo);
+		
+		return response;
+	}
+	
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "ExportarCatalogoPdfRequest")
+	@ResponsePayload
+	public ExportarCatalogoPdfResponse exportarCatalogoPDF(@RequestPayload ExportarCatalogoPdfRequest request) throws Exception{
+		byte[] pdfBytes = catalogoService.exportCatalogoPDF(request.getCatalogId().getValue(), request.getUsername());
+		ExportarCatalogoPdfResponse response = new ExportarCatalogoPdfResponse();
+		response.setPdfBytes(pdfBytes);
 		
 		return response;
 	}
