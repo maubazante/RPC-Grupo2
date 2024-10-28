@@ -8,6 +8,7 @@ import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
 import com.example.catalogos.ListCatalogoResponse;
+import com.example.catalogos.ModificarCatalogoResponse;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
 import com.example.catalogos.ProductoDTO;
 import com.unla.stockearte.model.Catalogo;
@@ -15,7 +16,6 @@ import com.unla.stockearte.model.CatalogoProducto;
 import com.unla.stockearte.model.Producto;
 
 public class CatalogoHelper {
-
 
 	public static ListCatalogoResponse getCatalogosResponse(List<Catalogo> catalogos) {
 		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
@@ -59,7 +59,7 @@ public class CatalogoHelper {
 		}
 		return obtenerProductoPorCatalogoResponse;
 	}
-	
+
 	public static com.unla.stockearte.dto.CatalogoDTO catalogoCreateRequestToCatalogo(CrearCatalogoRequest request) {
 		com.unla.stockearte.dto.CatalogoDTO catalogo = new com.unla.stockearte.dto.CatalogoDTO();
 		catalogo.setNombre(request.getCatalogo().getNombre());
@@ -67,7 +67,7 @@ public class CatalogoHelper {
 		catalogo.setProductoIds(request.getCatalogo().getProductoIds().getProductoId());
 		return catalogo;
 	}
-	
+
 	public static CrearCatalogoResponse crearCatalogoResponse(Catalogo catalogo) {
 		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
 		CrearCatalogoResponse catagaloResponse = new CrearCatalogoResponse();
@@ -75,9 +75,34 @@ public class CatalogoHelper {
 		catalogoDTO.setNombre(catalogo.getNombre());
 		catalogoDTO.setTiendaId(factory.createCatalogoDTOTiendaId(catalogo.getTienda().getId()));
 		catalogoDTO.setId(factory.createCatalogoDTOId(catalogo.getId()));
-		
+
 		catagaloResponse.setCatalogo(catalogoDTO);
 		return catagaloResponse;
+	}
+
+	public static com.unla.stockearte.dto.CatalogoDTO createCatalogoDTO(CatalogoDTO catalogoDTO) {
+		com.unla.stockearte.dto.CatalogoDTO catalogo = new com.unla.stockearte.dto.CatalogoDTO();
+		catalogo.setNombre(catalogoDTO.getNombre());
+		catalogo.setTiendaId(catalogoDTO.getTiendaId().getValue());
+
+		for (Long productoid : catalogoDTO.getProductoIds().getProductoId()) {
+			catalogo.getProductoIds().add(productoid);
+		}
+
+		return catalogo;
+
+	}
+
+	public static ModificarCatalogoResponse crearModificarCatalogoResponse(Catalogo catalogo) {
+		com.example.catalogos.ObjectFactory factory = new com.example.catalogos.ObjectFactory();
+		ModificarCatalogoResponse modificarCatalogoResponse = new ModificarCatalogoResponse();
+		CatalogoDTO catalogoDTO = new CatalogoDTO();
+		catalogoDTO.setNombre(catalogo.getNombre());
+		catalogoDTO.setId(factory.createCatalogoDTOId(catalogo.getId()));
+
+		modificarCatalogoResponse.setCatalogo(catalogoDTO);
+
+		return modificarCatalogoResponse;
 	}
 
 }

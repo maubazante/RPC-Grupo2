@@ -151,6 +151,8 @@ public class CatalogoService {
 		return catalogoRepository.save(catalogo);
 	}
 
+	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public Catalogo updateCatalogo(Long id, CatalogoDTO catalogoDTO, String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));

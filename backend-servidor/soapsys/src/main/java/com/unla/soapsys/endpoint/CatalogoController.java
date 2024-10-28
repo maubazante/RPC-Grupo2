@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.catalogos.CrearCatalogoResponse;
 import com.example.catalogos.ListCatalogoResponse;
+import com.example.catalogos.ModificarCatalogoResponse;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
 import com.unla.soapsys.helper.CatalogoHelper;
 import com.unla.soapsys.response.Catalogo;
@@ -56,8 +58,18 @@ public class CatalogoController {
 			@RequestParam String username) {
 		CrearCatalogoResponse crearCatalogoResponse = (CrearCatalogoResponse) webServiceTemplate
 				.marshalSendAndReceive(CatalogoHelper.crearCatalogoRequest(catalogoDTO, username));
-		
+
 		Catalogo response = CatalogoHelper.crearCatalogo(crearCatalogoResponse);
 		return new ResponseEntity<Catalogo>(response, HttpStatus.OK);
 	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Catalogo> updateCatalogo(@PathVariable Long id, @RequestBody CatalogoDTO catalogoDTO,
+			@RequestParam String username) {
+		ModificarCatalogoResponse modificarCatalogoResponse = (ModificarCatalogoResponse) webServiceTemplate
+				.marshalSendAndReceive(CatalogoHelper.crearModificarCatalogoRequest(id, catalogoDTO, username));
+		Catalogo response = CatalogoHelper.updatedCatalogo(modificarCatalogoResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 }
