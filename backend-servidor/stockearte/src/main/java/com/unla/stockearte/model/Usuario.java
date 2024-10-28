@@ -1,5 +1,9 @@
 package com.unla.stockearte.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -42,6 +47,10 @@ public class Usuario {
 	@JoinColumn(name = "fk_tienda_id", referencedColumnName = "id")
 	private Tienda tienda;
 
+	@OneToMany
+	@JoinColumn(name = "fk_usuarios_id", referencedColumnName = "id")
+	private List<FiltroOrdenes> filtroOrdenesList = new ArrayList<>();
+
 	public Usuario(Long id, String nombre, String apellido, String username, String password, Boolean habilitado,
 			Rol rol, Tienda tienda) {
 		super();
@@ -56,8 +65,7 @@ public class Usuario {
 		this.tienda = tienda;
 	}
 
-	public Usuario(Long id, String nombre, String apellido, String username, String password,
-			Rol rol, Tienda tienda) {
+	public Usuario(Long id, String nombre, String apellido, String username, String password, Rol rol, Tienda tienda) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -68,6 +76,15 @@ public class Usuario {
 		this.rol = rol;
 		this.tienda = tienda;
 	}
+    public Usuario(String username, String password, String nombre, String apellido, Rol rol, Tienda tienda) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.habilitado = true; // o según tu lógica
+        this.rol = rol;
+        this.tienda = tienda;
+    }	
 
 	public Usuario() {
 		super();
@@ -142,6 +159,14 @@ public class Usuario {
 	public boolean esDeCasaCentral() {
 		Tienda tienda = this.tienda;
 		return tienda != null && tienda.getEsCasaCentral();
+	}
+
+	public List<FiltroOrdenes> getFiltroOrdenesList() {
+		return filtroOrdenesList;
+	}
+
+	public void setFiltroOrdenesList(List<FiltroOrdenes> filtroOrdenesList) {
+		this.filtroOrdenesList = filtroOrdenesList;
 	}
 
 }

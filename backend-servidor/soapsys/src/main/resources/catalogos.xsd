@@ -1,0 +1,133 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://example.com/catalogos"
+	targetNamespace="http://example.com/catalogos"
+	elementFormDefault="qualified">
+
+	<xs:element name="GetAllCatalogosRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="username" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogos" type="tns:CatalogoDTO"
+					minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ObtenerProductoPorCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogId" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ObtenerProductoPorCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="productos" type="tns:ProductoDTO"
+					minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CrearCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CrearCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ModificarCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ModificarCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ExportarCatalogoPdfRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogId" type="xs:long" minOccurs="0"
+					nillable="true" />
+				<xs:element name="username" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ExportarCatalogoPdfResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="pdfBytes" type="xs:base64Binary" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="ListaLongs">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CatalogoDTO">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0"
+				nillable="true" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="userName" type="xs:string" />
+			<xs:element name="tiendaId" type="xs:long" minOccurs="0"
+				nillable="true" />
+			<xs:element name="productoIds">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="productoId" type="xs:long"
+							maxOccurs="unbounded" minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProductoDTO">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0"
+				nillable="true" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="codigo" type="xs:string" />
+			<xs:element name="talle" type="xs:string" />
+			<xs:element name="foto" type="xs:string" />
+			<xs:element name="color" type="xs:string" />
+			<xs:element name="cantidad" type="xs:integer" minOccurs="0"
+				nillable="true" />
+			<xs:element name="habilitado" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar Filtro' : 'Crear Filtro' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="filtroForm">
+    <!-- Campo para el nombre del filtro -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del Filtro</mat-label>
+      <input matInput placeholder="Ingrese un nombre para el filtro" formControlName="nombre" required>
+      <mat-error *ngIf="filtroForm.get('nombre')?.hasError('required')">
+        El nombre del filtro es obligatorio
+      </mat-error>
+      <mat-error *ngIf="filtroForm.get('nombre')?.hasError('minlength')">
+        El nombre debe tener al menos 3 caracteres
+      </mat-error>
+      <mat-error *ngIf="filtroForm.get('nombre')?.hasError('maxlength')">
+        El nombre no debe exceder los 50 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Opciones de campos para filtrar -->
+      <h6>Seleccione los Campos a Filtrar</h6>
+      <mat-checkbox formControlName="filtroProducto">Código de Producto</mat-checkbox>
+      <mat-checkbox formControlName="filtroFecha">Rango de Fechas</mat-checkbox>
+      <mat-checkbox formControlName="filtroEstado">Estado</mat-checkbox>
+      <mat-checkbox formControlName="filtroTienda" [disabled]="isAdmin">Tienda</mat-checkbox>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="filtroForm.invalid">Guardar</button>
+  <button mat-raised-button color="secondary" (click)="borrarFiltro()">Borrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,31 @@
+form {
+    padding: 15px;
+}
+
+h2 {
+    margin: 0.5em;
+    margin-bottom: 0;
+}
+
+mat-form-field {
+    display: flex;
+}
+
+.form-fields {
+    padding-top: 20px;
+    text-align: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-container {
+display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+h6 {
+    padding-top: 15px;
+}

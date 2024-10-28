@@ -1,0 +1,145 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://example.com/filtroordenes"
+	targetNamespace="http://example.com/filtroordenes"
+	elementFormDefault="qualified">
+	<xs:element name="AddFiltroOrdenesRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:long" minOccurs="0"
+					nillable="true" />
+				<xs:element name="nombre" type="xs:string" />
+				<xs:element name="filtroProducto" type="xs:boolean"
+					minOccurs="0" nillable="true" />
+				<xs:element name="filtroFecha" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="filtroEstado" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="filtroTienda" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="userId" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="AddFiltroOrdenResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="filtroOrdenes" type="tns:FiltroOrdenesDTO"
+					minOccurs="0" nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="FiltroOrdenesDTO">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0" nillable="true" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="filtroProducto" type="xs:boolean" minOccurs="0"
+				nillable="true" />
+			<xs:element name="filtroFecha" type="xs:boolean" minOccurs="0"
+				nillable="true" />
+			<xs:element name="filtroEstado" type="xs:boolean" minOccurs="0"
+				nillable="true" />
+			<xs:element name="filtroTienda" type="xs:boolean" minOccurs="0"
+				nillable="true" />
+			<xs:element name="fkUsuariosId" type="xs:long" minOccurs="0"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="FiltroOrdenesDeleteRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="FiltroOrdenesDeleteResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="response" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="ListFiltroOrdenesRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="usuarioId" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListFiltroOrdenesResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Elemento contenedor para la lista -->
+				<xs:element name="filtroOrdenesList"
+					type="tns:FiltroOrdenesList" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="FiltroOrdenesList">
+		<xs:sequence>
+			<xs:element name="filtroOrdenes" type="tns:FiltroOrdenesDTO"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:element name="GetFiltroOrdenRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="GetFiltroOrdenResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="filtroOrdenes" type="tns:FiltroOrdenesDTO"
+					minOccurs="0" nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="UpdateFiltroOrdenRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:long" minOccurs="0"
+					nillable="true" />
+				<xs:element name="nombre" type="xs:string" />
+				<xs:element name="filtroProducto" type="xs:boolean"
+					minOccurs="0" nillable="true" />
+				<xs:element name="filtroFecha" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="filtroEstado" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="filtroTienda" type="xs:boolean" minOccurs="0"
+					nillable="true" />
+				<xs:element name="userId" type="xs:long" minOccurs="0"
+					nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="UpdateFiltroOrdenResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="filtroOrdenes" type="tns:FiltroOrdenesDTO"
+					minOccurs="0" nillable="true" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

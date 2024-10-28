@@ -7,7 +7,8 @@ import { Usuario } from '../../../shared/types/Usuario';
 import { ModalAction } from '../../../shared/types/ModalAction';
 import { AuthService } from '../../../core/services/auth.service';
 import { StoresService } from '../../../core/services/stores.service';
-import { Notyf } from 'notyf';
+import { INotyfNotificationOptions, Notyf } from 'notyf';
+import { UsersService } from '../../../core/services/users.service';
 
 @Component({
   selector: 'app-user-form',
@@ -26,6 +27,7 @@ export class UserFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UsersService,
     private tiendaService: StoresService,
     public dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: Usuario, tiendas: Tienda[], action: string }
@@ -74,5 +76,30 @@ export class UserFormComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      console.log('Archivo seleccionado:', file);
+  
+      const formData = new FormData();
+      formData.append('archivo', file); 
+
+      this.userService.cargarUsuario(formData).subscribe({
+        next: (response: any) => {
+          response.map((res: string) => {this.notyf.success('INFO: ' + res);})
+        },
+        error: (err) => {
+          console.error('Error al cargar el archivo:', err);
+          this.notyf.error('Error al cargar el archivo');
+        },
+        complete: () => {
+          console.log('Proceso de carga masiva completado');
+          this.dialogRef.close();
+        }
+      });
+    }
   }
 }
