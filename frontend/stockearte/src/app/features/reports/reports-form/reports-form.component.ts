@@ -13,8 +13,8 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ReportsFormComponent implements OnInit {
   filtroForm: FormGroup;
   isEdit: boolean = false;
-  isAdmin: boolean = true;
-  notyf = new Notyf();
+  isAdmin: boolean = false;
+  notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +28,7 @@ export class ReportsFormComponent implements OnInit {
       filtroEstado: [false],
       filtroFecha: [false],
       filtroProducto: [false],
-      filtroTienda: [false],
+      filtroTienda: [{value: false, disabled: !this.isAdmin}],
       id: [null],
       fkUsuariosId: Number(this.authService.getUserId()),
       userId: Number(this.authService.getUserId())
@@ -36,6 +36,7 @@ export class ReportsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
     this.isEdit = this.data.selectedProfile ? true : false;
     if (this.isEdit && this.data.selectedProfile) {
       this.filtroForm.patchValue(this.data.selectedProfile);

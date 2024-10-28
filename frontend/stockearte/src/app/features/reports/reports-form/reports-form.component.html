@@ -29,5 +29,5 @@
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="filtroForm.invalid">Guardar</button>
-  <button mat-raised-button color="secondary" (click)="borrarFiltro()">Borrar</button>
+  <button mat-raised-button color="secondary" (click)="borrarFiltro()" *ngIf="isEdit">Borrar</button>
 </mat-dialog-actions>

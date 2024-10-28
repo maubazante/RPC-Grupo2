@@ -47,7 +47,7 @@
           </mat-form-field>
 
           <!-- Filtro por Tienda -->
-          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroTienda']">
+          <mat-form-field appearance="outline" *ngIf="activeFilters['filtroTienda'] && this.isAdmin">
             <mat-label>Tienda</mat-label>
             <mat-select formControlName="tiendaId">
               <mat-option [value]="null">Sin tienda</mat-option>
