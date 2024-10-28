@@ -158,13 +158,13 @@ public class Helper {
 			informeOrden.setFechaSolicitud(orden.getFechaSolicitud());
 			
 			Tienda tienda = new Tienda();
-			tienda.setId(informeOrden.getTienda().getId());
-			tienda.setCodigo(informeOrden.getTienda().getCodigo());
+			tienda.setId(orden.getTienda().getId().getValue());
+			tienda.setCodigo(orden.getTienda().getNombre());
+			informeOrden.setTienda(tienda);
 			
 			for(ProductoInfo producto : orden.getTienda().getProductoList()) {
 				Producto productoAgregar = new Producto();
 				
-				productoAgregar.setId(producto.getId().getValue());
 				productoAgregar.setCantidad(producto.getCantidad().getValue().intValue());
 				productoAgregar.setCodigo(producto.getCodigo());
 				informeOrden.getProducto().add(productoAgregar);

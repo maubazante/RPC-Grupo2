@@ -81,9 +81,9 @@ export class ReportsListComponent implements OnInit {
   loadReports(): void {
     this.reportsService.getReports().subscribe((data: any) => {
       console.log(data);
-      this.originalDataSource = [...data];
-      this.dataSource.data = data;
-      this.reportsSubject.next(data);
+      this.originalDataSource = data.filter((item: any) => item.tienda.id === this.authService.getTiendaId());
+      this.dataSource.data = this.originalDataSource;
+      this.reportsSubject.next(this.originalDataSource);
     });
   }
 
@@ -145,8 +145,7 @@ export class ReportsListComponent implements OnInit {
 
         if (this.activeFilters['filtroProducto'] && filters.productoId) {
           filteredData = filteredData.filter(item =>
-            item.codigoArticulo === filters.productoId
-          );
+            item.producto[0].codigo === filters.productoId);
         }
 
         if (this.activeFilters['filtroTienda'] && filters.tiendaId) {

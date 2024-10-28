@@ -23,6 +23,7 @@ export class ReportsFormComponent implements OnInit {
     private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any // recibir información para edición
   ) {
+    this.isAdmin = this.authService.isAdmin();
     this.filtroForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       filtroEstado: [false],
@@ -36,7 +37,7 @@ export class ReportsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
+    console.log(this.isAdmin)
     this.isEdit = this.data.selectedProfile ? true : false;
     if (this.isEdit && this.data.selectedProfile) {
       this.filtroForm.patchValue(this.data.selectedProfile);

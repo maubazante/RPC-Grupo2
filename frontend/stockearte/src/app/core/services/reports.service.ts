@@ -31,6 +31,6 @@ export class ReportsService {
     }
 
     getReports() {
-        return this.http.get(`${environment.controllerURL}/api/ordenDeCompra/list`);
+        return this.http.get(`${environment.soapSysURL}/api/ordenDeCompra/list`);
     }
 }

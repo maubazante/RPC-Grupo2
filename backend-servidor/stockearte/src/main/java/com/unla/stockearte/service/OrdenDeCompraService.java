@@ -183,7 +183,9 @@ public class OrdenDeCompraService {
 
 		return listInforme;
 	}
-
+	
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
+	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public List<OrdenDeCompra> getList() {
 		List<OrdenDeCompra> list = ordenDeCompraRepository.findAll();
 		return list;

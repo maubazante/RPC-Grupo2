@@ -1,5 +1,6 @@
 package com.unla.soapsys.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InformeOrdenCompraDTO {
@@ -7,7 +8,7 @@ public class InformeOrdenCompraDTO {
 	private Long id;
 	private String fechaSolicitud;
 	private EstadoOrden estado;
-	private List<Producto> producto;
+	private List<Producto> producto = new ArrayList<>();
 	private Tienda tienda;
 
 	public InformeOrdenCompraDTO() {
