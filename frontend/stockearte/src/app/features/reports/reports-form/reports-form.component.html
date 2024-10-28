@@ -22,12 +22,12 @@
       <mat-checkbox formControlName="filtroProducto">Código de Producto</mat-checkbox>
       <mat-checkbox formControlName="filtroFecha">Rango de Fechas</mat-checkbox>
       <mat-checkbox formControlName="filtroEstado">Estado</mat-checkbox>
-      <mat-checkbox formControlName="filtroTienda" [disabled]="isAdmin">Tienda</mat-checkbox>
+      <mat-checkbox formControlName="filtroTienda">Tienda</mat-checkbox>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="filtroForm.invalid">Guardar</button>
-  <button mat-raised-button color="secondary" (click)="borrarFiltro()">Borrar</button>
+  <button mat-raised-button color="secondary" (click)="borrarFiltro()" *ngIf="isEdit">Borrar</button>
 </mat-dialog-actions>

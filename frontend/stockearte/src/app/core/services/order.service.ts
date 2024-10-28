@@ -28,7 +28,6 @@ export class OrderService {
     }
 
     modifyOrder(order: any) {
-        console.log(order);
         return this.http.put(`${environment.controllerURL}/api/ordenDeCompra/${order.id}`, order);
     }
 

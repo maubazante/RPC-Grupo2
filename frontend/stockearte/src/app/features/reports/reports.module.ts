@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatOptionModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -42,6 +42,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatIconModule,
     FormsModule
   ],
-  exports: [ReportsListComponent]
+  exports: [ReportsListComponent],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }]
 })
 export class ReportsModule { }

@@ -1,30 +1,44 @@
 package com.unla.soapsys.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InformeOrdenCompraDTO {
 
-	private String codigoArticulo;
+	private Long id;
+	private String fechaSolicitud;
 	private EstadoOrden estado;
+	private List<Producto> producto = new ArrayList<>();
 	private Tienda tienda;
-	private Long totalCantidad;
 
 	public InformeOrdenCompraDTO() {
 		super();
 	}
 
-	public InformeOrdenCompraDTO(String codigoArticulo, EstadoOrden estado, Tienda tienda, Long totalCantidad) {
+	public InformeOrdenCompraDTO(Long id, String fechaSolicitud, EstadoOrden estado, List<Producto> producto,
+			Tienda tienda) {
 		super();
-		this.codigoArticulo = codigoArticulo;
+		this.id = id;
+		this.fechaSolicitud = fechaSolicitud;
 		this.estado = estado;
+		this.producto = producto;
 		this.tienda = tienda;
-		this.totalCantidad = totalCantidad;
 	}
 
-	public String getCodigoArticulo() {
-		return codigoArticulo;
+	public Long getId() {
+		return id;
 	}
 
-	public void setCodigoArticulo(String codigoArticulo) {
-		this.codigoArticulo = codigoArticulo;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getFechaSolicitud() {
+		return fechaSolicitud;
+	}
+
+	public void setFechaSolicitud(String fechaSolicitud) {
+		this.fechaSolicitud = fechaSolicitud;
 	}
 
 	public EstadoOrden getEstado() {
@@ -35,20 +49,20 @@ public class InformeOrdenCompraDTO {
 		this.estado = estado;
 	}
 
+	public List<Producto> getProducto() {
+		return producto;
+	}
+
+	public void setProducto(List<Producto> producto) {
+		this.producto = producto;
+	}
+
 	public Tienda getTienda() {
 		return tienda;
 	}
 
 	public void setTienda(Tienda tienda) {
 		this.tienda = tienda;
-	}
-
-	public Long getTotalCantidad() {
-		return totalCantidad;
-	}
-
-	public void setTotalCantidad(Long totalCantidad) {
-		this.totalCantidad = totalCantidad;
 	}
 
 }
