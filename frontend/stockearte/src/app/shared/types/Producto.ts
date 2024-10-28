@@ -10,7 +10,7 @@ export interface Producto {
   talle: string
   habilitado: boolean
   cantidad: number
-  id: string
+  id: string | number
   foto: string
   idUserAdmin: string
 }

@@ -16,6 +16,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ReportsFormComponent } from './reports-form/reports-form.component';
 import { ReportsListComponent } from './reports-list/reports-list.component';
 import { ReportsRoutingModule } from './reports-routing.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -27,9 +29,11 @@ import { ReportsRoutingModule } from './reports-routing.module';
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
     MatOptionModule,
     MatSelectModule,
     MatInputModule,

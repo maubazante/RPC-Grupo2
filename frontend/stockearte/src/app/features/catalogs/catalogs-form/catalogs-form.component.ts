@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./catalogs-form.component.css']
 })
 export class CatalogsFormComponent implements OnInit {
-  catalog: Catalogo;
+  catalog: any;
   isEditMode: boolean;
   availableProducts: Producto[] = []; // Productos disponibles para selección
 
@@ -25,28 +25,38 @@ export class CatalogsFormComponent implements OnInit {
     private authService: AuthService
   ) {
     this.isEditMode = !!data.catalog;
-    this.catalog = data.catalog ? { ...data.catalog } : { nombre: '', descripcion: '', habilitado: true, productos: [] };
+    this.catalog = data.catalog ? { ...data.catalog } : { id: 0, nombre: '', productosIds: [] };
+    console.log(this.catalog);
+    this.loadProducts();
   }
 
   ngOnInit(): void {
-    this.loadProducts();
+
   }
 
   loadProducts(): void {
     this.productsService.getProductos(this.authService.getUsername(), true).subscribe((products) => {
-      this.availableProducts = products.productos;
-    });
+      this.availableProducts = products.productos.map(product => ({
+          ...product,
+          id: Number(product.id)
+      }));
+  });
+  
   }
 
-  compareProducts(p1: Producto, p2: Producto): boolean {
-    return p1 && p2 ? p1.id === p2.id : p1 === p2;
+  compareProducts(id1: number, id2: number): boolean {
+    return id1 === id2;
   }
+  
 
   saveCatalog(): void {
+    this.catalog.tiendaId = this.authService.getTiendaId();
+    this.catalog.productoIds = this.catalog.productosIds;
+
     if (this.isEditMode) {
       this.catalogsService.updateCatalogo(this.catalog.id!, this.catalog).subscribe(() => this.dialogRef.close(true));
     } else {
-      this.catalogsService.createCatalogo(this.catalog).subscribe(() => this.dialogRef.close(true));
+      this.catalogsService.createCatalogo(this.catalog, this.authService.getUsername()).subscribe(() => this.dialogRef.close(true));
     }
   }
 }

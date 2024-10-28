@@ -5,17 +5,12 @@
             <mat-label>Nombre del Catálogo</mat-label>
             <input matInput [(ngModel)]="catalog.nombre" required />
           </mat-form-field>
-          
-          <mat-form-field appearance="outline">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput [(ngModel)]="catalog.descripcion" required></textarea>
-          </mat-form-field>
     </div>
   
   <!-- Lista de selección de productos -->
   <h6>Seleccionar Productos</h6>
-  <mat-selection-list [(ngModel)]="catalog.productos" [compareWith]="compareProducts">
-    <mat-list-option *ngFor="let product of availableProducts" [value]="product">
+  <mat-selection-list [(ngModel)]="catalog.productosIds" [compareWith]="compareProducts">
+    <mat-list-option *ngFor="let product of availableProducts" [value]="product.id">
       {{ product.nombre }} - {{ product.codigo }}
     </mat-list-option>
   </mat-selection-list>
@@ -23,5 +18,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-button (click)="saveCatalog()" [disabled]="!catalog.nombre || !catalog.descripcion">Guardar</button>
+  <button mat-button (click)="saveCatalog()" [disabled]="!catalog.nombre">Guardar</button>
 </mat-dialog-actions>
