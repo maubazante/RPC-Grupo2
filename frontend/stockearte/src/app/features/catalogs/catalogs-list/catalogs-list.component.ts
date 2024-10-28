@@ -88,7 +88,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
   }
 
   deleteCatalog(id: number): void {
-    const deleteSubscription = this.catalogsService.deleteCatalogo(id).subscribe({
+    const deleteSubscription = this.catalogsService.deleteCatalogo(id, this.authService.getUsername()).subscribe({
       next: () => {
         this.loadCatalogs();
       },

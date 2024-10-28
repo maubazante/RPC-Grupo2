@@ -66,4 +66,5 @@ public class StockearteController {
 	    FiltroOrdenes filtroOrden = Helper.crearFiltroOrdenesAtravesDeUpdateFiltroOrdenResponse(updateFiltroOrdenResponse);
 	    return new ResponseEntity<FiltroOrdenes>(filtroOrden, HttpStatus.OK);
 	}
+	
 }

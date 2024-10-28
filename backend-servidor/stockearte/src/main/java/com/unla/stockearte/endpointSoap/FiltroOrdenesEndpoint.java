@@ -15,6 +15,8 @@ import com.example.filtroordenes.FiltroOrdenesDeleteRequest;
 import com.example.filtroordenes.FiltroOrdenesDeleteResponse;
 import com.example.filtroordenes.GetFiltroOrdenRequest;
 import com.example.filtroordenes.GetFiltroOrdenResponse;
+import com.example.filtroordenes.InformeOrdenCompraRequest;
+import com.example.filtroordenes.InformeOrdenCompraResponse;
 import com.example.filtroordenes.ListFiltroOrdenesRequest;
 import com.example.filtroordenes.ListFiltroOrdenesResponse;
 import com.example.filtroordenes.UpdateFiltroOrdenRequest;
@@ -22,6 +24,7 @@ import com.example.filtroordenes.UpdateFiltroOrdenResponse;
 import com.unla.stockearte.helpers.Helper;
 import com.unla.stockearte.model.FiltroOrdenes;
 import com.unla.stockearte.service.FiltroOrdenesService;
+import com.unla.stockearte.service.OrdenDeCompraService;
 
 @Endpoint
 public class FiltroOrdenesEndpoint {
@@ -31,6 +34,9 @@ public class FiltroOrdenesEndpoint {
 	@Autowired
 	@Qualifier(FiltroOrdenesService.BEAN_NAME)
 	FiltroOrdenesService filtroService;
+	
+	@Autowired
+	OrdenDeCompraService orderDeCompraService;
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "AddFiltroOrdenesRequest")
     @ResponsePayload
@@ -66,6 +72,13 @@ public class FiltroOrdenesEndpoint {
     @ResponsePayload
     public UpdateFiltroOrdenResponse updateFiltroOrdenResponse(@RequestPayload UpdateFiltroOrdenRequest request) throws Exception{
     	UpdateFiltroOrdenResponse response = Helper.crearupdateFiltroOrdenResponse(filtroService.modificarFiltroOrdenes(Helper.crearFiltroOrdenAtravesUpdateFiltroRequest(request)));
+    	return response;
+    }
+    
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "InformeOrdenCompraRequest")
+    @ResponsePayload
+    public InformeOrdenCompraResponse informeOrdenDeCompra(@RequestPayload InformeOrdenCompraRequest request) throws Exception{
+    	InformeOrdenCompraResponse response = Helper.crearInformeOrdenCompraResponse(orderDeCompraService.getList());
     	return response;
     }
 }

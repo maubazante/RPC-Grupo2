@@ -5,6 +5,7 @@ import { CatalogosService } from '../../../core/services/catalogs.service';
 import { Catalogo } from '../../../shared/types/Catalogo';
 import { Producto } from '../../../shared/types/Producto';
 import { AuthService } from '../../../core/services/auth.service';
+import { Notyf } from 'notyf';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class CatalogsFormComponent implements OnInit {
   catalog: any;
   isEditMode: boolean;
   availableProducts: Producto[] = []; // Productos disponibles para selección
+  notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
 
   constructor(
     public dialogRef: MatDialogRef<CatalogsFormComponent>,
@@ -54,9 +56,27 @@ export class CatalogsFormComponent implements OnInit {
     this.catalog.productoIds = this.catalog.productosIds;
 
     if (this.isEditMode) {
-      this.catalogsService.updateCatalogo(this.catalog.id!, this.catalog).subscribe(() => this.dialogRef.close(true));
+      this.catalogsService.updateCatalogo(this.catalog.id!, this.authService.getUsername(), this.catalog).subscribe({
+        next: () => {
+          this.notyf.success('Catalogo actualizado exitosamente')
+          this.dialogRef.close(true)
+        },
+        error: (error) => {
+          console.error(error);
+          this.notyf.error("Error actualizando catalogo");
+        }
+      });
     } else {
-      this.catalogsService.createCatalogo(this.catalog, this.authService.getUsername()).subscribe(() => this.dialogRef.close(true));
+      this.catalogsService.createCatalogo(this.catalog, this.authService.getUsername()).subscribe({
+        next: () => {
+          this.notyf.success('Catalogo creado exitosamente')
+          this.dialogRef.close(true)
+        },
+        error: (error: any) => {
+          console.error(error);
+          this.notyf.error("Error creando catalogo");
+        }
+      });
     }
   }
 }
