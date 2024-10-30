@@ -17,10 +17,12 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ModalCargaComponent } from './modal-carga/modal-carga.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
-  declarations: [UserListComponent, UserFormComponent],
+  declarations: [UserListComponent, UserFormComponent, ModalCargaComponent],
   imports: [
     CommonModule,
     UsersRoutingModule,
@@ -37,6 +39,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSelectModule,
     MatDividerModule,
     MatSlideToggleModule,
+    MatTooltipModule,
     FormsModule
   ]
 })

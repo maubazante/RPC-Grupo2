@@ -1,0 +1,7 @@
+<h2 mat-dialog-title>Informe de carga de usuario <button *ngIf="huboRepetidos" mat-icon-button
+        matTooltip="Si hubo usuarios duplicados, igualmente no interrumpe el proceso de carga">
+        <mat-icon>info</mat-icon>
+    </button></h2>
+<mat-dialog-content>
+    <p *ngFor="let item of response">{{ item }}</p>
+</mat-dialog-content>
