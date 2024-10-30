@@ -90,9 +90,11 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
   deleteCatalog(id: number): void {
     const deleteSubscription = this.catalogsService.deleteCatalogo(id, this.authService.getUsername()).subscribe({
       next: () => {
+        this.notyf.success('Catalogo actualizado correctamente')
         this.loadCatalogs();
       },
       error: (err) => {
+        this.notyf.error(err)
         console.error('Error deleting catalog', err);
       },
       complete: () => {
