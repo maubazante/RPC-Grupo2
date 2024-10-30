@@ -37,7 +37,7 @@ export class ReportsListComponent implements OnInit {
   filtros: Filtro[] = [];
   selectedFiltro: any = null;
   filtroForm!: FormGroup;
-  displayedColumns: string[] = ['id', 'codigoArticulo', 'tienda', 'fechaSolicitud', 'estado'];
+  displayedColumns: string[] = ['id', 'codigoArticulo', 'cantidad', 'tienda', 'fechaSolicitud', 'estado'];
   private reportsSubject = new BehaviorSubject<any[]>([]);
   private filtersSubject = new BehaviorSubject<any>(null);
 
