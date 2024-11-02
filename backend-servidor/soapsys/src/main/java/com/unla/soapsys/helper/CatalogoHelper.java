@@ -11,6 +11,7 @@ import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoRequest;
 import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.GetAllCatalogosRequest;
@@ -125,8 +126,13 @@ public class CatalogoHelper {
 		return modificarCatalogoRequest;
 	}
 	
-	public static String deleteCatalog(long id, String username) {
-		return null;
+	public static EliminarCatalogoRequest deleteCatalog(Long id, String username) {
+		ObjectFactory factory = new ObjectFactory();
+		EliminarCatalogoRequest request = new EliminarCatalogoRequest();
+		request.setCatalogId(factory.createEliminarCatalogoRequestCatalogId(id));
+		request.setUsername(username);
+		
+		return request;
 	}
 	
 	public static Catalogo deletedCatalog(EliminarCatalogoResponse eliminarCatalogoResponse) {

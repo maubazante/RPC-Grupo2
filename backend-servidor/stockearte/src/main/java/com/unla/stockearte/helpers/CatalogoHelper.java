@@ -106,9 +106,9 @@ public class CatalogoHelper {
 		return modificarCatalogoResponse;
 	}
 	
-	public static EliminarCatalogoResponse crearEliminarCatalogoResponse(long id) {
+	public static EliminarCatalogoResponse crearEliminarCatalogoResponse(Long oid) {
 		EliminarCatalogoResponse modificarCatalogoResponse = new EliminarCatalogoResponse();
-		modificarCatalogoResponse.setMessage("Catálogo con id " + id + " eliminado exitosamente");
+		modificarCatalogoResponse.setMessage("Catálogo con id " + oid.toString() + " eliminado exitosamente");
 		
 		return modificarCatalogoResponse;
 	}

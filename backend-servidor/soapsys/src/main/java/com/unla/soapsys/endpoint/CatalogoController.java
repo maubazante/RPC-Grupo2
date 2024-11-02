@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoRequest;
 import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.ExportarCatalogoPdfResponse;

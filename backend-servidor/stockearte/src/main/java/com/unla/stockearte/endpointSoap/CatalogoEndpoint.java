@@ -81,8 +81,8 @@ public class CatalogoEndpoint {
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "EliminarCatalogoRequest")
 	@ResponsePayload
 	public EliminarCatalogoResponse eliminarCatalogo(@RequestPayload EliminarCatalogoRequest request) throws Exception{
-		catalogoService.deleteCatalogo(request.getCatalogId(), request.getUsername());
-		EliminarCatalogoResponse response = CatalogoHelper.crearEliminarCatalogoResponse(request.getCatalogId());
+		catalogoService.deleteCatalogo(request.getCatalogId().getValue(), request.getUsername());
+		EliminarCatalogoResponse response = CatalogoHelper.crearEliminarCatalogoResponse(request.getCatalogId().getValue());
 		
 		return response;
 	}
