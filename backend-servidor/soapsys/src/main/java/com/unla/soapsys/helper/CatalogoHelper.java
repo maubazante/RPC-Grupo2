@@ -11,6 +11,7 @@ import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
@@ -122,6 +123,14 @@ public class CatalogoHelper {
 		modificarCatalogoRequest.setCatalogo(catalogo);
 		
 		return modificarCatalogoRequest;
+	}
+	
+	public static String deleteCatalog(long id, String username) {
+		return null;
+	}
+	
+	public static Catalogo deletedCatalog(EliminarCatalogoResponse eliminarCatalogoResponse) {
+		return null;
 	}
 	
 	public static Catalogo updatedCatalogo(ModificarCatalogoResponse modificarCatalogoResponse) {

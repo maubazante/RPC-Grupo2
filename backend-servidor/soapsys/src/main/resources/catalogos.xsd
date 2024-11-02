@@ -88,6 +88,22 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="EliminarCatalogoRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="catalogo" type="tns:CatalogoDTO" />
+				<xs:element name="username" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="EliminarCatalogoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="message" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 
 	<xs:complexType name="ListaLongs">
 		<xs:sequence>

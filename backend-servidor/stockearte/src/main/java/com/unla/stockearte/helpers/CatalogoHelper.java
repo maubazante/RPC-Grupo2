@@ -7,6 +7,7 @@ import com.example.catalogos.CatalogoDTO;
 import com.example.catalogos.CatalogoDTO.ProductoIds;
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ModificarCatalogoResponse;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
@@ -102,6 +103,13 @@ public class CatalogoHelper {
 
 		modificarCatalogoResponse.setCatalogo(catalogoDTO);
 
+		return modificarCatalogoResponse;
+	}
+	
+	public static EliminarCatalogoResponse crearEliminarCatalogoResponse(long id) {
+		EliminarCatalogoResponse modificarCatalogoResponse = new EliminarCatalogoResponse();
+		modificarCatalogoResponse.setMessage("Catálogo con id " + id + " eliminado exitosamente");
+		
 		return modificarCatalogoResponse;
 	}
 
