@@ -7,7 +7,7 @@ import { filter } from 'rxjs';
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class LayoutComponent {
   @ViewChild('drawer') drawer!: MatDrawer;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -11,11 +11,11 @@ import { AuthService } from '../../../core/services/auth.service';
 export class NavbarComponent implements OnInit {
   
   isAdmin: boolean = false;
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private cd: ChangeDetectorRef) {
     this.isAdmin = this.authService.isAdmin();
   }
   ngOnInit(): void {
-    
+    this.cd.detectChanges();
   }
 
   logout = () => { this.authService.logout() }

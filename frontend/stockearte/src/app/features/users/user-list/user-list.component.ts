@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Usuario, UsuariosArray } from '../../../shared/types/Usuario';
 import { MatDialog } from '@angular/material/dialog';
 import { UserFormComponent } from '../user-form/user-form.component';
@@ -6,17 +6,20 @@ import { UsersService } from '../../../core/services/users.service';
 import { Notyf } from 'notyf';
 import { ModalAction } from '../../../shared/types/ModalAction';
 import { AuthService } from '../../../core/services/auth.service';
-import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-user-list',
   standalone: false,
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styleUrl: './user-list.component.css',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class UserListComponent implements OnDestroy {
   displayedColumns: string[] = ['id', 'nombre', 'apellido', 'username', 'rol', 'tienda', 'habilitado', 'edit', 'erase'];
-  dataSource: Usuario[] = [];
+  dataSource = new MatTableDataSource<Usuario>();
+  private usersSubject = new Subject<Usuario[]>();
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
   private subscriptions: Subscription[] = [];
@@ -29,10 +32,18 @@ export class UserListComponent implements OnDestroy {
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
+
+    this.subscriptions.push(
+      this.usersSubject.subscribe(users => {
+        console.log(users)
+        this.dataSource.data = users;
+      })
+    );
+
     this.loadUsers();
 
     this.subscriptions.push(
@@ -44,24 +55,31 @@ export class UserListComponent implements OnDestroy {
         this.filterUsers(searchTerm);
       })
     );
+
+    // Define filtrar por username o tiendaCodigo
+    this.dataSource.filterPredicate = (data: Usuario, filter: string) => {
+      return data.username?.toLowerCase().includes(filter) ||
+        data.tiendaCodigo.toLowerCase().includes(filter);
+    };
   }
 
   ngOnDestroy(): void {
-    // Cancelar todas las suscripciones al destruir el componente
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   loadUsers(): void {
     const sub = this.usersService.getUsers(this.soloHabilitados).subscribe({
       next: (users) => {
-        this.dataSource = users.usuarios;
+        console.log("From back: ", users.usuarios);
+        this.dataSource.data = users.usuarios;
+        this.usersSubject.next(users.usuarios);
       },
       error: (err) => {
         this.notyf.error('Error al cargar usuarios');
         console.error(err);
       },
       complete: () => {
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
     this.subscriptions.push(sub);
@@ -89,16 +107,17 @@ export class UserListComponent implements OnDestroy {
 
     const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const createSub = this.usersService.createUser(result).subscribe({
+        const createSub = this.usersService.createUser(result).pipe(
+          finalize(() => this.loadUsers())
+        ).subscribe({
           next: (response) => {
             response.message.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
-            this.loadUsers();
           },
           error: (err) => {
             this.notyf.error('Error al crear usuario');
             console.error(err);
-          },
-        });
+          }
+        }); 
         this.subscriptions.push(createSub);
       }
     });
@@ -106,41 +125,37 @@ export class UserListComponent implements OnDestroy {
   }
 
   updateUser(usuario: Usuario): void {
-    const sub = this.usersService.modifyUser(usuario).subscribe({
+    const sub = this.usersService.modifyUser(usuario).pipe(
+      finalize(() => this.loadUsers())
+    ).subscribe({
       next: (response) => {
         response.message.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
       },
       error: (err) => {
         this.notyf.error('Error al actualizar usuario');
         console.error(err);
-      },
-      complete: () => {
-        this.loadUsers();
       }
     });
     this.subscriptions.push(sub);
   }
 
   deleteUser(id: string): void {
-      const sub = this.usersService.deleteUser(id).subscribe({
-        next: () => {
-          this.notyf.success('Usuario eliminado con éxito');
-        },
-        error: (err) => {
-          this.notyf.error('Error al eliminar usuario');
-          console.error(err);
-        },
-        complete: () => {
-          this.loadUsers();
-        }
-      });
-      this.subscriptions.push(sub);
+    const sub = this.usersService.deleteUser(id).pipe(
+      finalize(() => this.loadUsers())
+    ).subscribe({
+      next: () => {
+        this.notyf.success('Usuario eliminado con éxito');
+      },
+      error: (err) => {
+        this.notyf.error('Error al eliminar usuario');
+        console.error(err);
+      }
+    });
+    this.subscriptions.push(sub);
   }
 
   filterUsers(searchTerm: string): void {
-    this.dataSource = this.dataSource.filter(usuario =>
-      usuario.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   clearSearch(): void {
@@ -158,6 +173,6 @@ export class UserListComponent implements OnDestroy {
 
   toggleHabilitadas(event: any): void {
     this.soloHabilitados = event.checked;
-    this.loadUsers(); 
+    this.loadUsers();
   }
 }

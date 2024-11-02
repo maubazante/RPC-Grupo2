@@ -8,7 +8,7 @@
       </mat-slide-toggle>
     <mat-form-field class="search-field" appearance="outline" [style.width.px]=500>
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput placeholder="Buscar usuario" (input)="onSearchChange($event)" />
+      <input matInput placeholder="Buscar usuario" (input)="onSearchChange($event)" [(ngModel)]="searchTerm"/>
       <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
         <mat-icon>close</mat-icon>
       </button>

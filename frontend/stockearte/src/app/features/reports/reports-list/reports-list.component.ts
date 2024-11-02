@@ -18,7 +18,7 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.css'],
   providers: [provideNativeDateAdapter()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ReportsListComponent implements OnInit {
   isAdmin: boolean = false;
