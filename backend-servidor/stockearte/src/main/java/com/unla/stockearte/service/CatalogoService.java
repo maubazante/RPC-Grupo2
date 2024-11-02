@@ -159,25 +159,24 @@ public class CatalogoService {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
 
+		Catalogo catalogoExistente = catalogoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Catálogo no encontrado"));
+
 		if (!usuario.isHabilitado() || !isAuthorizedUser(username)) {
 			throw new UnauthorizedException("El usuario no tiene permisos para actualizar el catálogo.");
 		}
 
-		Catalogo catalogoExistente = catalogoRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Catálogo no encontrado"));
-
 		Tienda tiendaUsuario = usuario.getTienda();
-
 		if (tiendaUsuario != null && !tiendaUsuario.getEsCasaCentral()
 				&& !catalogoExistente.getTienda().getId().equals(tiendaUsuario.getId())) {
 			throw new UnauthorizedException("El usuario no tiene permisos para actualizar este catálogo.");
 		}
 
+		// Actualizar nombre del catálogo
 		catalogoExistente.setNombre(catalogoDTO.getNombre());
 
-		catalogoExistente.getProductos().clear();
-
-		List<CatalogoProducto> catalogoProductos = new ArrayList<>();
+		// Limpiar productos existentes y agregar nuevos
+		catalogoExistente.getCatalogoProductos().clear();
 		for (Long productoId : catalogoDTO.getProductoIds()) {
 			Producto producto = productoRepository.findById(productoId)
 					.orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
@@ -185,10 +184,8 @@ public class CatalogoService {
 			CatalogoProducto catalogoProducto = new CatalogoProducto();
 			catalogoProducto.setCatalogo(catalogoExistente);
 			catalogoProducto.setProducto(producto);
-			catalogoProductos.add(catalogoProducto);
+			catalogoExistente.getCatalogoProductos().add(catalogoProducto);
 		}
-
-		catalogoExistente.setCatalogoProductos(catalogoProductos);
 
 		return catalogoRepository.save(catalogoExistente);
 	}
