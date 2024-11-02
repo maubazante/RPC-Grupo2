@@ -96,6 +96,8 @@
 							${project.basedir}/src/main/resources/filtroOrdenes.xsd</source>
 						<source>
 							${project.basedir}/src/main/resources/catalogos.xsd</source>
+						<source>
+						    ${project.basedir}/src/main/resources/usuarios.xsd</source>
 					</sources>
 				</configuration>
 			</plugin>

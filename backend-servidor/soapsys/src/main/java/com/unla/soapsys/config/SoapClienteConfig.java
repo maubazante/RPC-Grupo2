@@ -39,5 +39,20 @@ public class SoapClienteConfig {
 		template.setDefaultUri("http://localhost:8080/ws");
 		return template;
 	}
+	@Bean
+	public Jaxb2Marshaller marshallerUsuarios() {
+	    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+	    marshaller.setContextPath("com.example.usuarios");
+	    return marshaller;
+	}
+
+	@Bean
+	public WebServiceTemplate webServiceTemplateCargaUsuario(Jaxb2Marshaller marshallerUsuarios) {
+	    WebServiceTemplate template = new WebServiceTemplate();
+	    template.setMarshaller(marshallerUsuarios);
+	    template.setUnmarshaller(marshallerUsuarios);
+	    template.setDefaultUri("http://localhost:8080/ws");
+	    return template;
+	}
 
 }
