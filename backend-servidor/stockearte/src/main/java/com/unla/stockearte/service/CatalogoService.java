@@ -2,9 +2,11 @@ package com.unla.stockearte.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +45,13 @@ public class CatalogoService {
 	private ProductoRepository productoRepository;
 
 	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public List<Producto> obtenerProductosPorCatalogo(Long catalogoId) {
 		return catalogoRepository.findProductosByCatalogoId(catalogoId);
 	}
 
 	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public List<Catalogo> getAllCatalogos(String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
@@ -108,7 +110,7 @@ public class CatalogoService {
 	}
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public Catalogo createCatalogo(CatalogoDTO catalogoDTO, String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
@@ -152,7 +154,7 @@ public class CatalogoService {
 	}
 
 	@Transactional(readOnly = false, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public Catalogo updateCatalogo(Long id, CatalogoDTO catalogoDTO, String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new UnauthorizedException("Usuario no encontrado"));
@@ -219,7 +221,7 @@ public class CatalogoService {
 	}
 
 	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
-	"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public byte[] exportCatalogoPDF(Long id, String username) throws IOException {
 		Catalogo catalogo = getCatalogoById(id, username)
 				.orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
@@ -247,7 +249,8 @@ public class CatalogoService {
 			throw new RuntimeException("Acceso denegado: el usuario no tiene permiso para acceder a este catálogo.");
 		}
 
-		List<Producto> productos = catalogo.getProductos();
+		// Set para evitar duplicados
+		Set<Producto> productos = new LinkedHashSet<>(catalogo.getProductos());
 
 		// Crear la lista de contenidos para el PDF
 		List<ContenidoPDF> contenidos = new ArrayList<>();
