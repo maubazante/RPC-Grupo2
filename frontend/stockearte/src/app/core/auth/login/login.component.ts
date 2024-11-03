@@ -59,7 +59,6 @@ export class LoginComponent {
 
           this.notyf.success("Usuario ingresado exitosamente")
           response.rol === Rol.ADMIN ? this.router.navigate(['/users']) : this.router.navigate(['/products']);
-          //console.log("response: ", response)
         }
       },
       error: (error) => {

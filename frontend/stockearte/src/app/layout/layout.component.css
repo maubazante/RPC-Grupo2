@@ -27,11 +27,15 @@ h3 {
   margin-left: 16px;
 }
 
-.welcomeHeader {
+.user-store {
   font-size: 16px;
   margin-left: 32px;
   margin-right: auto;
   color: white;
   display: flex;
   align-items: center;
+  border: 1.1px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border-color: rgba(255, 255, 255, 0.432);
 }

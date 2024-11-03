@@ -1,6 +1,6 @@
 .navbar {
   position: absolute;
-  top: 280px;
+  top: 340px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,7 +26,13 @@
 }
 
 .username-display {
+  position: relative;
+  bottom: 30px;
   margin-right: 8px;
   font-size: 14px;
   color: #fff;
+  border: 1.1px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border-color: rgba(255, 255, 255, 0.432);
 }

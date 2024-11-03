@@ -1,5 +1,7 @@
 <mat-toolbar color="primary" class="navbar">
     <div class="container">
+        <span class="username-display" *ngIf="username"><mat-icon style="position: relative; top: 6px;">account_box</mat-icon>  <strong>{{ username }}</strong> </span>
+
         <button mat-button routerLink="/users" *ngIf="this.isAdmin">Usuarios</button>
         <button mat-button routerLink="/products">Productos</button>
         <button mat-button routerLink="/orders">Órdenes de Compra</button>
@@ -10,7 +12,6 @@
         <button mat-button routerLink="/stores" *ngIf="this.isAdmin">Tiendas</button>
 
         <span class="spacer"></span>
-        <span class="username-display" *ngIf="username">Usuario: <strong>{{ username }}</strong> </span>
         <button mat-stroked-button (click)="logout()">Logout</button>
     </div>
 </mat-toolbar>

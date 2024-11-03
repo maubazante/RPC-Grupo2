@@ -2,8 +2,8 @@
   <button mat-mini-fab *ngIf="showHamburgerMenu" (click)="drawer.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class="welcomeHeader" *ngIf="username && showHamburgerMenu">
-    Bienvenido, {{ nombre }} {{ apellido }} - Tienda {{ codTienda }} {{ casaCentral }}
+  <span class="user-store" *ngIf="username && showHamburgerMenu">
+    <mat-icon>person</mat-icon> <b>{{ nombre }} {{ apellido }}</b>
   </span>
   <h3>stockearte</h3>
 </mat-toolbar>
