@@ -7,6 +7,7 @@ import { Catalogo, CatalogoSOAP } from '../../../shared/types/Catalogo';
 import { AuthService } from '../../../core/services/auth.service';
 import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-catalogs-list',
@@ -20,9 +21,12 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   private subscriptions = new Subscription();
 
-  constructor(private catalogsService: CatalogosService, 
-    private dialog: MatDialog, 
-    private authService: AuthService) {}
+  constructor(
+    private catalogsService: CatalogosService,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadCatalogs();
@@ -32,6 +36,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     const catalogSubscription = this.catalogsService.getCatalogos(this.authService.getUsername()).subscribe({
       next: (data) => {
         this.dataSource = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading catalogs', err);
@@ -52,7 +57,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     const dialogSubscription = dialogRef.afterClosed().subscribe({
       next: (result) => {
         if (result) {
-          this.loadCatalogs();  
+          this.loadCatalogs();
         }
       },
       error: (err) => {
@@ -74,7 +79,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     const dialogSubscription = dialogRef.afterClosed().subscribe({
       next: (result) => {
         if (result) {
-          this.loadCatalogs(); 
+          this.loadCatalogs();
         }
       },
       error: (err) => {

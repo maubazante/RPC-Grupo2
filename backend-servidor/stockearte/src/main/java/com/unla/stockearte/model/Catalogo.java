@@ -30,7 +30,7 @@ public class Catalogo {
 	@JoinColumn(name = "fk_tienda_id", nullable = false)
 	private Tienda tienda;
 
-	@OneToMany(mappedBy = "catalogo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "catalogo", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CatalogoProducto> catalogoProductos;
 
 	public Long getId() {

@@ -50,10 +50,16 @@ export class LoginComponent {
         else {
           sessionStorage.setItem("ROLE", response.rol);
           sessionStorage.setItem("USERNAME", response.username);
+          sessionStorage.setItem("NOMBRE", response.nombre);
+          sessionStorage.setItem("APELLIDO", response.apellido);
           sessionStorage.setItem("USER_ID", response.userId);
           sessionStorage.setItem("TIENDA_ID", response.tiendaId);
+          sessionStorage.setItem("CODTIENDA", response.codTienda);
+          sessionStorage.setItem("CASACENTRAL", response.casaCentral ? "Casa Central" : "");
+
           this.notyf.success("Usuario ingresado exitosamente")
           response.rol === Rol.ADMIN ? this.router.navigate(['/users']) : this.router.navigate(['/products']);
+          //console.log("response: ", response)
         }
       },
       error: (error) => {

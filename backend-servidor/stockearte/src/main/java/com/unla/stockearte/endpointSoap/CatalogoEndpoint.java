@@ -10,6 +10,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.catalogos.CrearCatalogoRequest;
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoRequest;
+import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.ExportarCatalogoPdfResponse;
 import com.example.catalogos.GetAllCatalogosRequest;
@@ -75,5 +77,14 @@ public class CatalogoEndpoint {
 		
 		return response;
 	}
-
+	
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "EliminarCatalogoRequest")
+	@ResponsePayload
+	public EliminarCatalogoResponse eliminarCatalogo(@RequestPayload EliminarCatalogoRequest request) throws Exception{
+		catalogoService.deleteCatalogo(request.getCatalogId().getValue(), request.getUsername());
+		EliminarCatalogoResponse response = CatalogoHelper.crearEliminarCatalogoResponse(request.getCatalogId().getValue());
+		
+		return response;
+	}
+	
 }

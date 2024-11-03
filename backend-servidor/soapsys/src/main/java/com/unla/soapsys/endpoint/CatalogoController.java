@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoRequest;
+import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.ExportarCatalogoPdfResponse;
 import com.example.catalogos.ListCatalogoResponse;
@@ -77,6 +80,15 @@ public class CatalogoController {
 		Catalogo response = CatalogoHelper.updatedCatalogo(modificarCatalogoResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Catalogo> deleteCatalogo(@PathVariable Long id, @RequestParam String username) {
+		EliminarCatalogoResponse eliminarCatalogoResponse = (EliminarCatalogoResponse) webServiceTemplate
+				.marshalSendAndReceive(CatalogoHelper.deleteCatalog(id, username));
+		Catalogo response = CatalogoHelper.deletedCatalog(eliminarCatalogoResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}	
 
 	@GetMapping("/exportar/pdf/{id}")
 	public ResponseEntity<?> exportCatalogoPDF(@PathVariable Long id, @RequestParam String username) throws IOException {
