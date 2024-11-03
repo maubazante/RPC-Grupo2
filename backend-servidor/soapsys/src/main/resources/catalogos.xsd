@@ -87,6 +87,23 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	 <xs:element name="SendFileRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="fileName" type="xs:string"/>
+                <xs:element name="fileContent" type="xs:base64Binary"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="SendFileResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="resultado" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 
 	<xs:complexType name="ListaLongs">
