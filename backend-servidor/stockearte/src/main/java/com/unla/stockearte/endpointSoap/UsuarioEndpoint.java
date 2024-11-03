@@ -1,5 +1,6 @@
 package com.unla.stockearte.endpointSoap;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.catalogos.GetAllCatalogosRequest;
 import com.example.catalogos.ListCatalogoResponse;
+import com.example.catalogos.SendFileRequest;
 import com.example.catalogos.SendFileResponse;
 import com.unla.stockearte.helpers.CatalogoHelper;
 import com.unla.stockearte.model.Catalogo;
@@ -27,17 +29,13 @@ public class UsuarioEndpoint {
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAllCatalogosRequest")
 	@ResponsePayload
-	public SendFileResponse getAllCatalogos(@RequestPayload SendFileResponse request) throws Exception {
+	public SendFileResponse getAllCatalogos(@RequestPayload SendFileRequest request) throws Exception {
 		
-		MultipartFile multipartFile = new MockMultipartFile(
-			    "file",                   // Nombre del archivo
-			    "nombreArchivo.pdf",       // Nombre que deseas dar al archivo
-			    "application/pdf",         // Tipo de contenido MIME
-			    fileData                   // El arreglo de bytes con los datos del archivo
-			);
-		List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(archivo);
+		byte[] fileData = Base64.getDecoder().decode(request.getFileContent());
+		List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(fileData);
 
-		ListCatalogoResponse response = CatalogoHelper.getCatalogosResponse(catalogos);
+		SendFileResponse response = new SendFileResponse();
+
 		return response;
 	}
 	

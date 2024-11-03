@@ -1,9 +1,11 @@
 package com.unla.stockearte.service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 
 import java.util.List;
@@ -277,11 +279,12 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
 	}
-    public List<String> procesarArchivoCSV(MultipartFile archivo) throws IOException {
+	public List<String> procesarArchivoCSV(byte [] decodedBytes) throws IOException {
         List<String> errores = new ArrayList<>();
         List<Usuario> usuariosARegistrar = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(archivo.getInputStream()))) {
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(decodedBytes)))) {
             String linea;
             int numeroLinea = 1;
 

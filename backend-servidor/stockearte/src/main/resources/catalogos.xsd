@@ -100,11 +100,11 @@
     <xs:element name="SendFileResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="resultado" type="xs:boolean"/>
+                <xs:element name="error" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
+  
 
 	<xs:complexType name="ListaLongs">
 		<xs:sequence>

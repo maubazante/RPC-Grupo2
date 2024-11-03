@@ -19,11 +19,11 @@ public class UsuarioCargaController {
 
 	@Autowired
 	private UsuarioService usuarioCargaMasivaService;
-
+/*
 	@PostMapping("/cargar-usuarios")
 	public ResponseEntity<List<String>> cargarUsuarios(@RequestParam("archivo") MultipartFile archivo) {
 		try {
-			List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(archivo);
+			//List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(archivo);
 			if (errores.isEmpty()) {
 				return ResponseEntity.ok(List.of("Usuarios cargados exitosamente."));
 			} else {
@@ -33,4 +33,5 @@ public class UsuarioCargaController {
 			return ResponseEntity.status(500).body(List.of("Error al procesar el archivo."));
 		}
 	}
+*/	
 }
