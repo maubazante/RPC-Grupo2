@@ -19,5 +19,5 @@ export class NavbarComponent implements OnInit {
     this.username = sessionStorage.getItem("USERNAME");
   }
 
-  logout = () => { this.authService.logout() }
+  logout = () => { this.authService.logout(); sessionStorage.removeItem("USERNAME"); }
 }

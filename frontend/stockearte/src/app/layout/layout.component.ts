@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewChild, OnInit } from '@angular/
 import { MatDrawer } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
-import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -15,18 +14,22 @@ export class LayoutComponent implements OnInit {
   showHamburgerMenu = false;
   username: string | null = '';
 
-  // Inyectar el AuthService
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private router: Router) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       const url = event.url;
       this.showHamburgerMenu = !(url.includes('/login') || url.includes('/register'));
       this.drawer.close();
+      this.updateUsername();
     });
   }
 
   ngOnInit(): void {
-    this.username = this.authService.getUsername();
+    this.updateUsername();
+  }
+
+  private updateUsername(): void {
+    this.username = sessionStorage.getItem("USERNAME");
   }
 }
