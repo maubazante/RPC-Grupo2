@@ -18,12 +18,15 @@
 
 .container {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 30px;
   padding: 10px;
+  margin-right: 8px;
 }
 
 .username-display {
-  font-size: 16px;
+  margin-right: 8px;
+  font-size: 14px;
   color: #fff;
 }

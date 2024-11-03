@@ -10,6 +10,7 @@
         <button mat-button routerLink="/stores" *ngIf="this.isAdmin">Tiendas</button>
 
         <span class="spacer"></span>
+        <span class="username-display" *ngIf="username">Usuario: <strong>{{ username }}</strong> </span>
         <button mat-stroked-button (click)="logout()">Logout</button>
     </div>
 </mat-toolbar>

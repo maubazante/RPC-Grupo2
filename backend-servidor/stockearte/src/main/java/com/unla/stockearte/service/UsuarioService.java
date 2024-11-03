@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +30,6 @@ import com.usuario.grpc.GetUsuariosRequest;
 import com.usuario.grpc.GetUsuariosResponse;
 import com.usuario.grpc.ModifyUsuarioRequest;
 import com.usuario.grpc.ModifyUsuarioResponse;
-
 import com.usuario.grpc.UserLoginRequest;
 import com.usuario.grpc.UserLoginResponse;
 import com.usuario.grpc.UsuarioServiceGrpc.UsuarioServiceImplBase;
@@ -55,13 +53,9 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 	private com.usuario.grpc.Usuario convertToProtoUsuario(Usuario usuario) {
 		com.usuario.grpc.Usuario.Builder protoUsuarioBuilder = com.usuario.grpc.Usuario.newBuilder()
-				.setId(usuario.getId())
-				.setNombre(usuario.getNombre())
-				.setApellido(usuario.getApellido())
-				.setUsername(usuario.getUsername())
-				.setPassword(usuario.getPassword())
-				.setRol(usuario.getRol().toString())
-				.setHabilitado(usuario.isHabilitado());
+				.setId(usuario.getId()).setNombre(usuario.getNombre()).setApellido(usuario.getApellido())
+				.setUsername(usuario.getUsername()).setPassword(usuario.getPassword())
+				.setRol(usuario.getRol().toString()).setHabilitado(usuario.isHabilitado());
 
 		// Verifica si el usuario tiene una tienda asignada
 		if (usuario.getTienda() != null) {
@@ -92,8 +86,9 @@ public class UsuarioService extends UsuarioServiceImplBase {
 
 			Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
 
-			if (tienda.isPresent())
+			if (tienda.isPresent()) {
 				usuario.setTienda(tienda.get());
+			}
 
 			getUsuarioRepository().save(usuario);
 
@@ -145,8 +140,9 @@ public class UsuarioService extends UsuarioServiceImplBase {
 				usuario.get().setRol(Rol.fromValue(request.getUsuario().getRol()));
 
 				Optional<Tienda> tienda = getTiendaRepository().findById(request.getUsuario().getTiendaId());
-				if (tienda.isPresent())
+				if (tienda.isPresent()) {
 					usuario.get().setTienda(tienda.get());
+				}
 
 				getUsuarioRepository().save(usuario.get());
 
@@ -155,9 +151,8 @@ public class UsuarioService extends UsuarioServiceImplBase {
 			}
 
 		} else {
-			response = ModifyUsuarioResponse.newBuilder()
-					.setMessage(
-							"Error al modificar la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para modificar usuarios.")
+			response = ModifyUsuarioResponse.newBuilder().setMessage(
+					"Error al modificar la cuenta: el usuario autenticado no existe o carece de los permisos necesarios para modificar usuarios.")
 					.build();
 		}
 
@@ -173,8 +168,9 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	public Optional<Set<Usuario>> findUsuarios(String username, Long tiendaId) {
 		// Solo disponible para usuarios de casa central
 		Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
-		if (optionalUsuario.isPresent() && !optionalUsuario.get().esDeCasaCentral())
+		if (optionalUsuario.isPresent() && !optionalUsuario.get().esDeCasaCentral()) {
 			throw new RuntimeException("Acceso no permitido: el usuario no pertenece a casa central.");
+		}
 
 		Set<Usuario> usuarios;
 
@@ -218,7 +214,8 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	@Override
 	public void getUsuarios(GetUsuariosRequest request, StreamObserver<GetUsuariosResponse> responseObserver) {
 		// Verifica si se deben traer solo los usuarios habilitados
-		Boolean habilitados = request.hasHabilitados() ? request.getHabilitados() : null; // Verifica si se ha establecido
+		Boolean habilitados = request.hasHabilitados() ? request.getHabilitados() : null; // Verifica si se ha
+																							// establecido
 
 		System.out.println("¿Solo habilitados? " + habilitados);
 
@@ -246,6 +243,7 @@ public class UsuarioService extends UsuarioServiceImplBase {
 		responseObserver.onCompleted();
 	}
 
+	@Override
 	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
 			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public void loginUsuario(UserLoginRequest request, StreamObserver<UserLoginResponse> responseObserver) {
@@ -253,17 +251,15 @@ public class UsuarioService extends UsuarioServiceImplBase {
 				request.getUserLogin().getPassword());
 		UserLoginResponse response = null;
 		if (user.isPresent()) {
-			response = UserLoginResponse.newBuilder()
-					.setPassword(user.get().getPassword())
-					.setUsername(user.get().getUsername())
-					.setRol(user.get().getRol().getValue())
-					.setUserId(user.get().getId())
-					.setTiendaId(user.get().getTienda().getId())
-					.build();
+			response = UserLoginResponse.newBuilder().setPassword(user.get().getPassword())
+					.setUsername(user.get().getUsername()).setRol(user.get().getRol().getValue())
+					.setUserId(user.get().getId()).setTiendaId(user.get().getTienda().getId())
+					.setNombre(user.get().getNombre()).setApellido(user.get().getApellido())
+					.setCodTienda(user.get().getTienda().getCodigo())
+					.setCasaCentral(user.get().getTienda().getEsCasaCentral()).build();
 		} else {
 			response = UserLoginResponse.newBuilder()
-					.setErrorMessage("El usuario ingresado no existe en la base de datos.")
-					.build();
+					.setErrorMessage("El usuario ingresado no existe en la base de datos.").build();
 		}
 
 		responseObserver.onNext(response);
@@ -277,77 +273,78 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	public TiendaRepository getTiendaRepository() {
 		return tiendaRepository;
 	}
-    public List<String> procesarArchivoCSV(MultipartFile archivo) throws IOException {
-        List<String> errores = new ArrayList<>();
-        List<Usuario> usuariosARegistrar = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(archivo.getInputStream()))) {
-            String linea;
-            int numeroLinea = 1;
+	public List<String> procesarArchivoCSV(MultipartFile archivo) throws IOException {
+		List<String> errores = new ArrayList<>();
+		List<Usuario> usuariosARegistrar = new ArrayList<>();
 
-            while ((linea = reader.readLine()) != null) {
-                String[] datos = linea.split(";");
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(archivo.getInputStream()))) {
+			String linea;
+			int numeroLinea = 1;
 
-                if (datos.length != 5) {
-                    errores.add("Línea " + numeroLinea + ": Formato incorrecto.");
-                    numeroLinea++;
-                    continue;
-                }
+			while ((linea = reader.readLine()) != null) {
+				String[] datos = linea.split(";");
 
-                String username = datos[0];
-                String password = datos[1];
-                String nombre = datos[2];
-                String apellido = datos[3];
-                Long codigoTienda;
+				if (datos.length != 5) {
+					errores.add("Línea " + numeroLinea + ": Formato incorrecto.");
+					numeroLinea++;
+					continue;
+				}
 
-                // Validar que los campos no estén vacíos
-                if (username.isEmpty() || password.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || datos[4].isEmpty()) {
-                    errores.add("Línea " + numeroLinea + ": Campos vacíos.");
-                    numeroLinea++;
-                    continue;
-                }
+				String username = datos[0];
+				String password = datos[1];
+				String nombre = datos[2];
+				String apellido = datos[3];
+				Long codigoTienda;
 
-                try {
-                    codigoTienda = Long.parseLong(datos[4]);
-                } catch (NumberFormatException e) {
-                    errores.add("Línea " + numeroLinea + ": Código de tienda inválido.");
-                    numeroLinea++;
-                    continue;
-                }
+				// Validar que los campos no estén vacíos
+				if (username.isEmpty() || password.isEmpty() || nombre.isEmpty() || apellido.isEmpty()
+						|| datos[4].isEmpty()) {
+					errores.add("Línea " + numeroLinea + ": Campos vacíos.");
+					numeroLinea++;
+					continue;
+				}
 
-                // Validar duplicidad del usuario
-                if (usuarioRepository.findByUsername(username).isPresent()) {
-                    errores.add("Línea " + numeroLinea + ": Usuario duplicado.");
-                    numeroLinea++;
-                    continue;
-                }
+				try {
+					codigoTienda = Long.parseLong(datos[4]);
+				} catch (NumberFormatException e) {
+					errores.add("Línea " + numeroLinea + ": Código de tienda inválido.");
+					numeroLinea++;
+					continue;
+				}
 
-                // Validar existencia y estado de la tienda
-                Tienda tienda = tiendaRepository.findById(codigoTienda).orElse(null);
-                if (tienda == null) {
-                    errores.add("Línea " + numeroLinea + ": Código de tienda no encontrado.");
-                    numeroLinea++;
-                    continue;
-                }
+				// Validar duplicidad del usuario
+				if (usuarioRepository.findByUsername(username).isPresent()) {
+					errores.add("Línea " + numeroLinea + ": Usuario duplicado.");
+					numeroLinea++;
+					continue;
+				}
 
-                if (!tienda.isHabilitada()) {
-                    errores.add("Línea " + numeroLinea + ": La tienda está deshabilitada.");
-                    numeroLinea++;
-                    continue;
-                }
+				// Validar existencia y estado de la tienda
+				Tienda tienda = tiendaRepository.findById(codigoTienda).orElse(null);
+				if (tienda == null) {
+					errores.add("Línea " + numeroLinea + ": Código de tienda no encontrado.");
+					numeroLinea++;
+					continue;
+				}
 
-                // Crear usuario y agregar a la lista
-                Usuario usuario = new Usuario(username, password, nombre, apellido, Rol.STOREMANAGER, tienda);
-                usuariosARegistrar.add(usuario);
+				if (!tienda.isHabilitada()) {
+					errores.add("Línea " + numeroLinea + ": La tienda está deshabilitada.");
+					numeroLinea++;
+					continue;
+				}
 
-                numeroLinea++;
-            }
-        }
+				// Crear usuario y agregar a la lista
+				Usuario usuario = new Usuario(username, password, nombre, apellido, Rol.STOREMANAGER, tienda);
+				usuariosARegistrar.add(usuario);
 
-        // Guardar los usuarios válidos en la base de datos
-        usuarioRepository.saveAll(usuariosARegistrar);
+				numeroLinea++;
+			}
+		}
 
-        return errores;
-    }
+		// Guardar los usuarios válidos en la base de datos
+		usuarioRepository.saveAll(usuariosARegistrar);
+
+		return errores;
+	}
 }
-
