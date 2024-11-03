@@ -52,7 +52,7 @@ export class UsersService {
   }
 
   cargarUsuario(request: any){
-    return this.http.post(`${environment.controllerURL}/cargar-usuarios`, request);
+    return this.http.post(`${environment.soapSysURL}/api/catalogos/cargar-usuarios`, request);
   }
 
 }
