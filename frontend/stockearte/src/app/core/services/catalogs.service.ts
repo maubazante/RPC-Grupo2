@@ -32,7 +32,7 @@ export class CatalogosService {
   }
 
   deleteCatalogo(id: number, username: string | null): Observable<void> {
-    return this.http.delete<void>(`${environment.controllerURL}${BASE_URL}/${id}?username=${username}`, { headers: this.headers });
+    return this.http.delete<void>(`${environment.soapSysURL}${BASE_URL}/${id}?username=${username}`, { headers: this.headers });
   }
 
   exportCatalogoToPDF(id: number, username: string | null): Observable<Blob> {

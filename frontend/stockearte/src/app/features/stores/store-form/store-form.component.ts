@@ -5,6 +5,7 @@ import { Tienda } from '../../../shared/types/Tienda';
 import { Usuario } from '../../../shared/types/Usuario';
 import { UsersService } from '../../../core/services/users.service';
 import { ModalAction } from '../../../shared/types/ModalAction';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-store-form',
@@ -21,6 +22,7 @@ export class StoreFormComponent {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StoreFormComponent>,
     private userService: UsersService,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: { tienda: Tienda, usuarios: Usuario[], action: string }
   ) {
     this.usuarios = data.usuarios || [];
@@ -33,7 +35,8 @@ export class StoreFormComponent {
       provincia: [this.data.tienda.provincia],
       habilitada: [this.data.tienda.habilitada, Validators.required],
       es_casa_central: [this.data.tienda.es_casa_central],
-      usuarioId: null
+      usuarioId: Number(this.authService.getUserId()),
+      idUserAdmin: [this.authService.isAdmin() ? this.authService.getUserId() : 0]
     }); 
   }
 

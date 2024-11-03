@@ -16,13 +16,14 @@ export class ProductFormComponent {
   productForm: FormGroup;
   tiendas: Tienda[];  // Lista de tiendas para el select
   isEdit: boolean;
-
+  isAdmin: boolean
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     public dialogRef: MatDialogRef<ProductFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { product: Producto, tiendas: Tienda[], action: string }
   ) {
+    this.isAdmin = this.authService.isAdmin();
     this.tiendas = data.tiendas || [];
     this.isEdit = data.action === ModalAction.EDIT;
     this.productForm = this.fb.group({
@@ -32,10 +33,10 @@ export class ProductFormComponent {
       foto: [data.product.foto, Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)],
       color: [data.product.color],
       talle: [data.product.talle],
-      cantidad: [this.data.product.cantidad || 1, [Validators.required, Validators.min(0)]], // Control de cantidad
+      cantidad: [{value: Number(this.data.product.cantidad) || 0, disabled: this.authService.isAdmin()}, [Validators.required, Validators.min(0)]], // Control de cantidad
       habilitado: [data.product.habilitado, Validators.required],
       idUserAdmin: [this.authService.getUserId()],
-      tiendas: [[1]]
+      tiendaIds: [data.product.tiendaIds[0]]
     });
   }
 
@@ -45,6 +46,7 @@ export class ProductFormComponent {
 
   onSave(): void {
     if (this.productForm.valid) {
+      this.productForm.get('tiendaIds')?.setValue([this.productForm.get('tiendaIds')?.value])
       const updatedProduct = this.productForm.value;
       console.log(updatedProduct);
       this.dialogRef.close(updatedProduct);

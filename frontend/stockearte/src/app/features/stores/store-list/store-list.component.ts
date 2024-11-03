@@ -5,7 +5,7 @@ import { StoreFormComponent } from '../store-form/store-form.component';
 import { Notyf } from 'notyf';
 import { StoresService } from '../../../core/services/stores.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, Subscription } from 'rxjs';
 import { ModalAction } from '../../../shared/types/ModalAction';
 
 @Component({
@@ -89,10 +89,9 @@ export class StoreListComponent implements OnInit, OnDestroy {
 
     const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const createSub = this.tiendaService.createStore(result).subscribe({
+        const createSub = this.tiendaService.createStore(result).pipe(finalize(() => this.loadTiendas())).subscribe({
           next: (response) => {
             response.message.includes('Error') ? this.notyf.error(response) : this.notyf.success(response);
-            this.loadTiendas();
           },
           error: (err) => {
             this.notyf.error('Error al crear tienda');
@@ -106,34 +105,30 @@ export class StoreListComponent implements OnInit, OnDestroy {
   }
 
   updateTienda(tienda: Tienda): void {
-    const sub = this.tiendaService.modifyStore(tienda).subscribe({
+    const sub = this.tiendaService.modifyStore(tienda).pipe(finalize(() => this.loadTiendas())).subscribe({
       next: (updatedTienda) => {
         updatedTienda.message.includes('Error') ? this.notyf.error(updatedTienda) : this.notyf.success(updatedTienda);
       },
       error: (err) => {
         this.notyf.error('Error al actualizar tienda');
         console.error(err);
-      },
-      complete: () => {
-        this.loadTiendas();
       }
     });
     this.subscriptions.push(sub);
   }
 
-  deleteTienda(id: string): void {
-    if (confirm('Eliminar tienda no funcionará esta entrega')) {
-      const sub = this.tiendaService.deleteStore(id).subscribe({
-        next: () => {
-          // this.notyf.success('Tienda eliminada con éxito');
-        },
-        error: (err) => {
-          this.notyf.error('Error al eliminar tienda');
-          console.error(err);
-        }
-      });
-      this.subscriptions.push(sub);
-    }
+  deleteTienda(tienda: any): void {
+    const sub = this.tiendaService.deleteStore(tienda.codigo).pipe(finalize(() => this.loadTiendas())).subscribe({
+      next: (response: any) => {
+        this.notyf.success(response.message);
+      },
+      error: (err) => {
+        this.notyf.error('Error al eliminar tienda');
+        console.error(err);
+      }
+    });
+    this.subscriptions.push(sub);
+
   }
 
   filterStores(searchTerm: string): void {
@@ -157,6 +152,6 @@ export class StoreListComponent implements OnInit, OnDestroy {
 
   toggleHabilitadas(event: any): void {
     this.soloHabilitados = event.checked;
-    this.loadTiendas(); 
+    this.loadTiendas();
   }
 }

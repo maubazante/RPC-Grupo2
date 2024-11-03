@@ -63,10 +63,10 @@
     </mat-form-field>
 
     <!-- Tiendas -->
-    <mat-form-field appearance="outline" *ngIf="tiendas.length > 0">
+    <mat-form-field appearance="outline" *ngIf="isAdmin">
       <mat-label>Tiendas</mat-label>
-      <mat-select formControlName="tiendas" multiple>
-        <mat-option *ngFor="let tienda of tiendas" [value]="tienda">{{ tienda.codigo }}</mat-option>
+      <mat-select formControlName="tiendaIds">
+        <mat-option *ngFor="let tienda of tiendas" [value]="tienda.id">{{ tienda.codigo }}</mat-option>
       </mat-select>
     </mat-form-field>
   </form>
