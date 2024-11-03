@@ -41,7 +41,8 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading catalogs', err);
+        console.log(err);
+        this.notyf.error("Error obteniendo los catálogos")
       },
       complete: () => {
         console.log('Catalogs loaded successfully');

@@ -112,7 +112,7 @@ export class UserFormComponent implements OnInit {
 
   openModalCargaMasiva(response: any) {
     const dialogRef = this.dialog.open(ModalCargaComponent, {
-      width: '420px',
+      width: '600px',
       data: { response }
     });
   }
