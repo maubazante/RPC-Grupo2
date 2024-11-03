@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.catalogos.CrearCatalogoResponse;
@@ -26,7 +27,10 @@ import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.ExportarCatalogoPdfResponse;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ModificarCatalogoResponse;
+import com.example.catalogos.ObjectFactory;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
+import com.example.catalogos.SendFileRequest;
+import com.example.catalogos.SendFileResponse;
 import com.unla.soapsys.helper.CatalogoHelper;
 import com.unla.soapsys.response.Catalogo;
 import com.unla.soapsys.response.CatalogoDTO;
@@ -102,5 +106,38 @@ public class CatalogoController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Catálogo no encontrado: " + e.getMessage());
 		}
 	}
+	
+	@PostMapping("/cargar-usuarios")
+    public ResponseEntity<List<String>> cargarUsuarios(@RequestParam("archivo") MultipartFile archivo) {
+        try {
+
+            // Leer el contenido del archivo en un byte array
+            byte[] fileContentBytes = archivo.getBytes();
+
+            // Codificar en Base64
+            String fileContentBase64 = Base64.getEncoder().encodeToString(fileContentBytes);
+
+            // Crear la solicitud para SOAP
+            ObjectFactory factory = new ObjectFactory();
+            SendFileRequest sendFileRequest = factory.createSendFileRequest();
+            sendFileRequest.setFileContent(fileContentBase64); // Establecer el contenido del archivo codificado en
+                                                                // Base64
+            sendFileRequest.setFileName(archivo.getName()); // Establecer el nombre del archivo
+
+            // Enviar solicitud a través de SOAP
+            SendFileResponse response = (SendFileResponse) webServiceTemplate.marshalSendAndReceive(sendFileRequest);
+
+            if (response.getError().isEmpty()) {
+                return ResponseEntity.ok(List.of("Usuarios cargados exitosamente."));
+            } else {
+                return ResponseEntity.ok(response.getError());
+            }
+
+        } catch (IOException e) {
+            return ResponseEntity.ok(List.of("Error al procesar el archivo: " + e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of("Error al enviar la solicitud SOAP:  " + e.getMessage()));
+        }
+    }
 
 }

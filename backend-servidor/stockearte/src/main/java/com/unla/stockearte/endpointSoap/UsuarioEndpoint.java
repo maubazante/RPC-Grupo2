@@ -21,22 +21,24 @@ import com.unla.stockearte.service.UsuarioService;
 
 @Endpoint
 public class UsuarioEndpoint {
-
+	
 	private static final String NAMESPACE_URI = "http://example.com/catalogos";
 
-	@Autowired
+    @Autowired
     private UsuarioService usuarioCargaMasivaService;
 
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAllCatalogosRequest")
-	@ResponsePayload
-	public SendFileResponse getAllCatalogos(@RequestPayload SendFileRequest request) throws Exception {
-		
-		byte[] fileData = Base64.getDecoder().decode(request.getFileContent());
-		List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(fileData);
 
-		SendFileResponse response = new SendFileResponse();
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendFileRequest")
+    @ResponsePayload
+    public SendFileResponse cargarUsuarios(@RequestPayload SendFileRequest request) throws Exception {
 
-		return response;
-	}
+        byte[] fileData = Base64.getDecoder().decode(request.getFileContent());
+        List<String> errores = usuarioCargaMasivaService.procesarArchivoCSV(fileData);
+
+        SendFileResponse response = new SendFileResponse();
+        response.getError().addAll(errores);
+
+        return response;
+    }
 	
 }
