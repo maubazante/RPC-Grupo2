@@ -1,12 +1,13 @@
 <mat-toolbar class="mat-elevation-z3">
-  <button mat-mini-fab *ngIf="showHamburgerMenu" (click)="drawer.toggle()" >
-        <mat-icon>menu</mat-icon>
-    </button>
-    <h3>stockearte</h3>
+  <button mat-mini-fab *ngIf="showHamburgerMenu" (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="username" *ngIf="username && showHamburgerMenu">Bienvenido, {{ username }}</span>
+  <h3>stockearte</h3>
 </mat-toolbar>
 
 <mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav"  mode="side" [style.width]="'250px'" >
+  <mat-drawer #drawer class="example-sidenav" mode="side" [style.width]="'250px'">
     <app-navbar *ngIf="showHamburgerMenu"></app-navbar>
   </mat-drawer>
 

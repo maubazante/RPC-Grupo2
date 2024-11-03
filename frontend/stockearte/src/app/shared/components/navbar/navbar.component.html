@@ -1,15 +1,15 @@
 <mat-toolbar color="primary" class="navbar">
     <div class="container">
+        <button mat-button routerLink="/users" *ngIf="this.isAdmin">Usuarios</button>
+        <button mat-button routerLink="/products">Productos</button>
+        <button mat-button routerLink="/orders">Órdenes de Compra</button>
+        <button mat-button color="secondary" routerLink="/reports">Informes<mat-icon>fiber_new</mat-icon></button>
+        <button mat-button color="secondary" routerLink="/catalogs"
+            *ngIf="!isAdmin">Catálogos<mat-icon>fiber_new</mat-icon></button>
+        <button mat-button routerLink="/news" *ngIf="this.isAdmin">Novedades</button>
+        <button mat-button routerLink="/stores" *ngIf="this.isAdmin">Tiendas</button>
+
+        <span class="spacer"></span>
         <button mat-stroked-button (click)="logout()">Logout</button>
-    <span class="spacer"></span>
-       
-    <button mat-button routerLink="/users" *ngIf="this.isAdmin">Usuarios</button>
-    <button mat-button routerLink="/products">Productos</button>
-    <button mat-button routerLink="/orders">Órdenes de Compra</button>
-    <button mat-button color="secondary" routerLink="/reports">Informes<mat-icon>fiber_new</mat-icon></button>
-    <button mat-button color="secondary" routerLink="/catalogs" *ngIf="!isAdmin">Catálogos<mat-icon>fiber_new</mat-icon></button>
-    <button mat-button routerLink="/news" *ngIf="this.isAdmin">Novedades</button>
-    <button mat-button routerLink="/stores" *ngIf="this.isAdmin">Tiendas</button>
     </div>
-  </mat-toolbar>
-  
+</mat-toolbar>

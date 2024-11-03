@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, OnInit } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css',
+  styleUrls: ['./layout.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   showHamburgerMenu = false;
-  
-  constructor(private router: Router) {
+  username: string | null = '';
+
+  // Inyectar el AuthService
+  constructor(private router: Router, private authService: AuthService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -21,5 +24,9 @@ export class LayoutComponent {
       this.showHamburgerMenu = !(url.includes('/login') || url.includes('/register'));
       this.drawer.close();
     });
+  }
+
+  ngOnInit(): void {
+    this.username = this.authService.getUsername();
   }
 }

@@ -9,13 +9,14 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-  
+
   isAdmin: boolean = false;
+  username: string | null = '';
   constructor(private authService: AuthService) {
     this.isAdmin = this.authService.isAdmin();
   }
   ngOnInit(): void {
-    
+    this.username = sessionStorage.getItem("USERNAME");
   }
 
   logout = () => { this.authService.logout() }
