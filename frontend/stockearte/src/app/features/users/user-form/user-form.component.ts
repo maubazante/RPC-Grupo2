@@ -10,6 +10,7 @@ import { StoresService } from '../../../core/services/stores.service';
 import { INotyfNotificationOptions, Notyf } from 'notyf';
 import { UsersService } from '../../../core/services/users.service';
 import { ModalCargaComponent } from '../modal-carga/modal-carga.component';
+import { LoadingModalService } from '../../../core/services/loading-modal.service';
 
 @Component({
   selector: 'app-user-form',
@@ -31,6 +32,7 @@ export class UserFormComponent implements OnInit {
     private userService: UsersService,
     private tiendaService: StoresService,
     public dialog: MatDialog,
+    private loadingModal: LoadingModalService,
     public dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: Usuario, tiendas: Tienda[], action: string }
   ) {
@@ -81,6 +83,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
+    this.loadingModal.showLoading('Cargando usuarios...')
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -92,9 +95,11 @@ export class UserFormComponent implements OnInit {
       this.userService.cargarUsuario(formData).subscribe({
         next: (response) => {
           this.notyf.success('Proceso de carga masiva completado');
+          this.loadingModal.hideLoading();
           this.openModalCargaMasiva(response);
         },
         error: (err) => {
+          this.loadingModal.hideLoading();
           console.error('Error al cargar el archivo:', err);
           this.notyf.error('Error al cargar el archivo');
         },

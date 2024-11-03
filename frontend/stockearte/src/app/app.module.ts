@@ -25,7 +25,7 @@ import { AuthModule } from './core/auth/auth.module';
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
-    RouterModule,
+    RouterModule
   ],
   exports: [LayoutComponent]
 })

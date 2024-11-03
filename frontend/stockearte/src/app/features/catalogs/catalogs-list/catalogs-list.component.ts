@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { LoadingModalService } from '../../../core/services/loading-modal.service';
 
 @Component({
   selector: 'app-catalogs-list',
@@ -25,7 +26,8 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     private catalogsService: CatalogosService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private loadingModal: LoadingModalService
   ) { }
 
   ngOnInit(): void {
@@ -110,7 +112,7 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
   }
 
   exportCatalogToPDF(id: number): void {
-    this.notyf.success('Cargando PDF...')
+    this.loadingModal.showLoading('Generando PDF...')
     const exportSubscription = this.catalogsService.exportCatalogoToPDF(id, this.authService.getUsername()).subscribe({
       next: (blob) => {
         // Decodifica el JSON si es necesario o trata el blob directamente si es PDF
@@ -126,8 +128,10 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
             const byteArray = new Uint8Array(byteNumbers);
             const pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
             const url = URL.createObjectURL(pdfBlob);
+            this.loadingModal.hideLoading();
             window.open(url);
           } else {
+            this.loadingModal.hideLoading();
             this.notyf.error('Error generando PDF')
             console.error('El JSON no contiene un campo "pdfBase64".');
           }
