@@ -189,20 +189,27 @@ export class ReportsListComponent implements OnInit {
 
   private isDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
     const normalizedDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
     );
     const normalizedStart = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth(),
-      startDate.getDate()
+      startDate.getUTCFullYear(),
+      startDate.getUTCMonth(),
+      startDate.getUTCDate(),
+      startDate.getUTCHours() - 3,
     );
     const normalizedEnd = new Date(
-      endDate.getFullYear(),
-      endDate.getMonth(),
-      endDate.getDate()
+      endDate.getUTCFullYear(),
+      endDate.getUTCMonth(),
+      endDate.getUTCDate(),
+      endDate.getUTCHours() - 3,
     );
+
+    console.log("normalizedDate", normalizedDate);
+    console.log("normalizedStart", normalizedStart);
+    console.log("normalizedEnd", normalizedEnd);
 
     return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
   }

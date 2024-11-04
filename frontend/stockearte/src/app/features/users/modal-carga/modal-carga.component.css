@@ -16,6 +16,16 @@ mat-form-field {
     padding-top: 0.1em;
 }
 
+p {
+    font-size: 16px;
+}
+
 mat-dialog-content {
     padding: 10px;
+}
+
+.all-content {
+    align-items: center;
+    padding: 15px;
+    margin: 10px;
 }

@@ -40,7 +40,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    FormsModule
+    FormsModule,
+    MatDividerModule
   ]
 })
 export class UsersModule { }

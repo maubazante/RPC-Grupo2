@@ -1,7 +1,13 @@
-<h2 mat-dialog-title>Informe de carga de usuario <button *ngIf="huboRepetidos" mat-icon-button
+<div class="all-content">
+    <h2 mat-dialog-title style="align-self: center;">Informe de carga de usuario <button *ngIf="huboRepetidos" mat-icon-button
         matTooltip="Si hubo usuarios duplicados, igualmente no interrumpe el proceso de carga">
         <mat-icon>info</mat-icon>
     </button></h2>
+    <mat-divider></mat-divider>
 <mat-dialog-content>
-    <p *ngFor="let item of response">{{ item }}</p>
+    <p *ngFor="let item of response"> {{ item }} </p>
 </mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-stroked-button (click)="onClose()">Cerrar</button>
+</mat-dialog-actions>
+</div>

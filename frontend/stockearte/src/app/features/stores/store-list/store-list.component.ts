@@ -7,6 +7,7 @@ import { StoresService } from '../../../core/services/stores.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { debounceTime, distinctUntilChanged, finalize, Subject, Subscription } from 'rxjs';
 import { ModalAction } from '../../../shared/types/ModalAction';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-store-list',
@@ -16,7 +17,7 @@ import { ModalAction } from '../../../shared/types/ModalAction';
 })
 export class StoreListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'codigo', 'direccion', 'ciudad', 'provincia', 'habilitada', 'edit', 'erase'];
-  dataSource: Tienda[] = [];
+  dataSource = new MatTableDataSource<Tienda>();
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
   soloHabilitados: boolean = true;
@@ -45,6 +46,11 @@ export class StoreListComponent implements OnInit, OnDestroy {
         this.filterStores(searchTerm);
       })
     );
+
+    this.dataSource.filterPredicate = (data: Tienda, filter: string) => {
+      return data.codigo?.toLowerCase().includes(filter) ||
+        data.ciudad.toLowerCase().includes(filter);
+    };
   }
 
   ngOnDestroy(): void {
@@ -54,7 +60,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
   loadTiendas(): void {
     const sub = this.tiendaService.getTiendas(this.authService.getUsername(), this.soloHabilitados).subscribe({
       next: (tiendas) => {
-        this.dataSource = tiendas.tiendas;
+        this.dataSource.data = tiendas.tiendas;
       },
       error: (err) => {
         this.notyf.error('Error al cargar tiendas');
@@ -132,10 +138,9 @@ export class StoreListComponent implements OnInit, OnDestroy {
   }
 
   filterStores(searchTerm: string): void {
-    this.dataSource = this.dataSource.filter(tienda =>
-      tienda.codigo.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
+
 
   clearSearch(): void {
     this.searchTerm = '';
@@ -148,6 +153,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
     if (inputElement && inputElement.value) {
       this.searchTerm$.next(inputElement.value);
     }
+    if(inputElement.value === "") this.clearSearch();
   }
 
   toggleHabilitadas(event: any): void {

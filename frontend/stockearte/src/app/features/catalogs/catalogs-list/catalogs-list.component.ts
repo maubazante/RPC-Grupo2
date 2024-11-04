@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CatalogsFormComponent } from '../catalogs-form/catalogs-form.component';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { CatalogosService } from '../../../core/services/catalogs.service';
 import { Catalogo, CatalogoSOAP } from '../../../shared/types/Catalogo';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,6 +9,7 @@ import { Notyf } from 'notyf';
 import { ProductsService } from '../../../core/services/products.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { LoadingModalService } from '../../../core/services/loading-modal.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-catalogs-list',
@@ -16,9 +17,11 @@ import { LoadingModalService } from '../../../core/services/loading-modal.servic
   styleUrls: ['./catalogs-list.component.css']
 })
 export class CatalogsListComponent implements OnInit, OnDestroy {
-  dataSource: Catalogo[] = [];
+  dataSource = new MatTableDataSource<CatalogoSOAP>();
   displayedColumns: string[] = ['id', 'nombre', 'export', 'edit', 'erase'];
-  searchTerm: string = '';
+  searchTerm!: string;
+  searchTerm$ = new Subject<string>();
+
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   private subscriptions = new Subscription();
 
@@ -32,12 +35,28 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCatalogs();
+
+    this.searchTerm$.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.searchTerm = searchTerm;
+      this.filterCatalogs(searchTerm);
+    });
+
+    this.dataSource.filterPredicate = (data: CatalogoSOAP, filter: string) => {
+      return data.nombre.toLowerCase().includes(filter)
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe(); 
   }
 
   loadCatalogs(): void {
     const catalogSubscription = this.catalogsService.getCatalogos(this.authService.getUsername()).subscribe({
       next: (data) => {
-        this.dataSource = data;
+        this.dataSource.data = data;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -148,24 +167,23 @@ export class CatalogsListComponent implements OnInit, OnDestroy {
     this.subscriptions.add(exportSubscription);
   }
 
-  onSearchChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm = input.value;
-    this.applyFilter();
+  filterCatalogs(searchTerm: string): void {
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   clearSearch(): void {
     this.searchTerm = '';
-    this.applyFilter();
+    this.searchTerm$.next('');
+    this.ngOnInit();
   }
 
-  applyFilter(): void {
-    this.dataSource = this.dataSource.filter(catalog =>
-      catalog.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  onSearchChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.value) {
+      this.searchTerm$.next(inputElement.value);
+    }
+    if(inputElement.value === "") this.clearSearch();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();  // Desuscribirse de todas las suscripciones al destruir el componente
-  }
+  
 }

@@ -17,4 +17,7 @@ export class ModalCargaComponent {
     this.data.response.some((line: string) => line.includes('duplicado.')) ? this.huboRepetidos = true : this.huboRepetidos = false;
   }
 
+  onClose(): void {
+    this.dialogRef.close()
+  }
 }

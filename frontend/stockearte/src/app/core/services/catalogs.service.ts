@@ -14,8 +14,8 @@ export class CatalogosService {
 
   constructor(private http: HttpClient) {}
 
-  getCatalogos(username: string | null): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(`${environment.soapSysURL}${BASE_URL}?username=${username}`);
+  getCatalogos(username: string | null): Observable<CatalogoSOAP[]> {
+    return this.http.get<CatalogoSOAP[]>(`${environment.soapSysURL}${BASE_URL}?username=${username}`);
   }
 
   getCatalogoById(id: number): Observable<Catalogo> {

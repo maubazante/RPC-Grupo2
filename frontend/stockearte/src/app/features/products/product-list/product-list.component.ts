@@ -10,6 +10,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StoresService } from '../../../core/services/stores.service';
 import { Tienda } from '../../../shared/types/Tienda';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-product-list',
@@ -19,7 +20,7 @@ import { Tienda } from '../../../shared/types/Tienda';
 })
 export class ProductListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'cantidad', 'foto', 'edit', 'erase'];
-  dataSource: Producto[] = [];
+  dataSource = new MatTableDataSource<Producto>();
   tiendas: Tienda[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
@@ -49,6 +50,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.searchTerm = searchTerm;
       this.filterProducts(searchTerm);
     });
+
+    this.dataSource.filterPredicate = (data: Producto, filter: string) => {
+      return data.codigo.toLowerCase().includes(filter) ||
+        data.nombre.toLowerCase().includes(filter);
+    };
   }
 
   ngOnDestroy(): void {
@@ -75,7 +81,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   loadProductsByUsername(): void {
     const sub = this.productsService.getProductos(this.AuthService.getUsername(), this.soloHabilitados).subscribe({
       next: (products) => {
-        this.dataSource = products.productos;
+        this.dataSource.data = products.productos;
       },
       error: (err) => {
         this.notyf.error('Error al cargar productos');
@@ -162,9 +168,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   filterProducts(searchTerm: string): void {
-    this.dataSource = this.dataSource.filter(product =>
-      product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   clearSearch(): void {
@@ -178,6 +182,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     if (inputElement && inputElement.value) {
       this.searchTerm$.next(inputElement.value);
     }
+    if(inputElement.value === "") this.clearSearch();
   }
 
   toggleHabilitadas(event: any): void {
