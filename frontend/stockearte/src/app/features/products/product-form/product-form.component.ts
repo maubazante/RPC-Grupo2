@@ -27,16 +27,16 @@ export class ProductFormComponent {
     this.tiendas = data.tiendas || [];
     this.isEdit = data.action === ModalAction.EDIT;
     this.productForm = this.fb.group({
-      id: [data.product.id],
-      nombre: [data.product.nombre, Validators.required],
-      codigo: [data.product.codigo],
-      foto: [data.product.foto, Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)],
-      color: [data.product.color],
-      talle: [data.product.talle],
-      cantidad: [{value: Number(this.data.product.cantidad) || 0, disabled: this.authService.isAdmin()}, [Validators.required, Validators.min(0)]], // Control de cantidad
-      habilitado: [data.product.habilitado, Validators.required],
+      id: [data?.product?.id],
+      nombre: [data?.product?.nombre, Validators.required],
+      codigo: [data?.product?.codigo],
+      foto: [data?.product?.foto, Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)],
+      color: [data?.product?.color],
+      talle: [data?.product?.talle],
+      cantidad: [{ value: Number(this.data?.product?.cantidad) || 0, disabled: this.authService.isAdmin() }, [Validators.required, Validators.min(0)]], // Control de cantidad
+      habilitado: [data?.product?.habilitado, Validators.required],
       idUserAdmin: [this.authService.getUserId()],
-      tiendaIds: [data.product.tiendaIds[0]]
+      tiendaIds: [data?.product?.tiendaIds[0] || null, Validators.required]
     });
   }
 

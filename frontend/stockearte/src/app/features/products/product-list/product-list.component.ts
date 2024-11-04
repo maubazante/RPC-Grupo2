@@ -106,7 +106,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   createProduct(): void {
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
-      data: { product: {} as Producto, tiendas: this.tiendas, action: ModalAction.CREATE }
+      data: { tiendas: this.tiendas, action: ModalAction.CREATE }
     });
 
     const sub = dialogRef.afterClosed().subscribe(result => {
@@ -147,7 +147,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   deleteProduct(id: string): void {
     const sub = this.productsService.deleteProduct(id).subscribe({
       next: (response: any) => {
-        response.message.includes("Error") || response.message === ""  ? this.notyf.error("El producto no ha podido ser eliminado") : this.notyf.success(response.message) 
+        response.message.includes("Error") || response.message === "" ? this.notyf.error("El producto no ha podido ser eliminado") : this.notyf.success(response.message)
       },
       error: (err) => {
         this.notyf.error('Error al eliminar producto');
