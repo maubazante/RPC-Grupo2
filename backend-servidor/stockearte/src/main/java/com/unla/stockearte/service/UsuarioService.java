@@ -246,27 +246,56 @@ public class UsuarioService extends UsuarioServiceImplBase {
 	}
 
 	@Override
-	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable",
-			"java.lang.Exception" }, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = true, rollbackForClassName = { "java.lang.Throwable", "java.lang.Exception" }, propagation = Propagation.REQUIRED)
 	public void loginUsuario(UserLoginRequest request, StreamObserver<UserLoginResponse> responseObserver) {
-		Optional<Usuario> user = getUsuarioRepository().findByUsernameAndPassword(request.getUserLogin().getUsername(),
-				request.getUserLogin().getPassword());
-		UserLoginResponse response = null;
-		if (user.isPresent()) {
-			response = UserLoginResponse.newBuilder().setPassword(user.get().getPassword())
-					.setUsername(user.get().getUsername()).setRol(user.get().getRol().getValue())
-					.setUserId(user.get().getId()).setTiendaId(user.get().getTienda().getId())
-					.setNombre(user.get().getNombre()).setApellido(user.get().getApellido())
-					.setCodTienda(user.get().getTienda().getCodigo())
-					.setCasaCentral(user.get().getTienda().getEsCasaCentral()).build();
-		} else {
-			response = UserLoginResponse.newBuilder()
-					.setErrorMessage("El usuario ingresado no existe en la base de datos.").build();
-		}
+	    String username = request.getUserLogin().getUsername();
+	    String password = request.getUserLogin().getPassword();
 
-		responseObserver.onNext(response);
-		responseObserver.onCompleted();
+	    // Primero, busca solo por nombre de usuario
+	    Optional<Usuario> optionalUser = getUsuarioRepository().findByUsername(username);
+
+	    UserLoginResponse response;
+
+	    if (optionalUser.isPresent()) {
+	        Usuario user = optionalUser.get();
+
+	        // Verifica si la contraseña es correcta
+	        if (user.getPassword().equals(password)) {
+	            if (user.isHabilitado()) {
+	                response = UserLoginResponse.newBuilder()
+	                        .setPassword(user.getPassword())
+	                        .setUsername(user.getUsername())
+	                        .setRol(user.getRol().getValue())
+	                        .setUserId(user.getId())
+	                        .setTiendaId(user.getTienda().getId())
+	                        .setNombre(user.getNombre())
+	                        .setApellido(user.getApellido())
+	                        .setCodTienda(user.getTienda().getCodigo())
+	                        .setCasaCentral(user.getTienda().getEsCasaCentral())
+	                        .build();
+	            } else {
+	            	// Si el usuario no esta habilitado
+	                response = UserLoginResponse.newBuilder()
+	                        .setErrorMessage("El usuario no se encuentra habilitado. Contacte al administrador.")
+	                        .build();
+	            }
+	        } else {
+	            // Si la contraseña es incorrecta
+	            response = UserLoginResponse.newBuilder()
+	                    .setErrorMessage("La contraseña es incorrecta.")
+	                    .build();
+	        }
+	    } else {
+	        // Si el usuario no existe
+	        response = UserLoginResponse.newBuilder()
+	                .setErrorMessage("El usuario ingresado no existe en la base de datos.")
+	                .build();
+	    }
+
+	    responseObserver.onNext(response);
+	    responseObserver.onCompleted();
 	}
+
 
 	public UsuarioRepository getUsuarioRepository() {
 		return usuarioRepository;
