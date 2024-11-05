@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  constructor(private router: Router) {}
-  
+  constructor(private router: Router) { }
+
   public getUsername(): string | null {
     return sessionStorage.getItem("USERNAME");
   }
@@ -29,12 +29,12 @@ export class AuthService {
   }
 
   public isAdmin(): boolean {
-    if(!this.isLogged) return false;
+    if (!this.isLogged) return false;
     return this.getRol() === "ADMIN";
   }
 
   public isStoreManager(): boolean {
-    if(!this.isLogged) return false;
+    if (!this.isLogged) return false;
     return this.getRol() === "STOREMANAGER";
   }
 
@@ -42,4 +42,5 @@ export class AuthService {
     sessionStorage.clear();
     this.router.navigate(['/login']);
   }
+
 }

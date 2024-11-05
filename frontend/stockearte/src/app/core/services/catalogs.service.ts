@@ -14,8 +14,8 @@ export class CatalogosService {
 
   constructor(private http: HttpClient) {}
 
-  getCatalogos(username: string | null): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(`${environment.soapSysURL}${BASE_URL}?username=${username}`);
+  getCatalogos(username: string | null): Observable<CatalogoSOAP[]> {
+    return this.http.get<CatalogoSOAP[]>(`${environment.soapSysURL}${BASE_URL}?username=${username}`);
   }
 
   getCatalogoById(id: number): Observable<Catalogo> {
@@ -32,7 +32,7 @@ export class CatalogosService {
   }
 
   deleteCatalogo(id: number, username: string | null): Observable<void> {
-    return this.http.delete<void>(`${environment.controllerURL}${BASE_URL}/${id}?username=${username}`, { headers: this.headers });
+    return this.http.delete<void>(`${environment.soapSysURL}${BASE_URL}/${id}?username=${username}`, { headers: this.headers });
   }
 
   exportCatalogoToPDF(id: number, username: string | null): Observable<Blob> {

@@ -89,6 +89,10 @@ message UserLoginResponse	{
 	int64 userId = 4;
 	int64 tiendaId = 5;
 	string errorMessage = 6;
+	string nombre = 7;
+	string apellido = 8;
+	string codTienda = 9;
+	bool casaCentral = 10;
 }
 
 // Servicios para manejar usuarios

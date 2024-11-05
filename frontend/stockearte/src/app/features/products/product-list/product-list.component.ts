@@ -8,6 +8,9 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ModalAction } from '../../../shared/types/ModalAction';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { StoresService } from '../../../core/services/stores.service';
+import { Tienda } from '../../../shared/types/Tienda';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-product-list',
@@ -17,7 +20,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class ProductListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'nombre', 'codigo', 'color', 'talle', 'habilitado', 'cantidad', 'foto', 'edit', 'erase'];
-  dataSource: Producto[] = [];
+  dataSource = new MatTableDataSource<Producto>();
+  tiendas: Tienda[] = [];
   notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'top' } });
   isAdmin: boolean = false;
   soloHabilitados: boolean = true;
@@ -28,6 +32,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(
     private productsService: ProductsService,
+    private tiendaService: StoresService,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private AuthService: AuthService
@@ -36,6 +41,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isAdmin = this.AuthService.isAdmin();
     this.loadProductsByUsername();
+    this.loadTiendas();
 
     this.searchTerm$.pipe(
       debounceTime(300),
@@ -44,32 +50,38 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.searchTerm = searchTerm;
       this.filterProducts(searchTerm);
     });
+
+    this.dataSource.filterPredicate = (data: Producto, filter: string) => {
+      return data.codigo.toLowerCase().includes(filter) ||
+        data.nombre.toLowerCase().includes(filter);
+    };
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  // loadAllProducts(): void {
-  //   const sub = this.productsService.getAllProductos().subscribe({
-  //     next: (products) => {
-  //       this.dataSource = products.productos;
-  //     },
-  //     error: (err) => {
-  //       this.notyf.error('Error al cargar productos');
-  //       console.error(err);
-  //     },
-  //     complete: () => {
-  //       this.cdr.detectChanges();
-  //     }
-  //   });
-  //   this.subscriptions.push(sub);
-  // }
+
+  loadTiendas(): void {
+    const sub = this.tiendaService.getTiendas(this.AuthService.getUsername(), this.soloHabilitados).subscribe({
+      next: (tiendas) => {
+        this.tiendas = tiendas.tiendas;
+      },
+      error: (err) => {
+        this.notyf.error('Error al cargar tiendas');
+        console.error(err);
+      },
+      complete: () => {
+        this.cdr.detectChanges();
+      }
+    });
+    this.subscriptions.push(sub);
+  }
 
   loadProductsByUsername(): void {
     const sub = this.productsService.getProductos(this.AuthService.getUsername(), this.soloHabilitados).subscribe({
       next: (products) => {
-        this.dataSource = products.productos;
+        this.dataSource.data = products.productos;
       },
       error: (err) => {
         this.notyf.error('Error al cargar productos');
@@ -86,7 +98,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     console.log(product);
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
-      data: { product: product, action: ModalAction.EDIT }
+      data: { product: product, tiendas: this.tiendas, action: ModalAction.EDIT }
     });
 
     const sub = dialogRef.afterClosed().subscribe(result => {
@@ -100,7 +112,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   createProduct(): void {
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '400px',
-      data: { product: {} as Producto, action: ModalAction.CREATE }
+      data: { tiendas: this.tiendas, action: ModalAction.CREATE }
     });
 
     const sub = dialogRef.afterClosed().subscribe(result => {
@@ -122,6 +134,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   updateProduct(product: Producto): void {
+    console.log(product)
     const sub = this.productsService.modifyProduct(product).subscribe({
       next: (updatedProduct) => {
         updatedProduct.message.includes('Error') ? this.notyf.error(updatedProduct) : this.notyf.success(updatedProduct);
@@ -140,7 +153,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   deleteProduct(id: string): void {
     const sub = this.productsService.deleteProduct(id).subscribe({
       next: (response: any) => {
-        response.message.includes("Error") || response.message === ""  ? this.notyf.error("El producto no ha podido ser eliminado") : this.notyf.success(response.message) 
+        response.message.includes("Error") || response.message === "" ? this.notyf.error("El producto no ha podido ser eliminado") : this.notyf.success(response.message)
       },
       error: (err) => {
         this.notyf.error('Error al eliminar producto');
@@ -155,10 +168,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   filterProducts(searchTerm: string): void {
-    this.dataSource = this.dataSource.filter(product =>
-      product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    // this.productsService.searchProducts(searchTerm).subscribe(...);
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   clearSearch(): void {
@@ -172,6 +182,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     if (inputElement && inputElement.value) {
       this.searchTerm$.next(inputElement.value);
     }
+    if(inputElement.value === "") this.clearSearch();
   }
 
   toggleHabilitadas(event: any): void {

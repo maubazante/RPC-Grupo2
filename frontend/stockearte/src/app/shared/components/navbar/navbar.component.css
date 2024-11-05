@@ -1,19 +1,38 @@
 .navbar {
-    position: absolute;
-    top: 300px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .spacer {
-    flex: 1;
-  }
+  position: absolute;
+  top: 340px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding: 10px;
-  }
-  
+.navbar button {
+  font-size: 15px;
+  margin-right: 8px;
+}
+
+
+.spacer {
+  flex: 1;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+  padding: 10px;
+  margin-right: 8px;
+}
+
+.username-display {
+  position: relative;
+  bottom: 30px;
+  margin-right: 8px;
+  font-size: 14px;
+  color: #fff;
+  border: 1.1px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border-color: rgba(255, 255, 255, 0.432);
+}

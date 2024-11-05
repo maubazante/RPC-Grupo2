@@ -1,0 +1,31 @@
+form {
+    padding: 15px;
+}
+
+h2 {
+    align-self: center;
+    margin: 0.5em;
+    margin-bottom: 0;
+}
+
+mat-form-field {
+    display: flex;
+}
+
+.csv {
+    padding-top: 0.1em;
+}
+
+p {
+    font-size: 16px;
+}
+
+mat-dialog-content {
+    padding: 10px;
+}
+
+.all-content {
+    align-items: center;
+    padding: 15px;
+    margin: 10px;
+}

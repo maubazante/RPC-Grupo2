@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,14 +20,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.example.catalogos.CrearCatalogoResponse;
+import com.example.catalogos.EliminarCatalogoRequest;
+import com.example.catalogos.EliminarCatalogoResponse;
 import com.example.catalogos.ExportarCatalogoPdfRequest;
 import com.example.catalogos.ExportarCatalogoPdfResponse;
 import com.example.catalogos.ListCatalogoResponse;
 import com.example.catalogos.ModificarCatalogoResponse;
+import com.example.catalogos.ObjectFactory;
 import com.example.catalogos.ObtenerProductoPorCatalogoResponse;
+import com.example.catalogos.SendFileRequest;
+import com.example.catalogos.SendFileResponse;
 import com.unla.soapsys.helper.CatalogoHelper;
 import com.unla.soapsys.response.Catalogo;
 import com.unla.soapsys.response.CatalogoDTO;
@@ -77,6 +84,15 @@ public class CatalogoController {
 		Catalogo response = CatalogoHelper.updatedCatalogo(modificarCatalogoResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Catalogo> deleteCatalogo(@PathVariable Long id, @RequestParam String username) {
+		EliminarCatalogoResponse eliminarCatalogoResponse = (EliminarCatalogoResponse) webServiceTemplate
+				.marshalSendAndReceive(CatalogoHelper.deleteCatalog(id, username));
+		Catalogo response = CatalogoHelper.deletedCatalog(eliminarCatalogoResponse);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}	
 
 	@GetMapping("/exportar/pdf/{id}")
 	public ResponseEntity<?> exportCatalogoPDF(@PathVariable Long id, @RequestParam String username) throws IOException {
@@ -102,5 +118,38 @@ public class CatalogoController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Catálogo no encontrado: " + e.getMessage());
 		}
 	}
+	
+	@PostMapping("/cargar-usuarios")
+    public ResponseEntity<List<String>> cargarUsuarios(@RequestParam("archivo") MultipartFile archivo) {
+        try {
+
+            // Leer el contenido del archivo en un byte array
+            byte[] fileContentBytes = archivo.getBytes();
+
+            // Codificar en Base64
+            String fileContentBase64 = Base64.getEncoder().encodeToString(fileContentBytes);
+
+            // Crear la solicitud para SOAP
+            ObjectFactory factory = new ObjectFactory();
+            SendFileRequest sendFileRequest = factory.createSendFileRequest();
+            sendFileRequest.setFileContent(fileContentBase64); // Establecer el contenido del archivo codificado en
+                                                                // Base64
+            sendFileRequest.setFileName(archivo.getName()); // Establecer el nombre del archivo
+
+            // Enviar solicitud a través de SOAP
+            SendFileResponse response = (SendFileResponse) webServiceTemplate.marshalSendAndReceive(sendFileRequest);
+
+            if (response.getError().isEmpty()) {
+                return ResponseEntity.ok(List.of("Usuarios cargados exitosamente."));
+            } else {
+                return ResponseEntity.ok(response.getError());
+            }
+
+        } catch (IOException e) {
+            return ResponseEntity.ok(List.of("Error al procesar el archivo: " + e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of("Error al enviar la solicitud SOAP:  " + e.getMessage()));
+        }
+    }
 
 }
