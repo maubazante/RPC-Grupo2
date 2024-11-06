@@ -14,7 +14,7 @@ Este trabajo consiste en las tres entregas (TP1 - Grpc, TP2 - Kafka, TP3 - API R
 [https://youtu.be/m7Y2N5eE9b4](https://youtu.be/m7Y2N5eE9b4)
 ## Demo de la entrega 2 utilizando Kafka:
 [https://youtu.be/N_nWzSGu-gg](https://youtu.be/N_nWzSGu-gg)
-## Demo de la entrega 2 utilizando API REST/SOAP:
+## Demo de la entrega 3 utilizando API REST/SOAP:
 [https://youtu.be/wozt1URqeyE](https://youtu.be/wozt1URqeyE)
 
 ## Link al repositorio:
